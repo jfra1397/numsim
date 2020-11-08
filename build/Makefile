@@ -150,6 +150,33 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/settings.o: src/settings.cpp.o
+
+.PHONY : src/settings.o
+
+# target to build an object file
+src/settings.cpp.o:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/settings.cpp.o
+.PHONY : src/settings.cpp.o
+
+src/settings.i: src/settings.cpp.i
+
+.PHONY : src/settings.i
+
+# target to preprocess a source file
+src/settings.cpp.i:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/settings.cpp.i
+.PHONY : src/settings.cpp.i
+
+src/settings.s: src/settings.cpp.s
+
+.PHONY : src/settings.s
+
+# target to generate assembly for a file
+src/settings.cpp.s:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/settings.cpp.s
+.PHONY : src/settings.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,6 +189,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/settings.o"
+	@echo "... src/settings.i"
+	@echo "... src/settings.s"
 .PHONY : help
 
 
