@@ -5,9 +5,9 @@ project (numsim)
 
 # Prefix paths
 #set(PATH /home/jfra/projects/simtech/numsim)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY this/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY this/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY this/bin)
 
 #find_package(VTK)
 
@@ -27,7 +27,7 @@ set(CMAKE_BUILD_TYPE Debug)
 message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 # Sources
-set(SOURCES ../src/main.cpp
+set(SOURCES this/src/main.cpp
                         )
 
 # Libraries

@@ -1,0 +1,59 @@
+The system is: Linux - sh: 0: getcwd() failed: No such file or directory
+4.19.128-microsoft-standard - sh: 0: getcwd() failed: No such file or directory
+x86_64
+Determining if the C compiler works passed with the following output:
+Change Dir: /home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5dd84/fast"
+/usr/bin/make -f CMakeFiles/cmTC_5dd84.dir/build.make CMakeFiles/cmTC_5dd84.dir/build
+make[1]: Entering directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5dd84.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_5dd84.dir/testCCompiler.c.o   -c /home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_5dd84
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5dd84.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_5dd84.dir/testCCompiler.c.o  -o cmTC_5dd84 
+make[1]: Leaving directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_b9145/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b9145.dir/build.make CMakeFiles/cmTC_b9145.dir/build
+make[1]: Entering directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b9145.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_b9145.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.10/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_b9145
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9145.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_b9145.dir/CMakeCCompilerABI.c.o  -o cmTC_b9145 
+make[1]: Leaving directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_548e3/fast"
+/usr/bin/make -f CMakeFiles/cmTC_548e3.dir/build.make CMakeFiles/cmTC_548e3.dir/build
+make[1]: Entering directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_548e3.dir/testCXXCompiler.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTC_548e3.dir/testCXXCompiler.cxx.o -c /home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_548e3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_548e3.dir/link.txt --verbose=1
+/usr/bin/c++       CMakeFiles/cmTC_548e3.dir/testCXXCompiler.cxx.o  -o cmTC_548e3 
+make[1]: Leaving directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_33e83/fast"
+/usr/bin/make -f CMakeFiles/cmTC_33e83.dir/build.make CMakeFiles/cmTC_33e83.dir/build
+make[1]: Entering directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_33e83.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++     -o CMakeFiles/cmTC_33e83.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.10/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_33e83
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_33e83.dir/link.txt --verbose=1
+/usr/bin/c++       CMakeFiles/cmTC_33e83.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_33e83 
+make[1]: Leaving directory '/home/jfra/projects/simtech/numsim/build/CMakeFiles/CMakeTmp'
+
+

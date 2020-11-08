@@ -1,0 +1,3 @@
+/home/jfra/projects/simtech/numsim/build/CMakeFiles/rebuild_cache.dir
+/home/jfra/projects/simtech/numsim/build/CMakeFiles/numsim.dir
+/home/jfra/projects/simtech/numsim/build/CMakeFiles/edit_cache.dir

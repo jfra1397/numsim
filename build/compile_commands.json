@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/jfra/projects/simtech/numsim/build",
+  "command": "/usr/bin/c++      -o CMakeFiles/numsim.dir/this/src/main.cpp.o -c /home/jfra/projects/simtech/numsim/this/src/main.cpp",
+  "file": "/home/jfra/projects/simtech/numsim/this/src/main.cpp"
+}
+]
