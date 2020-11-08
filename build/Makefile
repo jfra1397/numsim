@@ -111,44 +111,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named numsim
+# Target rules for targets named numsim.out
 
 # Build rule for target.
-numsim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 numsim
-.PHONY : numsim
+numsim.out: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 numsim.out
+.PHONY : numsim.out
 
 # fast build rule for target.
-numsim/fast:
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/build
-.PHONY : numsim/fast
+numsim.out/fast:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/build
+.PHONY : numsim.out/fast
 
-this/src/main.o: this/src/main.cpp.o
+src/main.o: src/main.cpp.o
 
-.PHONY : this/src/main.o
+.PHONY : src/main.o
 
 # target to build an object file
-this/src/main.cpp.o:
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/this/src/main.cpp.o
-.PHONY : this/src/main.cpp.o
+src/main.cpp.o:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
 
-this/src/main.i: this/src/main.cpp.i
+src/main.i: src/main.cpp.i
 
-.PHONY : this/src/main.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-this/src/main.cpp.i:
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/this/src/main.cpp.i
-.PHONY : this/src/main.cpp.i
+src/main.cpp.i:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-this/src/main.s: this/src/main.cpp.s
+src/main.s: src/main.cpp.s
 
-.PHONY : this/src/main.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-this/src/main.cpp.s:
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/this/src/main.cpp.s
-.PHONY : this/src/main.cpp.s
+src/main.cpp.s:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
 # Help Target
 help:
@@ -157,11 +157,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... numsim"
+	@echo "... numsim.out"
 	@echo "... edit_cache"
-	@echo "... this/src/main.o"
-	@echo "... this/src/main.i"
-	@echo "... this/src/main.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 .PHONY : help
 
 

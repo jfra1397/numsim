@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/jfra/projects/simtech/numsim
 CMAKE_BINARY_DIR = /home/jfra/projects/simtech/numsim/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/numsim.dir
+# Target rules for target CMakeFiles/numsim.out.dir
 
 # All Build rule for target.
-CMakeFiles/numsim.dir/all:
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/depend
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jfra/projects/simtech/numsim/build/CMakeFiles --progress-num=1,2 "Built target numsim"
-.PHONY : CMakeFiles/numsim.dir/all
+CMakeFiles/numsim.out.dir/all:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/depend
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jfra/projects/simtech/numsim/build/CMakeFiles --progress-num=1,2 "Built target numsim.out"
+.PHONY : CMakeFiles/numsim.out.dir/all
 
 # Include target in all.
-all: CMakeFiles/numsim.dir/all
+all: CMakeFiles/numsim.out.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/numsim.dir/rule: cmake_check_build_system
+CMakeFiles/numsim.out.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jfra/projects/simtech/numsim/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/numsim.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/numsim.out.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jfra/projects/simtech/numsim/build/CMakeFiles 0
-.PHONY : CMakeFiles/numsim.dir/rule
+.PHONY : CMakeFiles/numsim.out.dir/rule
 
 # Convenience name for target.
-numsim: CMakeFiles/numsim.dir/rule
+numsim.out: CMakeFiles/numsim.out.dir/rule
 
-.PHONY : numsim
-
-# clean rule for target.
-CMakeFiles/numsim.dir/clean:
-	$(MAKE) -f CMakeFiles/numsim.dir/build.make CMakeFiles/numsim.dir/clean
-.PHONY : CMakeFiles/numsim.dir/clean
+.PHONY : numsim.out
 
 # clean rule for target.
-clean: CMakeFiles/numsim.dir/clean
+CMakeFiles/numsim.out.dir/clean:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/clean
+.PHONY : CMakeFiles/numsim.out.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/numsim.out.dir/clean
 
 .PHONY : clean
 

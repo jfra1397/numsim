@@ -10,8 +10,8 @@
     },
     "tasks": [
       {
-        "label": "numsim",
-        "options": {"cwd":"${workspaceFolder}/this/build"},
+        "label": "g++ build active file",
+        "options": {"cwd":"${workspaceFolder}/build"},
         "type": "shell",
         "command": "make",
         "group": {
