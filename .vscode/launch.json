@@ -8,7 +8,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/bin/numsim.out",
-        "args": [],
+        "args": ["../parameters.txt"],
         "stopAtEntry": true,
         "cwd": "${workspaceFolder}/src",
         "environment": [],

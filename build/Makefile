@@ -123,6 +123,60 @@ numsim.out/fast:
 	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/build
 .PHONY : numsim.out/fast
 
+src/array2d.o: src/array2d.cpp.o
+
+.PHONY : src/array2d.o
+
+# target to build an object file
+src/array2d.cpp.o:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/array2d.cpp.o
+.PHONY : src/array2d.cpp.o
+
+src/array2d.i: src/array2d.cpp.i
+
+.PHONY : src/array2d.i
+
+# target to preprocess a source file
+src/array2d.cpp.i:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/array2d.cpp.i
+.PHONY : src/array2d.cpp.i
+
+src/array2d.s: src/array2d.cpp.s
+
+.PHONY : src/array2d.s
+
+# target to generate assembly for a file
+src/array2d.cpp.s:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/array2d.cpp.s
+.PHONY : src/array2d.cpp.s
+
+src/field_variable.o: src/field_variable.cpp.o
+
+.PHONY : src/field_variable.o
+
+# target to build an object file
+src/field_variable.cpp.o:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/field_variable.cpp.o
+.PHONY : src/field_variable.cpp.o
+
+src/field_variable.i: src/field_variable.cpp.i
+
+.PHONY : src/field_variable.i
+
+# target to preprocess a source file
+src/field_variable.cpp.i:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/field_variable.cpp.i
+.PHONY : src/field_variable.cpp.i
+
+src/field_variable.s: src/field_variable.cpp.s
+
+.PHONY : src/field_variable.s
+
+# target to generate assembly for a file
+src/field_variable.cpp.s:
+	$(MAKE) -f CMakeFiles/numsim.out.dir/build.make CMakeFiles/numsim.out.dir/src/field_variable.cpp.s
+.PHONY : src/field_variable.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -186,6 +240,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... numsim.out"
 	@echo "... edit_cache"
+	@echo "... src/array2d.o"
+	@echo "... src/array2d.i"
+	@echo "... src/array2d.s"
+	@echo "... src/field_variable.o"
+	@echo "... src/field_variable.i"
+	@echo "... src/field_variable.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
