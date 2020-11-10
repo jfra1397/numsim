@@ -28,6 +28,10 @@ message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 # Sources
 set(SOURCES ../src/main.cpp
+            ../src/settings.cpp
+            ../src/field_variable.cpp
+            ../src/array2d.cpp
+
                         )
 
 # Libraries
