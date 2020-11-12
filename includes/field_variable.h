@@ -28,11 +28,11 @@ class FieldVariable: public Array2D
     private:
     FieldVariable();
     bool verticalBoundInterpolate;
-    btype topBoundType = DIRICHLET;
-    btype bottomBoundType = DIRICHLET;
+    btype topBoundType;
+    btype bottomBoundType;
     bool horizontalBoundInterpolate;
-    btype leftBoundType = DIRICHLET;
-    btype rightBoundType = DIRICHLET;
+    btype leftBoundType;
+    btype rightBoundType;
 
 };
 

@@ -3,6 +3,11 @@
 FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos):
 Array2D({0,0})
 {
+    topBoundType = DIRICHLET;
+    bottomBoundType = DIRICHLET;
+    leftBoundType = DIRICHLET;
+    rightBoundType = DIRICHLET;
+    
     double sizex = size[0], sizey = size[1];
     if (pos == VCENTRE)
     {
