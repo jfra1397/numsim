@@ -4,7 +4,6 @@
 #include <algorithm>
 
 
-
 Array2D::Array2D(std::array<int,2> size) :
   size_(size)
 {
@@ -54,4 +53,11 @@ double Array2D::get_min() const
     double min = *std::min_element(data_.begin(), data_.end());
 
     return min;
+}
+
+void Array2D::resize(std::array<int,2> size)
+{
+  size_=size;
+  // allocate data, initialize to 0
+  data_.resize(size_[0]*size_[1], 0.0);
 }

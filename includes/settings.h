@@ -7,6 +7,7 @@
 class Settings
 {
     private:
+    public:
 
     std::array<int,2> nCells;          //< number of cells in x and y direction
     std::array<double,2> physicalSize; //< physical size of the domain

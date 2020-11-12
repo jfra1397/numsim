@@ -31,6 +31,7 @@ set(SOURCES ../src/main.cpp
             ../src/settings.cpp
             ../src/field_variable.cpp
             ../src/array2d.cpp
+            ../src/staggered_grid.cpp
 
                         )
 

@@ -10,6 +10,7 @@
 class Array2D
 {
 public:
+  
   //! constructor
   Array2D(std::array<int,2> size);
 
@@ -28,8 +29,9 @@ public:
   //retunr minimum of array
   double get_min() const;
 
-private:
+protected:
 
   std::vector<double> data_;  //< storage array values, in row-major order
-  const std::array<int,2> size_;    //< width, height of the domain
+  std::array<int,2> size_;    //< width, height of the domain
+  void resize(std::array<int,2> size);
 };
