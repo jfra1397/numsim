@@ -45,23 +45,23 @@ class Settings
 
     std::array<int,2> nCells_;          //< number of cells in x and y direction
     std::array<double,2> physicalSize_; //< physical size of the domain
-    double re_ = 1000;                  //< reynolds number
-    double endTime_ = 10.0;             //< end time of the simulation
-    double tau_ = 0.5;                  //< safety factor for time step width
-    double maximumDt_ = 0.1;            //< maximum time step width
+    double re_;                  //< reynolds number
+    double endTime_;             //< end time of the simulation
+    double tau_;                  //< safety factor for time step width
+    double maximumDt_;            //< maximum time step width
 
-    std::array<double,2> g_ = {0., 0.};    //< external forces
+    std::array<double,2> g_;    //< external forces
 
-    bool useDonorCell_ = false;         //< if the donor cell scheme schould be used
-    double alpha_ = 0.5;                //< factor for donor-cell scheme
+    bool useDonorCell_;         //< if the donor cell scheme schould be used
+    double alpha_;                //< factor for donor-cell scheme
 
     std::array<double,2> dirichletBcBottom_;  //< prescribed values of u,v at bottom of domain
     std::array<double,2> dirichletBcTop_;     //< prescribed values of u,v at top of domain
     std::array<double,2> dirichletBcLeft_;    //< prescribed values of u,v at left of domain
     std::array<double,2> dirichletBcRight_;   //< prescribed values of u,v at right of domain
 
-    std::string pressureSolver_ = "SOR";      //< which pressure solver to use, "GaussSeidel" or "SOR"
-    double omega_ = 1.0;                //< overrelaxation factor
-    double epsilon_ = 1e-5;             //< tolerance for the residual in the pressure solver
-    int maximumNumberOfIterations_ = 1e5;    //< maximum number of iterations in the solver
+    std::string pressureSolver_;      //< which pressure solver to use, "GaussSeidel" or "SOR"
+    double omega_;                //< overrelaxation factor
+    double epsilon_;             //< tolerance for the residual in the pressure solver
+    int maximumNumberOfIterations_;    //< maximum number of iterations in the solver
 };
