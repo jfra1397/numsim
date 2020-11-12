@@ -19,8 +19,6 @@ Array2D SOR::compute_p(const std::shared_ptr<Discretization> discr)
     double hx = discr->meshWidth()[0];
     double hy = discr->meshWidth()[1];
 
-    double debug1, debg2, debug3;
-
     while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_)
     {
         norm_res = 0;
@@ -28,10 +26,6 @@ Array2D SOR::compute_p(const std::shared_ptr<Discretization> discr)
         {
             for (int j = 1; j < size[1] - 1; j++)
             {
-                debug1 = discr->rhs(i,j);
-                debg2 = discr->computeD2pDx2(i,j);
-                debug3 =  discr->computeD2pDy2(i,j);
-
                 temp_res = discr->rhs(i,j) - discr->computeD2pDx2(i,j) - discr->computeD2pDy2(i,j);
                 temp_p(i,j) = temp_p(i,j) - omega_/2 * hx * hx * hy * hy / (hx * hx + hy * hy) * temp_res;
                 norm_res += temp_res * temp_res;
