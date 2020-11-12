@@ -3,6 +3,10 @@ cmake_minimum_required (VERSION 2.6)
 # Project NAme
 project (numsim)
 
+# Set the version of the C++ standard to use, we use C++14, published in 2014
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Prefix paths
 #set(PATH /home/jfra/projects/simtech/numsim)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../lib)

@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     // values.u().print();
 
     std::array<int,2> size = {3,3};
+    size = [4,5]
     Array2D test(size);
     Array2D test2(size);
     test.print();
