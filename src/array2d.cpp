@@ -70,6 +70,11 @@ double Array2D::get_min() const
     return min;
 }
 
+double Array2D::get_abs_max() const
+{
+  return std::max(abs(get_min()), abs(get_max()));
+}
+
 void Array2D::resize(const std::array<int,2> size)
 {
   size_=size;
@@ -87,4 +92,10 @@ void Array2D::print() const
         }
         std::cout << std::endl;
     }
+}
+
+void Array2D::set_data(const Array2D &result)
+{
+  assert(size() == result.size());
+  data_ = result();
 }

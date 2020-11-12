@@ -22,6 +22,8 @@ class FieldVariable: public Array2D
 
     int set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);
     int set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h=0);
+
+    void operator= (const Array2D &data);
     
 
 

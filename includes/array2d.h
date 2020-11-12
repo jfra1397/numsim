@@ -17,6 +17,8 @@ public:
   //! get the size
   const std::array<int,2> size() const;
 
+  void set_data(const Array2D &data);
+
   const std::vector<double> operator()() const;
 
   //! access the value at coordinate (i,j), declared not const, i.e. the value can be changed
@@ -25,13 +27,15 @@ public:
   //! get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
   double operator()(int i, int j) const;
 
-  void operator= (const Array2D &data);
+  void operator= (const Array2D &result);
 
   //return maximum of array
   double get_max() const;
 
   //retunr minimum of array
   double get_min() const;
+
+  double get_abs_max() const;
 
   void print() const;
 

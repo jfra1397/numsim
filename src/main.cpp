@@ -1,65 +1,84 @@
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #include "../includes/settings.h"
 #include "../includes/field_variable.h"
 #include "../includes/staggered_grid.h"
 #include "../includes/array2d.h"
+#include "../includes/discretization.h"
+#include "../includes/central_differences.h"
+#include "../includes/donor_cell.h"
+#include "../includes/solver.h"
+#include "../includes/sor.h"
+#include "../includes/gauss_seidel.h"
+
+
+bool comp(double a, double b) {return (a<b);}
 
 int main(int argc, char *argv[])
 {
     //Pay attention corner interpolation!!!!
 
-
-    //Timesstamp!!!!
     Settings settings;
     if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
     else settings.loadFromFile(argv[1]);
     settings.printSettings();
 
-    // std::array<int,2> size = {3,3};
-    // FieldVariable test(size, VTOP);
-    // test.set_boundary_type(NEUMANN, NEUMANN, NEUMANN, NEUMANN);
-    // test.set_boundary(LEFT, 10, true, 2.0);
-    // test.print();
-    // std::cout << test.get_max() << ", " << test.get_min() << std::endl; 
+    std::shared_ptr<Discretization> discretization;
+    // create discretization
+    if (settings.useDonorCell())   // depending on a settings value
+    {
+        // create donor cell discretization
+        discretization = std::make_shared<DonorCell>(settings.nCells(), settings.physicalSize(), settings.alpha());
+    }
+    else
+    {
+        // create central differences
+        discretization = std::make_shared<CentralDifferences>(settings.nCells(), settings.physicalSize());
+    }
+    discretization->set_p().set_boundary_type(NEUMANN, NEUMANN, NEUMANN, NEUMANN);
+    std::shared_ptr<Solver> solver;
+    // create discretization
+    if (settings.pressureSolver() == "SOR")   // depending on a settings value
+    {
+        // create donor cell discretization
+        solver = std::make_shared<SOR>(settings.maximumNumberOfIterations(), settings.epsilon(), settings.omega());
+    }
+    else
+    {
+        // create central differences
+        solver = std::make_shared<GaussSeidel>(settings.maximumNumberOfIterations(), settings.epsilon());
+    }
+        
+    double t = 0;
+    while (t < settings.endTime())
+    {
 
-    StaggeredGrid values(settings.nCells());
-    // values.set_boundery_uv(settings.dirichletBcBottom, settings.dirichletBcRight, settings.dirichletBcTop, settings.dirichletBcLeft);
-    // values.set_boundery_fg(settings.dirichletBcBottom, settings.dirichletBcRight, settings.dirichletBcTop, settings.dirichletBcLeft);
-    // values.p.set_boundary_type(NEUMANN, NEUMANN, NEUMANN, NEUMANN);
-    // values.p.set_boundary(0,0,0,0);
+    
+        discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
 
-    // values.u.print();
-    // values.u().print();
-    // values.set_u(1,2) = 5;
-    // std::cout << values.u(1,2) << std::endl;
-    // values.u().print();
+        double dt = solver->compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discretization->meshWidth(), discretization->u(), discretization->v());
 
-    std::array<int,2> size = {3,3};
-    size = [4,5]
-    Array2D test(size);
-    Array2D test2(size);
-    test.print();
-    test2(1,1) = 5;
-    test2.print();
-    test = test2;
-    test.print();
-    test(0,0) = 10;
-    test.print();
-    test2.print();
+        discretization->set_f() = solver->compute_f(settings.re(), settings.g()[0], dt, discretization);
+        discretization->set_g() = solver->compute_g(settings.re(), settings.g()[1], dt, discretization);
 
+        discretization->set_boundary_fg(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        discretization->set_p().set_boundary(0,0,0,0);
 
+        discretization->set_rhs() = solver->compute_rhs(dt, discretization);
+
+        discretization->set_p() = solver->compute_p(discretization);
+
+        discretization->set_u() = solver->compute_u(dt, discretization);
+        discretization->set_v() = solver->compute_v(dt, discretization);
+
+        t += dt;
+
+    }
+
+    discretization->u().print();
+    discretization->v().print();
 
     return EXIT_SUCCESS;
 }
-
-
-/* compute
-{
-    for i ....
-        for j ....
-         f(i,j) = 1/re*dicret.central(u,i,j,1) + .......
-}
-
-*/

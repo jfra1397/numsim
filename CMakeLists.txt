@@ -36,6 +36,12 @@ set(SOURCES ../src/main.cpp
             ../src/field_variable.cpp
             ../src/array2d.cpp
             ../src/staggered_grid.cpp
+            ../src/discretization.cpp
+            ../src/central_differences.cpp
+            ../src/donor_cell.cpp
+            ../src/solver.cpp
+            ../src/gauss_seidel.cpp
+            ../src/sor.cpp
 
                         )
 

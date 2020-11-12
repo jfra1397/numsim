@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include "../includes/field_variable.h"
 
 FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos):
@@ -8,13 +10,13 @@ Array2D({0,0})
     leftBoundType = DIRICHLET;
     rightBoundType = DIRICHLET;
     
-    double sizex = size[0], sizey = size[1];
+    int sizex = size[0], sizey = size[1];
     if (pos == VCENTRE)
     {
         sizex += 2;
         sizey += 2;
         // allocate data, initialize to 0
-        resize(size);
+        resize({sizex, sizey});
         horizontalBoundInterpolate = true;
         verticalBoundInterpolate = true;
 
@@ -24,7 +26,7 @@ Array2D({0,0})
         sizex += 1;
         sizey += 2;
         // allocate data, initialize to 0
-        resize(size);
+        resize({sizex, sizey});
         horizontalBoundInterpolate = false;
         verticalBoundInterpolate = true;
 
@@ -34,7 +36,7 @@ Array2D({0,0})
         sizex += 2;
         sizey += 1;
         // allocate data, initialize to 0
-        resize(size);
+        resize({sizex, sizey});
         horizontalBoundInterpolate = true;
         verticalBoundInterpolate = false;
 
@@ -145,4 +147,10 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
 
     }
     return 0;
+}
+
+
+void FieldVariable::operator= (const Array2D &result)
+{
+    set_data(result);
 }

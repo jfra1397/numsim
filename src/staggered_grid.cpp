@@ -6,14 +6,14 @@ u_(size, VRIGHT), v_(size, VTOP), p_(size, VCENTRE), f_(size, VRIGHT), g_(size, 
 {}
 
 
-int StaggeredGrid::set_boundery_uv(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound)
+void StaggeredGrid::set_boundary_uv(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound)
 {
     set_u().set_boundary(bottomBound[0], rightBound[0], topBound[0], leftBound[0]);
     set_v().set_boundary(bottomBound[1], rightBound[1], topBound[1], leftBound[1]);
 
 }
 
-int StaggeredGrid::set_boundery_fg(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound)
+void StaggeredGrid::set_boundary_fg(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound)
 {
     set_f().set_boundary(bottomBound[0], rightBound[0], topBound[0], leftBound[0]);
     set_g().set_boundary(bottomBound[1], rightBound[1], topBound[1], leftBound[1]);

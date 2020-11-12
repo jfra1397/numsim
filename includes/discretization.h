@@ -50,9 +50,11 @@ class Discretization : public StaggeredGrid
 
     //! compute the 2nd derivative ∂^2 p / ∂y^2
     double computeD2pDy2(int i, int j) const;
+
+    const std::array<double,2> meshWidth() const;
     
 
-
+    private:
     std::array<int,2> nCells_;
     std::array<double,2> meshWidth_;
     std::array<double,2> physicalSize_;
