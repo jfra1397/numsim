@@ -3,7 +3,7 @@
 #include "../includes/central_differences.h"
 
 
-CentralDifferences::CentralDifferences(std::array<int,2> nCells, std::array<double,2> physicalSize):
+CentralDifferences::CentralDifferences(const std::array<int,2> nCells, const std::array<double,2> physicalSize):
 Discretization(nCells, physicalSize)
 {}
 

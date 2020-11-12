@@ -1,14 +1,13 @@
-#include <iostream>
-
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(std::array<int,2> size, vposition pos):
+FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos):
 Array2D({0,0})
 {
+    double sizex = size[0], sizey = size[1];
     if (pos == VCENTRE)
     {
-        size[0] += 2;
-        size[1] += 2;
+        sizex += 2;
+        sizey += 2;
         // allocate data, initialize to 0
         resize(size);
         horizontalBoundInterpolate = true;
@@ -17,8 +16,8 @@ Array2D({0,0})
     }
     else if (pos == VRIGHT)
     {
-        size[0] += 1;
-        size[1] += 2;
+        sizex += 1;
+        sizey += 2;
         // allocate data, initialize to 0
         resize(size);
         horizontalBoundInterpolate = false;
@@ -27,8 +26,8 @@ Array2D({0,0})
     }
     else if (pos == VTOP)
     {
-        size[0] += 2;
-        size[1] += 1;
+        sizex += 2;
+        sizey += 1;
         // allocate data, initialize to 0
         resize(size);
         horizontalBoundInterpolate = true;
@@ -141,17 +140,4 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
 
     }
     return 0;
-}
-
-
-void FieldVariable::print() const
-{
-    for(int j = size()[1] - 1; j>= 0 ;j--)
-    {
-        for (int i=0; i<size()[0]; i++)
-        {
-            std::cout << (*this)(i,j) << "  ";
-        }
-        std::cout << std::endl;
-    }
 }

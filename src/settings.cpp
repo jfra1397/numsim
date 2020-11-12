@@ -1,11 +1,29 @@
 #include <fstream>   // for file operations
 #include <iostream>  // for cout
-#include <algorithm>
+#include <algorithm> // forstr to int,double
 
 #include "../includes/settings.h"
 
 
-void Settings::loadFromFile(std::string filename)
+Settings::Settings()
+{
+    re_ = 1000;                  //< reynolds number
+    endTime_ = 10.0;             //< end time of the simulation
+    tau_ = 0.5;                  //< safety factor for time step width
+    maximumDt_ = 0.1;            //< maximum time step width
+
+    g_ = {0., 0.};    //< external forces
+
+    useDonorCell_ = false;         //< if the donor cell scheme schould be used
+    alpha_ = 0.5;                //< factor for donor-cell scheme
+
+    pressureSolver_ = "SOR";      //< which pressure solver to use, "GaussSeidel" or "SOR"
+    omega_ = 1.0;                //< overrelaxation factor
+    epsilon_ = 1e-5;             //< tolerance for the residual in the pressure solver
+    maximumNumberOfIterations_ = 1e5;    //< maximum number of iterations in the solver
+}
+
+void Settings::loadFromFile(const std::string filename)
 {
     // open file
     std::ifstream file(filename.c_str(), std::ios::in);
@@ -56,7 +74,7 @@ void Settings::loadFromFile(std::string filename)
         found = value.find_first_of("#");
         if (found!=std::string::npos) value = value.substr(0, found);
 
-        if (0 == assign_param(param, value)) std::cout << "assigned " << param << std::endl;
+        if (0 == assign_param_(param, value)) std::cout << "assigned " << param << std::endl;
         else std::cout << "Couldn't assign " << param << std::endl;
         
     }
@@ -65,50 +83,50 @@ void Settings::loadFromFile(std::string filename)
 }
 
 
-void Settings::printSettings()
+void Settings::printSettings() const
 {
     std::cout << "Settings: " << std::endl
-    //<< "  physicalSize: " << physicalSize[0] << " x " << physicalSize[1] << ", nCells: " << nCells[0] << " x " << nCells[1] << std::endl
-    << "  endTime: " << endTime << " s, re: " << re << ", g: (" << g[0] << "," << g[1] << "), tau: " << tau << ", maximum dt: " << maximumDt << std::endl
-    << "  dirichletBC: bottom: (" << dirichletBcBottom[0] << "," << dirichletBcBottom[1]  << ")"
-    << ", top: ("  << dirichletBcTop[0] << "," << dirichletBcTop[1]  << ")"
-    << ", left: ("  << dirichletBcLeft[0] << "," << dirichletBcLeft[1] << ")"
-    << ", right: ("  << dirichletBcRight[0] << "," << dirichletBcRight[1] << ")" << std::endl
-    << "  useDonorCell: " << std::boolalpha << useDonorCell << ", alpha: " << alpha << std::endl
-    << "  pressureSolver: " << pressureSolver << ", omega: " << omega << ", epsilon: " << epsilon << ", maximumNumberOfIterations: " << maximumNumberOfIterations << std::endl;
+    << "  physicalSize: " << physicalSize()[0] << " x " << physicalSize()[1] << ", nCells: " << nCells()[0] << " x " << nCells()[1] << std::endl
+    << "  endTime: " << endTime() << " s, re: " << re() << ", g: (" << g()[0] << "," << g()[1] << "), tau: " << tau() << ", maximum dt: " << maximumDt() << std::endl
+    << "  dirichletBC: bottom: (" << dirichletBcBottom()[0] << "," << dirichletBcBottom()[1]  << ")"
+    << ", top: ("  << dirichletBcTop()[0] << "," << dirichletBcTop()[1]  << ")"
+    << ", left: ("  << dirichletBcLeft()[0] << "," << dirichletBcLeft()[1] << ")"
+    << ", right: ("  << dirichletBcRight()[0] << "," << dirichletBcRight()[1] << ")" << std::endl
+    << "  useDonorCell: " << std::boolalpha << useDonorCell() << ", alpha: " << alpha() << std::endl
+    << "  pressureSolver: " << pressureSolver() << ", omega: " << omega() << ", epsilon: " << epsilon() << ", maximumNumberOfIterations: " << maximumNumberOfIterations() << std::endl;
 }
 
 
 
 
-int Settings::assign_param(std::string param, std::string value)
+int Settings::assign_param_(std::string param, std::string value)
 {
     try
     {
-        if (param == "physicalSizeX") physicalSize[0] = std::stod(value);
-        else if (param == "physicalSizeY") physicalSize[1] = std::stod(value);
-        else if (param == "endTime") endTime = std::stod(value);
-        else if (param == "re") re = std::stod(value);
-        else if (param == "gX") g[0] = std::stod(value);
-        else if (param == "gY") g[1] = std::stod(value);
-        else if (param == "dirichletBottomX") dirichletBcBottom[0] = std::stod(value);
-        else if (param == "dirichletBottomY") dirichletBcBottom[1] = std::stod(value);
-        else if (param == "dirichletTopX") dirichletBcTop[0] = std::stod(value);
-        else if (param == "dirichletTopY") dirichletBcTop[1] = std::stod(value);
-        else if (param == "dirichletLeftX") dirichletBcLeft[0] = std::stod(value);
-        else if (param == "dirichletLeftY") dirichletBcLeft[1] = std::stod(value);
-        else if (param == "dirichletRightX") dirichletBcRight[0] = std::stod(value);
-        else if (param == "dirichletRightY") dirichletBcRight[1] = std::stod(value);
-        else if (param == "nCellsX") nCells[0] = std::stoi(value);
-        else if (param == "nCellsY") nCells[1] = std::stoi(value);
-        else if (param == "useDonorCell") useDonorCell = value.compare("true") || value.compare("True");
-        else if (param == "alpha") alpha = std::stod(value);
-        else if (param == "tau") tau = std::stod(value);
-        else if (param == "maximumDt") maximumDt = std::stod(value);
-        else if (param == "pressureSolver") pressureSolver = value;
-        else if (param == "omega") omega = std::stod(value);
-        else if (param == "epsilon") epsilon = std::stod(value);
-        else if (param == "maximumNumberOfIterations") maximumNumberOfIterations = (int) std::stod(value);
+        if (param == "physicalSizeX") physicalSize_[0] = std::stod(value);
+        else if (param == "physicalSizeY") physicalSize_[1] = std::stod(value);
+        else if (param == "endTime") endTime_ = std::stod(value);
+        else if (param == "re") re_ = std::stod(value);
+        else if (param == "gX") g_[0] = std::stod(value);
+        else if (param == "gY") g_[1] = std::stod(value);
+        else if (param == "dirichletBottomX") dirichletBcBottom_[0] = std::stod(value);
+        else if (param == "dirichletBottomY") dirichletBcBottom_[1] = std::stod(value);
+        else if (param == "dirichletTopX") dirichletBcTop_[0] = std::stod(value);
+        else if (param == "dirichletTopY") dirichletBcTop_[1] = std::stod(value);
+        else if (param == "dirichletLeftX") dirichletBcLeft_[0] = std::stod(value);
+        else if (param == "dirichletLeftY") dirichletBcLeft_[1] = std::stod(value);
+        else if (param == "dirichletRightX") dirichletBcRight_[0] = std::stod(value);
+        else if (param == "dirichletRightY") dirichletBcRight_[1] = std::stod(value);
+        else if (param == "nCellsX") nCells_[0] = std::stoi(value);
+        else if (param == "nCellsY") nCells_[1] = std::stoi(value);
+        else if (param == "useDonorCell") useDonorCell_ = value.compare("true") || value.compare("True");
+        else if (param == "alpha") alpha_ = std::stod(value);
+        else if (param == "tau") tau_ = std::stod(value);
+        else if (param == "maximumDt") maximumDt_ = std::stod(value);
+        else if (param == "pressureSolver") pressureSolver_ = value;
+        else if (param == "omega") omega_ = std::stod(value);
+        else if (param == "epsilon") epsilon_ = std::stod(value);
+        else if (param == "maximumNumberOfIterations") maximumNumberOfIterations_ = (int) std::stod(value);
         
 
 
@@ -122,3 +140,38 @@ int Settings::assign_param(std::string param, std::string value)
 
     return 0;
 }
+
+//< return number of cells in x and y direction
+const std::array<int,2> Settings::nCells() const {return nCells_;}
+//< return physical size of the domain     
+const std::array<double,2> Settings::physicalSize() const {return physicalSize_;}
+//< return reynolds number
+double Settings::re() const {return re_;}
+//< return end time of the simulation
+double Settings::endTime() const {return endTime_;}
+//< return safety factor for time step width          
+double Settings::tau() const {return tau_;}
+//< return maximum time step width
+double Settings::maximumDt() const {return maximumDt_;}            
+//< return external forces
+const std::array<double,2> Settings::g() const {return g_;}    
+//< return if the donor cell scheme schould be used
+bool Settings::useDonorCell() const {return useDonorCell_;}
+//< return factor for donor-cell scheme
+double Settings::alpha() const {return alpha_;}                
+//< returnprescribed values of u,v at bottom of domain
+const std::array<double,2> Settings::dirichletBcBottom() const {return dirichletBcBottom_;}
+//< return prescribed values of u,v at top of domain
+const std::array<double,2> Settings::dirichletBcTop() const {return dirichletBcTop_;}
+//< return prescribed values of u,v at left of domain
+const std::array<double,2> Settings::dirichletBcLeft() const {return dirichletBcLeft_;}
+//< return prescribed values of u,v at right of domain
+const std::array<double,2> Settings::dirichletBcRight() const {return dirichletBcRight_;}
+//< return which pressure solver to use, "GaussSeidel" or "SOR"
+const std::string Settings::pressureSolver() const {return pressureSolver_;} 
+//< return overrelaxation factor
+double Settings::omega() const {return omega_;}
+//< return tolerance for the residual in the pressure solver
+double Settings::epsilon() const {return epsilon_;}
+//< return maximum number of iterations in the solver
+int Settings::maximumNumberOfIterations() const {return maximumNumberOfIterations_;}    

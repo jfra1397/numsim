@@ -2,12 +2,11 @@
 
 #include "discretization.h"
 
-class CentralDifferences : public Discretization
+class DonorCell : public Discretization
 {
     public:
-
     //! use the constructor of the base class
-    CentralDifferences(const std::array<int,2> nCells, const std::array<double,2> physicalSize);
+    DonorCell(const std::array<int,2> nCells, const std::array<double,2> physicalSize, double alpha);
 
     //! compute the 1st derivative ∂ u^2 / ∂x
     virtual double computeDu2Dx(int i, int j) const;
@@ -20,4 +19,7 @@ class CentralDifferences : public Discretization
 
     //! compute the 1st derivative ∂ (uv) / ∂y
     virtual double computeDuvDy(int i, int j) const;
+
+    private:
+    double alpha_;
 };

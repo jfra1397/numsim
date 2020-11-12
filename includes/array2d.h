@@ -15,7 +15,9 @@ public:
   Array2D(std::array<int,2> size);
 
   //! get the size
-  std::array<int,2> size() const;
+  const std::array<int,2> size() const;
+
+  const std::vector<double> operator()() const;
 
   //! access the value at coordinate (i,j), declared not const, i.e. the value can be changed
   double &operator()(int i, int j);
@@ -23,15 +25,20 @@ public:
   //! get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
   double operator()(int i, int j) const;
 
+  void operator= (const Array2D &data);
+
   //return maximum of array
   double get_max() const;
 
   //retunr minimum of array
   double get_min() const;
 
-protected:
+  void print() const;
 
+protected:
+  void resize(const std::array<int,2> size);
+
+private:
   std::vector<double> data_;  //< storage array values, in row-major order
   std::array<int,2> size_;    //< width, height of the domain
-  void resize(std::array<int,2> size);
 };

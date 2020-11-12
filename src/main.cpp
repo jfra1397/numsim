@@ -4,6 +4,7 @@
 #include "../includes/settings.h"
 #include "../includes/field_variable.h"
 #include "../includes/staggered_grid.h"
+#include "../includes/array2d.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,14 +24,28 @@ int main(int argc, char *argv[])
     // test.print();
     // std::cout << test.get_max() << ", " << test.get_min() << std::endl; 
 
-    StaggeredGrid values(settings.nCells);
-    values.set_boundery_uv(settings.dirichletBcBottom, settings.dirichletBcRight, settings.dirichletBcTop, settings.dirichletBcLeft);
-    values.set_boundery_fg(settings.dirichletBcBottom, settings.dirichletBcRight, settings.dirichletBcTop, settings.dirichletBcLeft);
-    values.p.set_boundary_type(NEUMANN, NEUMANN, NEUMANN, NEUMANN);
-    values.p.set_boundary(0,0,0,0);
+    StaggeredGrid values(settings.nCells());
+    // values.set_boundery_uv(settings.dirichletBcBottom, settings.dirichletBcRight, settings.dirichletBcTop, settings.dirichletBcLeft);
+    // values.set_boundery_fg(settings.dirichletBcBottom, settings.dirichletBcRight, settings.dirichletBcTop, settings.dirichletBcLeft);
+    // values.p.set_boundary_type(NEUMANN, NEUMANN, NEUMANN, NEUMANN);
+    // values.p.set_boundary(0,0,0,0);
 
-    values.u.print();
+    // values.u.print();
+    // values.u().print();
+    // values.set_u(1,2) = 5;
+    // std::cout << values.u(1,2) << std::endl;
+    // values.u().print();
 
+    Array2D test({3,3});
+    Array2D test2({4,3});
+    test.print();
+    test2(1,1) = 5;
+    test2.print();
+    test = test2;
+    test.print();
+    test(0,0) = 10;
+    test.print();
+    test2.print();
 
 
 

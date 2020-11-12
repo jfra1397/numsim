@@ -1,7 +1,7 @@
 #include "../includes/discretization.h"
 
 
-Discretization::Discretization(std::array<int,2> nCells, std::array<double,2> physicalSize):
+Discretization::Discretization(const std::array<int,2> nCells, const std::array<double,2> physicalSize):
 StaggeredGrid(nCells)
 {
     physicalSize_ = physicalSize;
@@ -63,7 +63,7 @@ double Discretization::computeDpDx(int i, int j) const
 //! compute the 1st derivative ∂ p / ∂y
 double Discretization::computeDpDy(int i, int j) const
 {
-    double result = (p(i,j+1)-p(i,j))/meshWidth_[1];
+    double result = (p(i,j+1) - p(i,j))/meshWidth_[1];
     return result;
 }
 
