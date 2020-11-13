@@ -11,8 +11,8 @@ GaussSeidel::GaussSeidel(int maximumNumberOfIterations, double epsilon)
 Array2D GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
 {
     std::array<int,2> size = discr->p().size();
-    Array2D temp_p(size);
-    temp_p = discr->p();
+    //Array2D temp_p(size);
+    //temp_p = discr->p();
     double temp_res, norm_res = 2*epsilon_;
     int iter = 0;
     double hx = discr->meshWidth()[0];
@@ -27,7 +27,7 @@ Array2D GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
             {
 
                 temp_res = discr->rhs(i,j) - discr->computeD2pDx2(i,j) - discr->computeD2pDy2(i,j);
-                temp_p(i,j) = temp_p(i,j) - 1/2 * hx * hx * hy * hy / (hx * hx + hy * hy) * temp_res;
+                discr->set_p(i,j) = discr->p(i,j) - 1/2 * hx * hx * hy * hy / (hx * hx + hy * hy) * temp_res;
                 norm_res += temp_res * temp_res;
             }
         }
@@ -36,6 +36,6 @@ Array2D GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
 
     }
 
-    return temp_p;
+    return discr->p();
 
 }

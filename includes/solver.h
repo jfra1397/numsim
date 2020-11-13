@@ -15,6 +15,7 @@ class Solver
     Array2D compute_rhs(double dt, const std::shared_ptr<Discretization> discretization);
     Array2D compute_u(double dt, const std::shared_ptr<Discretization> discretization);
     Array2D compute_v(double dt, const std::shared_ptr<Discretization> discretization);
+    double compute_res();
 
     private:
     bool comp(double a, double b) 

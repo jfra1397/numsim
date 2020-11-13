@@ -76,7 +76,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
         }
         else if (topBoundType == NEUMANN)
         {
-            (*this)(i,j) = topBound*h - (*this)(i,j-1);
+            (*this)(i,j) = topBound*h + (*this)(i,j-1);
         }
 
     }
@@ -98,7 +98,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
         }
         else if (bottomBoundType == NEUMANN)
         {
-            (*this)(i,j) = bottomBound*h - (*this)(i,j+1);
+            (*this)(i,j) = bottomBound*h + (*this)(i,j+1);
         }
 
     }
@@ -120,7 +120,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
         }
         else if (leftBoundType == NEUMANN)
         {
-            (*this)(i,j) = leftBound*h - (*this)(i+1,j);
+            (*this)(i,j) = leftBound*h + (*this)(i+1,j);
         }
 
     }
@@ -142,7 +142,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
         }
         else if (rightBoundType == NEUMANN)
         {
-            (*this)(i,j) = rightBound*h - (*this)(i-1,j);
+            (*this)(i,j) = rightBound*h + (*this)(i-1,j);
         }
 
     }
