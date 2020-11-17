@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fstream>
+
 #include "array2d.h"
 
 enum vposition
@@ -24,6 +26,10 @@ class FieldVariable: public Array2D
     int set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h=0);
 
     void operator= (const Array2D &data);
+
+    void wirte_to_file(std::string fileName, std::string name, bool append = false) const;
+
+    double interpolateAt(double x, double y) const;
     
 
 
@@ -35,6 +41,8 @@ class FieldVariable: public Array2D
     bool horizontalBoundInterpolate;
     btype leftBoundType;
     btype rightBoundType;
+    vposition pos_;
+
 
 };
 

@@ -1,3 +1,8 @@
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <fstream>
+
 #include "../includes/discretization.h"
 
 
@@ -84,4 +89,37 @@ double Discretization::computeD2pDy2(int i, int j) const
 const std::array<double,2> Discretization::meshWidth() const
 {
     return meshWidth_;
+}
+
+const std::array<int,2> Discretization::nCells() const
+{
+    return nCells_;
+}
+
+
+void Discretization::write_to_file(int fileNo, double time) const
+{
+    // create "out" subdirectory if it does not yet exist
+    int returnValue = system("mkdir -p out");
+    if (returnValue != 0) std::cout << "Could not create subdirectory \"out\"." << std::endl;
+
+    // Assemble the filename
+    std::stringstream fileName;
+    fileName << "out/output_" << std::setw(4) << std::setfill('0') << fileNo << ".txt";
+
+    //std::cout << "Write file \"" << fileName.str() << "\"." << std::endl;
+
+    std::ofstream myfile;
+    myfile.open(fileName.str());
+    myfile << "t: " << time << std::endl;
+    myfile << "nCells: " << nCells_[0] << "x" << nCells_[1] << ", dx: " << meshWidth()[0] << ", dx: " << meshWidth()[1] <<std::endl;
+    myfile.close();
+    
+    u().wirte_to_file(fileName.str(), "u", true);
+    v().wirte_to_file(fileName.str(), "v", true);
+    p().wirte_to_file(fileName.str(), "p", true);
+    f().wirte_to_file(fileName.str(), "f", true);
+    g().wirte_to_file(fileName.str(), "g", true);
+    rhs().wirte_to_file(fileName.str(), "rhs", true);
+
 }

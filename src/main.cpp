@@ -49,16 +49,10 @@ int main(int argc, char *argv[])
     {
         // create central differences
         solver = std::make_shared<GaussSeidel>(settings.maximumNumberOfIterations(), settings.epsilon());
-    }
-    for (int ii=0;ii<discretization->p().size()[0];ii++)
-    {
-        for (int jj=0;jj<discretization->p().size()[1];jj++)
-        {
-            discretization->set_p(ii,jj) = 0;
-        }
     }    
     
     double t = 0;
+    int fileNo = 0;
     while (t < settings.endTime())
     {
 
@@ -75,33 +69,20 @@ int main(int argc, char *argv[])
 
         discretization->set_rhs() = solver->compute_rhs(dt, discretization);
         
-        discretization->set_p().set_boundary(0,0,0,0);
-        discretization->set_p() = solver->compute_p(discretization);
-        discretization->set_p().set_boundary(0,0,0,0);
+        discretization->set_p()= solver->compute_p(discretization);
 
         discretization->set_u() = solver->compute_u(dt, discretization);
         discretization->set_v() = solver->compute_v(dt, discretization);
 
-        std::cout << 'f' << std::endl;
-        discretization->f().print();
-        std::cout << 'g' << std::endl;
-        discretization->g().print();
-        std::cout << "rhs" << std::endl;
-        discretization->rhs().print();
-        std::cout << 'p' << std::endl;
-        discretization->p().print();
-        std::cout << 'u' << std::endl;
-        discretization->u().print();
-        std::cout << 'v' << std::endl;
-        discretization->v().print();
 
 
         t += dt;
+        discretization->write_to_file(fileNo++, t);
+        
 
     }
 
-    discretization->u().print();
-    discretization->v().print();
+
 
     return EXIT_SUCCESS;
 }

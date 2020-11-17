@@ -1,6 +1,7 @@
 #include <cassert>
 #include <algorithm>
 #include <iostream>
+#include <math.h>
 
 #include "../includes/array2d.h"
 
@@ -72,7 +73,7 @@ double Array2D::get_min() const
 
 double Array2D::get_abs_max() const
 {
-  return std::max(abs(get_min()), abs(get_max()));
+  return std::max(fabs(get_min()), fabs(get_max()));
 }
 
 void Array2D::resize(const std::array<int,2> size)

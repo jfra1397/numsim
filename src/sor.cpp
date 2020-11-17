@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 
 #include "../includes/sor.h"
 
@@ -18,23 +19,29 @@ Array2D SOR::compute_p(const std::shared_ptr<Discretization> discr)
     int iter = 0;
     double hx = discr->meshWidth()[0];
     double hy = discr->meshWidth()[1];
+    double factor =  hx * hx * hy * hy / (2.0*(hx * hx + hy * hy));
 
     while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_*epsilon_)
     {
+        discr->set_p().set_boundary(0,0,0,0);
         norm_res = 0;
-        for (int i = 1; i < size[0] - 1; i++)
+        for (int j = 1 ; j < size[1] - 1; j++)
         {
-            for (int j = 1; j < size[1] - 1; j++)
+            for (int i = 1; i < size[0] - 1; i++)
             {
-                temp_res = omega_ * (discr->rhs(i,j) - discr->computeD2pDx2(i,j) - discr->computeD2pDy2(i,j)) * hx * hx * hy * hy / (2*(hx * hx + hy * hy));
-                discr->set_p(i,j) = discr->p(i,j) - temp_res;
-                norm_res += temp_res * temp_res;
+                double debug1 = discr->computeD2pDx2(i,j) + discr->computeD2pDy2(i,j);
+                double debug2 = discr->rhs(i,j);
+                temp_res =  debug1 - debug2;
+                discr->set_p(i,j) = discr->p(i,j) + (omega_ * factor * temp_res);
+                norm_res = norm_res + (temp_res * temp_res);
             }
         }
-        norm_res = norm_res/((size[0] - 2) * (size[1] - 2));
+        
+        //nCells of discretization!!!!
+        norm_res = norm_res/((discr->nCells()[0]) * (discr->nCells()[1]));
         iter += 1;
-
     }
+    std::cout << iter << std::endl;
 
     return discr->p();
 

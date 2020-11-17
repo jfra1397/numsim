@@ -52,6 +52,10 @@ class Discretization : public StaggeredGrid
     double computeD2pDy2(int i, int j) const;
 
     const std::array<double,2> meshWidth() const;
+
+    const std::array<int,2> nCells() const;
+
+    void write_to_file(int fileNo, double time) const;
     
 
     private:
