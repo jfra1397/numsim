@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
 
 #include "../includes/discretization.h"
 
@@ -115,11 +116,11 @@ void Discretization::write_to_file(int fileNo, double time) const
     myfile << "nCells: " << nCells_[0] << "x" << nCells_[1] << ", dx: " << meshWidth()[0] << ", dx: " << meshWidth()[1] <<std::endl;
     myfile.close();
     
-    u().wirte_to_file(fileName.str(), "u", true);
-    v().wirte_to_file(fileName.str(), "v", true);
-    p().wirte_to_file(fileName.str(), "p", true);
-    f().wirte_to_file(fileName.str(), "f", true);
-    g().wirte_to_file(fileName.str(), "g", true);
-    rhs().wirte_to_file(fileName.str(), "rhs", true);
+    u().write_to_file(fileName.str(), "u", true);
+    v().write_to_file(fileName.str(), "v", true);
+    p().write_to_file(fileName.str(), "p", true);
+    f().write_to_file(fileName.str(), "f", true);
+    g().write_to_file(fileName.str(), "g", true);
+    rhs().write_to_file(fileName.str(), "rhs", true);
 
 }

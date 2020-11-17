@@ -4,7 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos, const std::array<int,2> physicalSize):
+FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos, const std::array<double,2> physicalSize):
 Array2D({0,0})
 {
     pos_ = pos;
@@ -13,7 +13,8 @@ Array2D({0,0})
     leftBoundType = DIRICHLET;
     rightBoundType = DIRICHLET;
     
-    int meshx = physicalSize[0]/(double) size[0], meshy = physicalSize[1]/(double) size[1];
+    meshx = physicalSize[0]/(double) size[0];
+    meshy = physicalSize[1]/(double) size[1];
     int sizex = size[0], sizey = size[1];
     if (pos == VCENTRE)
     {
@@ -160,7 +161,7 @@ void FieldVariable::operator= (const Array2D &result)
 }
 
 
-void FieldVariable::wirte_to_file(std::string fileName, std::string name, bool append) const
+void FieldVariable::write_to_file(std::string fileName, std::string name, bool append) const
 {
     std::ofstream myfile;
 

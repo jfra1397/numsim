@@ -51,13 +51,13 @@ int main(int argc, char *argv[])
         solver = std::make_shared<GaussSeidel>(settings.maximumNumberOfIterations(), settings.epsilon());
     }    
     
+    
     double t = 0;
-    int fileNo = 0;
+    int fileNo = 1;
+
+    discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
     while (t < settings.endTime())
     {
-
-    
-        discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
 
         double dt = solver->compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discretization->meshWidth(), discretization->u(), discretization->v());
         if (t + dt > settings.endTime()) dt = settings.endTime()-t;
@@ -74,12 +74,10 @@ int main(int argc, char *argv[])
         discretization->set_u() = solver->compute_u(dt, discretization);
         discretization->set_v() = solver->compute_v(dt, discretization);
 
-
-
+        discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
         t += dt;
         discretization->write_to_file(fileNo++, t);
         
-
     }
 
 

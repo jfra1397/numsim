@@ -7,7 +7,7 @@
 class StaggeredGrid
 {
     public:
-    StaggeredGrid(const std::array<int,2> size);
+    StaggeredGrid(const std::array<int,2> size,const std::array<double,2> physicalSize);
     
 
     void set_boundary_uv(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound);
