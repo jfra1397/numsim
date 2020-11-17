@@ -4,7 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos):
+FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos, const std::array<int,2> physicalSize):
 Array2D({0,0})
 {
     pos_ = pos;
@@ -13,6 +13,7 @@ Array2D({0,0})
     leftBoundType = DIRICHLET;
     rightBoundType = DIRICHLET;
     
+    int meshx = physicalSize[0]/(double) size[0], meshy = physicalSize[1]/(double) size[1];
     int sizex = size[0], sizey = size[1];
     if (pos == VCENTRE)
     {
@@ -209,34 +210,33 @@ void FieldVariable::wirte_to_file(std::string fileName, std::string name, bool a
 
 double FieldVariable::interpolateAt(double x, double y) const
 {
-    double meshX, meshY;
 
     double verticalOffset = 0, horizontalOffset = 0;
 
     if(pos_ == VCENTRE)
     {
-        horizontalOffset = meshX/2;
-        verticalOffset = meshY/2;
+        horizontalOffset = meshx/2;
+        verticalOffset = meshy/2;
     }
-    else if (pos_ == VRIGHT) verticalOffset = meshY/2;
-    else if (pos_ == VTOP) horizontalOffset = meshX/2;
+    else if (pos_ == VRIGHT) verticalOffset = meshy/2;
+    else if (pos_ == VTOP) horizontalOffset = meshx/2;
 
-    int i = (x+horizontalOffset)/meshX;
-    int j = (y+verticalOffset)/meshY;
-    double xLeft = i*meshX - horizontalOffset;
-    double xRight = (i+1)*meshX - horizontalOffset;
-    double yUp = j*meshY - verticalOffset;
-    double yDown = j*meshY - verticalOffset;
+    int i = (x+horizontalOffset)/meshx;
+    int j = (y+verticalOffset)/meshy;
+    double xLeft = i*meshx - horizontalOffset;
+    double xRight = (i+1)*meshx - horizontalOffset;
+    double yUp = j*meshy - verticalOffset;
+    double yDown = j*meshy - verticalOffset;
 
-    double DownLeft = (*this)(i,j);
-    double DownRight = (*this)(i+1,j);
-    double UpLeft = (*this)(i,j+1);
-    double UpRight = (*this)(i+1,j+1);
+    double downLeft = (*this)(i,j);
+    double downRight = (*this)(i+1,j);
+    double upLeft = (*this)(i,j+1);
+    double upRight = (*this)(i+1,j+1);
 
-    double DownMid = DownLeft + (DownRight-DownLeft)/(xRight-xLeft) * (x-xLeft);
-    double UpMid = UpLeft + (UpRight-UpLeft)/(xRight-xLeft) * (x-xLeft);
+    double downMid = downLeft + (downRight-downLeft)/(xRight-xLeft) * (x-xLeft);
+    double upMid = upLeft + (upRight-upLeft)/(xRight-xLeft) * (x-xLeft);
 
-    double Mid = DownMid+ (UpMid - DownMid)/(yUp-yDown) * (y-yDown);
+    double mid = downMid+ (upMid - downMid)/(yUp-yDown) * (y-yDown);
 
-    return Mid;
+    return mid;
 }

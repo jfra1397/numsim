@@ -25,13 +25,12 @@ Array2D SOR::compute_p(const std::shared_ptr<Discretization> discr)
     {
         discr->set_p().set_boundary(0,0,0,0);
         norm_res = 0;
+        //maybe change i and j, see GS)?!
         for (int j = 1 ; j < size[1] - 1; j++)
         {
             for (int i = 1; i < size[0] - 1; i++)
             {
-                double debug1 = discr->computeD2pDx2(i,j) + discr->computeD2pDy2(i,j);
-                double debug2 = discr->rhs(i,j);
-                temp_res =  debug1 - debug2;
+                temp_res =  discr->computeD2pDx2(i,j) + discr->computeD2pDy2(i,j)-discr->rhs(i,j);
                 discr->set_p(i,j) = discr->p(i,j) + (omega_ * factor * temp_res);
                 norm_res = norm_res + (temp_res * temp_res);
             }

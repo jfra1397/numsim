@@ -1,8 +1,8 @@
 #include "../includes/staggered_grid.h"
 
 
-StaggeredGrid::StaggeredGrid(const std::array<int,2> size):
-u_(size, VRIGHT), v_(size, VTOP), p_(size, VCENTRE), f_(size, VRIGHT), g_(size, VTOP), rhs_(size, VCENTRE)
+StaggeredGrid::StaggeredGrid(const std::array<int,2> size,const std::array<int,2> physicalSize)):
+u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize)
 {}
 
 

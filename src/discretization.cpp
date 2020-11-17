@@ -7,7 +7,7 @@
 
 
 Discretization::Discretization(const std::array<int,2> nCells, const std::array<double,2> physicalSize):
-StaggeredGrid(nCells)
+StaggeredGrid(nCells,physicalSize)
 {
     physicalSize_ = physicalSize;
     meshWidth_[0] = physicalSize[0]/(double) nCells[0];
