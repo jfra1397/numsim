@@ -1,0 +1,5 @@
+/home/jfra/projects/simtech/numsim/VTK/Geovis/Core/vtkCompassRepresentation.h;vtkGeovisCore
+/home/jfra/projects/simtech/numsim/VTK/Geovis/Core/vtkCompassWidget.h;vtkGeovisCore
+/home/jfra/projects/simtech/numsim/VTK/Geovis/Core/vtkGeoProjection.h;vtkGeovisCore
+/home/jfra/projects/simtech/numsim/VTK/Geovis/Core/vtkGeoTransform.h;vtkGeovisCore
+/home/jfra/projects/simtech/numsim/VTK-build/Geovis/Core/vtkGeovisCoreModule.h;vtkGeovisCore
