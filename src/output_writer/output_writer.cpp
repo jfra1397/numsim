@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #include "../../includes/output_writer.h"
-=======
-#include "../../includes/output_writer/output_writer.h"
->>>>>>> 70f4e5d8be137a8cdb61ea078c3c5e32bde03592
 
 #include <iostream>
 
