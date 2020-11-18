@@ -43,6 +43,14 @@
         "ctime": "cpp",
         "complex": "cpp",
         "cinttypes": "cpp",
-        "iomanip": "cpp"
-    }
+        "iomanip": "cpp",
+        "bit": "cpp",
+        "map": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "cfenv": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }

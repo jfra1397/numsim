@@ -23,8 +23,8 @@ Array2D SOR::compute_p(const std::shared_ptr<Discretization> discr)
 
     while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_*epsilon_)
     {
-        discr->set_p().set_boundary(0,0,0,0);
         norm_res = 0;
+        discr->set_p().set_boundary(0,0,0,0);
         for (int i = 1 ; i < size[0] - 1; i++)
         {
             for (int j = 1; j < size[1] - 1; j++)
@@ -40,6 +40,8 @@ Array2D SOR::compute_p(const std::shared_ptr<Discretization> discr)
         iter += 1;
     }
     //std::cout << iter << std::endl;
+
+    discr->set_p().set_boundary(0,0,0,0);
 
     return discr->p();
 

@@ -13,10 +13,36 @@ void StaggeredGrid::set_boundary_uv(const std::array<double,2> bottomBound, cons
 
 }
 
-void StaggeredGrid::set_boundary_fg(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound)
+void StaggeredGrid::set_boundary_fg(const FieldVariable u, const FieldVariable v)
 {
-    set_f().set_boundary(bottomBound[0], rightBound[0], topBound[0], leftBound[0]);
-    set_g().set_boundary(bottomBound[1], rightBound[1], topBound[1], leftBound[1]);
+    // set_f().set_boundary(bottomBound[0], rightBound[0], topBound[0], leftBound[0]);
+    // set_g().set_boundary(bottomBound[1], rightBound[1], topBound[1], leftBound[1]);
+
+    int iumax = u.size()[0], ivmax = v.size()[0], jumax = u.size()[1], jvmax = v.size()[1];
+    int i,j;
+    for(i=0;i<iumax;i++)
+    {
+        set_f(i,0) = u(i,0);
+        set_f(i,jumax - 1) = u(i,jumax - 1);
+    }
+    for (i=0;i<ivmax;i++)
+    {
+        set_g(i,0) = v(i,0);
+        set_g(i,jvmax - 1) = v(i,jvmax - 1);
+    }
+    for(j=1;j<jumax-1;j++)
+    {
+        set_f(0,j) = u(0,j);
+        set_f(iumax-1,j) = u(iumax - 1,j);
+    }
+    for (j=0;j<jvmax;j++)
+    {
+        set_g(0,j) = v(0,j);
+        set_g(ivmax - 1,j) = v(ivmax - 1,j);
+    }
+
+
+
 
 }
 

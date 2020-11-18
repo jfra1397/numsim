@@ -8,13 +8,13 @@ FieldVariable::FieldVariable(const std::array<int,2> size, vposition pos, const 
 Array2D({0,0})
 {
     pos_ = pos;
-    topBoundType = DIRICHLET;
-    bottomBoundType = DIRICHLET;
-    leftBoundType = DIRICHLET;
-    rightBoundType = DIRICHLET;
+    topBoundType_ = DIRICHLET;
+    bottomBoundType_ = DIRICHLET;
+    leftBoundType_ = DIRICHLET;
+    rightBoundType_ = DIRICHLET;
     
-    meshx = physicalSize[0]/(double) size[0];
-    meshy = physicalSize[1]/(double) size[1];
+    meshx_ = physicalSize[0]/(double) size[0];
+    meshy_ = physicalSize[1]/(double) size[1];
     int sizex = size[0], sizey = size[1];
     if (pos == VCENTRE)
     {
@@ -22,8 +22,8 @@ Array2D({0,0})
         sizey += 2;
         // allocate data, initialize to 0
         resize({sizex, sizey});
-        horizontalBoundInterpolate = true;
-        verticalBoundInterpolate = true;
+        horizontalBoundInterpolate_ = true;
+        verticalBoundInterpolate_ = true;
 
     }
     else if (pos == VRIGHT)
@@ -32,8 +32,8 @@ Array2D({0,0})
         sizey += 2;
         // allocate data, initialize to 0
         resize({sizex, sizey});
-        horizontalBoundInterpolate = false;
-        verticalBoundInterpolate = true;
+        horizontalBoundInterpolate_ = false;
+        verticalBoundInterpolate_ = true;
 
     }
     else if (pos == VTOP)
@@ -42,8 +42,8 @@ Array2D({0,0})
         sizey += 1;
         // allocate data, initialize to 0
         resize({sizex, sizey});
-        horizontalBoundInterpolate = true;
-        verticalBoundInterpolate = false;
+        horizontalBoundInterpolate_ = true;
+        verticalBoundInterpolate_ = false;
 
     }
 }
@@ -52,10 +52,10 @@ Array2D({0,0})
 
 int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
 {
-    topBoundType = top;
-    bottomBoundType = bottom;
-    leftBoundType = left;
-    rightBoundType = right;
+    topBoundType_ = top;
+    bottomBoundType_ = bottom;
+    leftBoundType_ = left;
+    rightBoundType_ = right;
 
     return 0;
 }
@@ -66,9 +66,9 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
     j = size()[1] - 1;
     for (i = 1; i < size()[0]-1; i++)
     {
-        if (topBoundType == DIRICHLET)
+        if (topBoundType_ == DIRICHLET)
         {
-            if (verticalBoundInterpolate)
+            if (verticalBoundInterpolate_)
             {
                 (*this)(i,j) = 2*topBound - (*this)(i,j-1);
             }
@@ -79,7 +79,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
             
 
         }
-        else if (topBoundType == NEUMANN)
+        else if (topBoundType_ == NEUMANN)
         {
             (*this)(i,j) = topBound*h + (*this)(i,j-1);
         }
@@ -88,9 +88,9 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
     j = 0;
     for (i = 1; i < size()[0]-1; i++)
     {
-        if (bottomBoundType == DIRICHLET)
+        if (bottomBoundType_ == DIRICHLET)
         {
-            if (verticalBoundInterpolate)
+            if (verticalBoundInterpolate_)
             {
                 (*this)(i,j) = 2*bottomBound - (*this)(i,j+1);
             }
@@ -101,7 +101,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
             
 
         }
-        else if (bottomBoundType == NEUMANN)
+        else if (bottomBoundType_ == NEUMANN)
         {
             (*this)(i,j) = bottomBound*h + (*this)(i,j+1);
         }
@@ -110,9 +110,9 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
     i = 0;
     for (j = 0; j < size()[1]; j++)
     {
-        if (leftBoundType == DIRICHLET)
+        if (leftBoundType_ == DIRICHLET)
         {
-            if (horizontalBoundInterpolate)
+            if (horizontalBoundInterpolate_)
             {
                 (*this)(i,j) = 2*leftBound - (*this)(i+1,j);
             }
@@ -123,7 +123,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
             
 
         }
-        else if (leftBoundType == NEUMANN)
+        else if (leftBoundType_ == NEUMANN)
         {
             (*this)(i,j) = leftBound*h + (*this)(i+1,j);
         }
@@ -132,9 +132,9 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
     i = size()[0]-1;
     for (j = 0; j < size()[1]; j++)
     {
-        if (rightBoundType == DIRICHLET)
+        if (rightBoundType_ == DIRICHLET)
         {
-            if (horizontalBoundInterpolate)
+            if (horizontalBoundInterpolate_)
             {
                 (*this)(i,j) = 2*rightBound - (*this)(i-1,j);
             }
@@ -145,7 +145,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
             
 
         }
-        else if (rightBoundType == NEUMANN)
+        else if (rightBoundType_ == NEUMANN)
         {
             (*this)(i,j) = rightBound*h + (*this)(i-1,j);
         }
@@ -170,7 +170,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
     myfile << name <<" (" << size()[0]  << "x" << size()[1] << "):" << std::endl;
 
     myfile << std::right;
-    myfile.precision(5);
+    myfile.precision(4);
 
     int setw = 14;
     int ii = -1;
@@ -216,18 +216,18 @@ double FieldVariable::interpolateAt(double x, double y) const
 
     if(pos_ == VCENTRE)
     {
-        horizontalOffset = meshx/2;
-        verticalOffset = meshy/2;
+        horizontalOffset = meshx_/2;
+        verticalOffset = meshy_/2;
     }
-    else if (pos_ == VRIGHT) verticalOffset = meshy/2;
-    else if (pos_ == VTOP) horizontalOffset = meshx/2;
+    else if (pos_ == VRIGHT) verticalOffset = meshy_/2;
+    else if (pos_ == VTOP) horizontalOffset = meshx_/2;
 
-    int i = (x+horizontalOffset)/meshx;
-    int j = (y+verticalOffset)/meshy;
-    double xLeft = i*meshx - horizontalOffset;
-    double xRight = (i+1)*meshx - horizontalOffset;
-    double yUp = j*meshy - verticalOffset;
-    double yDown = j*meshy - verticalOffset;
+    int i = (x+horizontalOffset)/meshx_;
+    int j = (y+verticalOffset)/meshy_;
+    double xLeft = i*meshx_ - horizontalOffset;
+    double xRight = (i+1)*meshx_ - horizontalOffset;
+    double yUp = j*meshy_ - verticalOffset;
+    double yDown = j*meshy_ - verticalOffset;
 
     double downLeft = (*this)(i,j);
     double downRight = (*this)(i+1,j);

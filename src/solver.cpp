@@ -55,6 +55,7 @@ Array2D Solver::compute_rhs(double dt, const std::shared_ptr<Discretization> dis
 {
     std::array<int,2> size = discr->rhs().size();
     Array2D result(size);
+    result = discr->rhs();
     for (int i=1; i < size[0] - 1; i++)
     {
         for (int j=1; j < size[1] - 1; j++)

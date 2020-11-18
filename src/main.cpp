@@ -12,6 +12,7 @@
 #include "../includes/solver.h"
 #include "../includes/sor.h"
 #include "../includes/gauss_seidel.h"
+#include "../includes/output_writer/output_writer_paraview.h"
 
 
 bool comp(double a, double b) {return (a<b);}
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
         solver = std::make_shared<GaussSeidel>(settings.maximumNumberOfIterations(), settings.epsilon());
     }    
     
+    OutputWriterParaview writer(discretization);
     
     double t = 0;
     int fileNo = 1;
@@ -65,7 +67,7 @@ int main(int argc, char *argv[])
         discretization->set_f() = solver->compute_f(settings.re(), settings.g()[0], dt, discretization);
         discretization->set_g() = solver->compute_g(settings.re(), settings.g()[1], dt, discretization);
 
-        discretization->set_boundary_fg(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        discretization->set_boundary_fg(discretization->u(), discretization->v());
 
         discretization->set_rhs() = solver->compute_rhs(dt, discretization);
         
@@ -75,8 +77,10 @@ int main(int argc, char *argv[])
         discretization->set_v() = solver->compute_v(dt, discretization);
 
         discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        
         t += dt;
         discretization->write_to_file(fileNo++, t);
+        writer.writeFile(t);
         
     }
 

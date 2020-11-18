@@ -11,14 +11,16 @@ Discretization(nCells, physicalSize)
 //! compute the 1st derivative ∂ u^2 / ∂x
 double CentralDifferences::computeDu2Dx(int i, int j) const
 {
-    double result = (pow(u(i+1,j) + u(i,j),2) - pow(u(i,j) + u(i-1,j),2))/(4*meshWidth()[0]);
+    double uMidRight = u(i+1,j) + u(i,j), uMidLeft = u(i,j) + u(i-1,j);
+    double result = (uMidRight*uMidRight - uMidLeft*uMidLeft)/(4*meshWidth()[0]);
     return result;
 }
 
 //! compute the 1st derivative ∂ v^2 / ∂y
 double CentralDifferences::computeDv2Dy(int i, int j) const
 {
-    double result = (pow(v(i,j+1) + v(i,j),2) - pow(v(i,j) + v(i,j-1),2))/(4*meshWidth()[1]);
+    double vMidUp = v(i,j+1) + v(i,j), vMidDown = v(i,j) + v(i,j-1);
+    double result = (vMidUp*vMidUp - vMidDown*vMidDown)/(4*meshWidth()[1]);
     return result;
 }
 

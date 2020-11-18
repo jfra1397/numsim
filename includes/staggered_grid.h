@@ -11,7 +11,7 @@ class StaggeredGrid
     
 
     void set_boundary_uv(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound);
-    void set_boundary_fg(const std::array<double,2> bottomBound, const std::array<double,2> rightBound, const std::array<double,2> topBound, const std::array<double,2> leftBound);
+    void set_boundary_fg(const FieldVariable u, const FieldVariable v);
     
     const FieldVariable & u() const;
     const FieldVariable & v() const;

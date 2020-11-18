@@ -35,14 +35,14 @@ class FieldVariable: public Array2D
 
     private:
     FieldVariable();
-    bool verticalBoundInterpolate;
-    btype topBoundType;
-    btype bottomBoundType;
-    bool horizontalBoundInterpolate;
-    btype leftBoundType;
-    btype rightBoundType;
+    bool verticalBoundInterpolate_;
+    btype topBoundType_;
+    btype bottomBoundType_;
+    bool horizontalBoundInterpolate_;
+    btype leftBoundType_;
+    btype rightBoundType_;
     vposition pos_;
-    double meshx, meshy;
+    double meshx_, meshy_;
 
 
 };
