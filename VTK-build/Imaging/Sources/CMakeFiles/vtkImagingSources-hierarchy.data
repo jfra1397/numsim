@@ -1,8 +1,0 @@
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageCanvasSource2D.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageEllipsoidSource.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageGaussianSource.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageGridSource.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageMandelbrotSource.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageNoiseSource.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Sources/vtkImageSinusoidSource.h;vtkImagingSources
-/home/jfra/projects/simtech/numsim/VTK-build/Imaging/Sources/vtkImagingSourcesModule.h;vtkImagingSources

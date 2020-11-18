@@ -1,9 +1,0 @@
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageDivergence.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageDotProduct.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageLogarithmicScale.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageLogic.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageMagnitude.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageMaskBits.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageMathematics.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Math/vtkImageWeightedSum.h;vtkImagingMath
-/home/jfra/projects/simtech/numsim/VTK-build/Imaging/Math/vtkImagingMathModule.h;vtkImagingMath

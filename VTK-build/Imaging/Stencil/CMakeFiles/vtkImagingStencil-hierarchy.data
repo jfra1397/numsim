@@ -1,8 +1,0 @@
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkImageStencil.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkImageStencilToImage.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkImageToImageStencil.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkImplicitFunctionToImageStencil.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkLassoStencilSource.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkPolyDataToImageStencil.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK/Imaging/Stencil/vtkROIStencilSource.h;vtkImagingStencil
-/home/jfra/projects/simtech/numsim/VTK-build/Imaging/Stencil/vtkImagingStencilModule.h;vtkImagingStencil

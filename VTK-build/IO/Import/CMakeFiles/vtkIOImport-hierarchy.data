@@ -1,8 +1,0 @@
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtk3DS.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtk3DSImporter.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtkGLTFImporter.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtkImporter.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtkVRMLImporter.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtkOBJImporter.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK/IO/Import/vtkOBJImporterInternals.h;vtkIOImport
-/home/jfra/projects/simtech/numsim/VTK-build/IO/Import/vtkIOImportModule.h;vtkIOImport

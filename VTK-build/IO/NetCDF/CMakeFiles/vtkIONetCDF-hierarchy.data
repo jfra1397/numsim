@@ -1,8 +1,0 @@
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkMPASReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkNetCDFCAMReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkNetCDFCFReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkNetCDFPOPReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkNetCDFReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkSLACParticleReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK/IO/NetCDF/vtkSLACReader.h;vtkIONetCDF
-/home/jfra/projects/simtech/numsim/VTK-build/IO/NetCDF/vtkIONetCDFModule.h;vtkIONetCDF

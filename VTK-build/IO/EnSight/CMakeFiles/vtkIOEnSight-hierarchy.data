@@ -1,8 +1,0 @@
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkEnSight6BinaryReader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkEnSight6Reader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkEnSightGoldBinaryReader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkEnSightGoldReader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkEnSightMasterServerReader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkEnSightReader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK/IO/EnSight/vtkGenericEnSightReader.h;vtkIOEnSight
-/home/jfra/projects/simtech/numsim/VTK-build/IO/EnSight/vtkIOEnSightModule.h;vtkIOEnSight
