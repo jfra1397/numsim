@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 #include "../../includes/output_writer_paraview.h"
+=======
+#include "../../includes/output_writer/output_writer_paraview.h"
+
+// #include "/usr/local/include/vtk-9.0/vtkImageData.h"
+// #include "/usr/local/include/vtk-9.0/vtkDoubleArray.h"
+// #include "/usr/local/include/vtk-9.0/vtkPointData.h"
+>>>>>>> 70f4e5d8be137a8cdb61ea078c3c5e32bde03592
 
 #include <vtkImageData.h>
 #include <vtkDoubleArray.h>
