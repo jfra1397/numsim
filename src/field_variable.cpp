@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iomanip>
+#include <iostream>
 
 
 #include "../includes/field_variable.h"
@@ -218,15 +219,38 @@ double FieldVariable::interpolateAt(double x, double y) const
     {
         horizontalOffset = meshx_/2;
         verticalOffset = meshy_/2;
+        //std::cout<<"Field: P"<<std::endl;
     }
-    else if (pos_ == VRIGHT) verticalOffset = meshy_/2;
-    else if (pos_ == VTOP) horizontalOffset = meshx_/2;
+    else if (pos_ == VRIGHT){
+        verticalOffset = meshy_/2;
+        //std::cout<<"Field: U"<<std::endl;
+    }
+    else if (pos_ == VTOP){
+        horizontalOffset = meshx_/2;
+        //std::cout<<"Field: V"<<std::endl;
+    }
+
+    //std::cout<<"x: "<< x <<std::endl;
+    //std::cout<<"y: "<< y<<std::endl;
 
     int i = (x+horizontalOffset)/meshx_;
     int j = (y+verticalOffset)/meshy_;
+
+    if(pos_ == VRIGHT && i == size()[0]-1){
+        i = i-1;
+    }
+    else if (pos_ == VTOP && j == size()[1]-1)
+    {
+        j = j-1;
+    }
+    
+
+    //std::cout<<"i: "<< i<<std::endl;
+    //std::cout<<"j: "<< j<<std::endl;
+
     double xLeft = i*meshx_ - horizontalOffset;
     double xRight = (i+1)*meshx_ - horizontalOffset;
-    double yUp = j*meshy_ - verticalOffset;
+    double yUp = (j+1)*meshy_ - verticalOffset;
     double yDown = j*meshy_ - verticalOffset;
 
     double downLeft = (*this)(i,j);

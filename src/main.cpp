@@ -12,13 +12,15 @@
 #include "../includes/solver.h"
 #include "../includes/sor.h"
 #include "../includes/gauss_seidel.h"
-#include "../includes/output_writer/output_writer_paraview.h"
+#include "../includes/output_writer_paraview.h"
+//#include "../includes/output_writer.h"
 
 
 bool comp(double a, double b) {return (a<b);}
 
 int main(int argc, char *argv[])
 {
+
     //Pay attention corner interpolation!!!!
 
     Settings settings;
@@ -81,10 +83,8 @@ int main(int argc, char *argv[])
         t += dt;
         discretization->write_to_file(fileNo++, t);
         writer.writeFile(t);
-        
+
     }
-
-
 
     return EXIT_SUCCESS;
 }
