@@ -219,19 +219,14 @@ double FieldVariable::interpolateAt(double x, double y) const
     {
         horizontalOffset = meshx_/2;
         verticalOffset = meshy_/2;
-        //std::cout<<"Field: P"<<std::endl;
     }
     else if (pos_ == VRIGHT){
         verticalOffset = meshy_/2;
-        //std::cout<<"Field: U"<<std::endl;
     }
     else if (pos_ == VTOP){
         horizontalOffset = meshx_/2;
-        //std::cout<<"Field: V"<<std::endl;
     }
 
-    //std::cout<<"x: "<< x <<std::endl;
-    //std::cout<<"y: "<< y<<std::endl;
 
     int i = (x+horizontalOffset)/meshx_;
     int j = (y+verticalOffset)/meshy_;
@@ -244,9 +239,6 @@ double FieldVariable::interpolateAt(double x, double y) const
         j = j-1;
     }
     
-
-    //std::cout<<"i: "<< i<<std::endl;
-    //std::cout<<"j: "<< j<<std::endl;
 
     double xLeft = i*meshx_ - horizontalOffset;
     double xRight = (i+1)*meshx_ - horizontalOffset;

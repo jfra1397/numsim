@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     OutputWriterParaview writer(discretization);
     
     double t = 0;
-    int fileNo = 1;
+    int fileNo = 0;
 
     discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
     while (t < settings.endTime())
