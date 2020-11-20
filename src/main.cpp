@@ -21,16 +21,14 @@ bool comp(double a, double b) {return (a<b);}
 int main(int argc, char *argv[])
 {
 
-    //Pay attention corner interpolation!!!!
-
     Settings settings;
     if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
     else settings.loadFromFile(argv[1]);
     settings.printSettings();
 
     std::shared_ptr<Discretization> discretization;
-    // create discretization
-    if (settings.useDonorCell())   // depending on a settings value
+    //create discretization depending on a settings value
+    if (settings.useDonorCell())
     {
         // create donor cell discretization
         discretization = std::make_shared<DonorCell>(settings.nCells(), settings.physicalSize(), settings.alpha());
@@ -66,17 +64,17 @@ int main(int argc, char *argv[])
         double dt = solver->compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discretization->meshWidth(), discretization->u(), discretization->v());
         if (t + dt > settings.endTime()) dt = settings.endTime()-t;
 
-        discretization->set_f() = solver->compute_f(settings.re(), settings.g()[0], dt, discretization);
-        discretization->set_g() = solver->compute_g(settings.re(), settings.g()[1], dt, discretization);
+        solver->compute_f(settings.re(), settings.g()[0], dt, discretization);
+        solver->compute_g(settings.re(), settings.g()[1], dt, discretization);
 
         discretization->set_boundary_fg(discretization->u(), discretization->v());
 
-        discretization->set_rhs() = solver->compute_rhs(dt, discretization);
+        solver->compute_rhs(dt, discretization);
         
-        discretization->set_p()= solver->compute_p(discretization);
+        solver->compute_p(discretization);
 
-        discretization->set_u() = solver->compute_u(dt, discretization);
-        discretization->set_v() = solver->compute_v(dt, discretization);
+        solver->compute_u(dt, discretization);
+        solver->compute_v(dt, discretization);
 
         discretization->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
         

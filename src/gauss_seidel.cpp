@@ -4,42 +4,64 @@
 
 GaussSeidel::GaussSeidel(int maximumNumberOfIterations, double epsilon)
 {
+    //set stopping criteria: maximum number of iterations
     maximumNumberOfIterations_ = maximumNumberOfIterations;
+
+    //set stopping criteria: error tolerance
     epsilon_ = epsilon;
 }
 
-Array2D GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
+void GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
 {
-    std::array<int,2> size = discr->p().size();
-    //Array2D temp_p(size);
-    //temp_p = discr->p();
-    double temp_res, norm_res = 2*epsilon_*epsilon_;
+    std::array<int, 2> size = discr->p().size();
+
+    //initialize residuum and iteration counter
+    double temp_res, norm_res;
     int iter = 0;
+
+    //set meshwidth in each direction
     double hx = discr->meshWidth()[0];
     double hy = discr->meshWidth()[1];
-    double factor =  hx * hx * hy * hy / (2.0*(hx * hx + hy * hy));
 
-    while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_*epsilon_)
+    //calculate prefactor
+    double factor = hx * hx * hy * hy / (2.0 * (hx * hx + hy * hy));
+
+    //GS algorithm
+    do
     {
-        discr->set_p().set_boundary(0,0,0,0);
+        //adjust boundary values for p
+        discr->set_p().set_boundary(0, 0, 0, 0);
+
+        //reset residuum norm
         norm_res = 0;
+
+        //GS iteration over whole matrix
         for (int i = 1; i < size[0] - 1; i++)
         {
             for (int j = 1; j < size[1] - 1; j++)
             {
+                //calculate residuum at position (i,j)
+                temp_res = discr->computeD2pDx2(i, j) + discr->computeD2pDy2(i, j) - discr->rhs(i, j);
 
-                temp_res =  discr->computeD2pDx2(i,j) + discr->computeD2pDy2(i,j)-discr->rhs(i,j);
-                discr->set_p(i,j) = discr->p(i,j) + (factor * temp_res);
+                //calculate new p at position (i,j)
+                discr->set_p(i, j) = discr->p(i, j) + (factor * temp_res);
+
+                //update residuum norm
                 norm_res = norm_res + (temp_res * temp_res);
             }
         }
 
-        //nCells of discretization!!!!
-        norm_res = norm_res/((discr->nCells()[0]) * (discr->nCells()[1]));
+        //finish calculation of residuum
+        norm_res = norm_res / ((discr->nCells()[0]) * (discr->nCells()[1]));
+
+        //next iteration
         iter += 1;
 
     }
+    //check if stopping criteria achieved (error tolerance, maximum number of iterations)
+    while (iter < maximumNumberOfIterations_ && norm_res > epsilon_ * epsilon_);
 
-    return discr->p();
+    //set correct boundary values (safety first)
+    discr->set_p().set_boundary(0,0,0,0);
 
 }

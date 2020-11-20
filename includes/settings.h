@@ -3,65 +3,128 @@
 #include <iostream>
 #include <array>
 
-
 class Settings
 {
 
-    
-    public:
-    
+public:
     Settings();
-    
-    //! parse a text file with settings, each line contains "<parameterName> = <value>"
+
+    //parse a text file with settings, each line contains "<parameterName> = <value>"
     void loadFromFile(const std::string filename);
 
-    //! output all settings to console
+    //output all settings to console
     void printSettings() const;
 
-    const std::array<int,2> nCells() const;          //< return number of cells in x and y direction
-    const std::array<double,2> physicalSize() const; //< return physical size of the domain
-    double re() const;                  //< return reynolds number
-    double endTime() const;             //< return end time of the simulation
-    double tau() const;                  //< return safety factor for time step width
-    double maximumDt() const;            //< return maximum time step width
+    //return number of cells in x and y direction
+    const std::array<int, 2> nCells() const;
 
-    const std::array<double,2> g() const;    //< return external forces
+    //return physical size of the domain
+    const std::array<double, 2> physicalSize() const;
 
-    bool useDonorCell() const;         //< return if the donor cell scheme schould be used
-    double alpha() const;                //< return factor for donor-cell scheme
+    //return reynolds number
+    double re() const;
 
-    const std::array<double,2> dirichletBcBottom() const;  //< returnprescribed values of u,v at bottom of domain
-    const std::array<double,2> dirichletBcTop() const;     //< return prescribed values of u,v at top of domain
-    const std::array<double,2> dirichletBcLeft() const;    //< return prescribed values of u,v at left of domain
-    const std::array<double,2> dirichletBcRight() const;   //< return prescribed values of u,v at right of domain
+    //return end time of the simulation
+    double endTime() const;
 
-    const std::string pressureSolver() const;      //< return which pressure solver to use, "GaussSeidel" or "SOR"
-    double omega() const;                //< return overrelaxation factor
-    double epsilon() const;             //< return tolerance for the residual in the pressure solver
-    int maximumNumberOfIterations() const;    //< return maximum number of iterations in the solver
+    //return safety factor for time step width
+    double tau() const;
 
-    private:
+    //return maximum time step width
+    double maximumDt() const;
+
+    //return external forces
+    const std::array<double, 2> g() const;
+
+    //return if the donor cell scheme schould be used
+    bool useDonorCell() const;
+
+    //return factor for donor-cell scheme
+    double alpha() const;
+
+
+    //return prescribed values of u,v at bottom of domain
+    const std::array<double, 2> dirichletBcBottom() const;
+
+    //return prescribed values of u,v at top of domain
+    const std::array<double, 2> dirichletBcTop() const;
+
+    //return prescribed values of u,v at left of domain
+    const std::array<double, 2> dirichletBcLeft() const;
+
+    //return prescribed values of u,v at right of domain
+    const std::array<double, 2> dirichletBcRight() const;
+
+
+    //return which pressure solver to use, "GaussSeidel" or "SOR"
+    const std::string pressureSolver() const;
+
+    //return overrelaxation factor
+    double omega() const;
+
+    //return tolerance for the residual in the pressure solver
+    double epsilon() const;
+
+    //return maximum number of iterations in the solver
+    int maximumNumberOfIterations() const;
+
+
+private:
+
+    //assign value to parameter named param and cast datatype
     int assign_param_(std::string param, std::string value);
 
-    std::array<int,2> nCells_;          //< number of cells in x and y direction
-    std::array<double,2> physicalSize_; //< physical size of the domain
-    double re_;                  //< reynolds number
-    double endTime_;             //< end time of the simulation
-    double tau_;                  //< safety factor for time step width
-    double maximumDt_;            //< maximum time step width
 
-    std::array<double,2> g_;    //< external forces
+    //number of cells in x and y direction
+    std::array<int, 2> nCells_;
 
-    bool useDonorCell_;         //< if the donor cell scheme schould be used
-    double alpha_;                //< factor for donor-cell scheme
+    //physical size of the domain
+    std::array<double, 2> physicalSize_;
 
-    std::array<double,2> dirichletBcBottom_;  //< prescribed values of u,v at bottom of domain
-    std::array<double,2> dirichletBcTop_;     //< prescribed values of u,v at top of domain
-    std::array<double,2> dirichletBcLeft_;    //< prescribed values of u,v at left of domain
-    std::array<double,2> dirichletBcRight_;   //< prescribed values of u,v at right of domain
+    //reynolds number
+    double re_;
 
-    std::string pressureSolver_;      //< which pressure solver to use, "GaussSeidel" or "SOR"
-    double omega_;                //< overrelaxation factor
-    double epsilon_;             //< tolerance for the residual in the pressure solver
-    int maximumNumberOfIterations_;    //< maximum number of iterations in the solver
+    //end time of the simulation
+    double endTime_;
+
+    //safety factor for time step width
+    double tau_;
+
+    //maximum time step width
+    double maximumDt_; 
+
+    //external forces
+    std::array<double, 2> g_;
+
+    //if the donor cell scheme schould be used
+    bool useDonorCell_;
+
+    //factor for donor-cell scheme
+    double alpha_;
+
+
+    //prescribed values of u,v at bottom of domain
+    std::array<double, 2> dirichletBcBottom_;
+
+    //prescribed values of u,v at top of domain
+    std::array<double, 2> dirichletBcTop_;
+
+    //prescribed values of u,v at left of domain
+    std::array<double, 2> dirichletBcLeft_;
+
+    //prescribed values of u,v at right of domain
+    std::array<double, 2> dirichletBcRight_;
+
+
+    //which pressure solver to use, "GaussSeidel" or "SOR"
+    std::string pressureSolver_;
+
+    //overrelaxation factor
+    double omega_;
+
+    //tolerance for the residual in the pressure solver
+    double epsilon_;
+
+    //maximum number of iterations in the solver
+    int maximumNumberOfIterations_;
 };
