@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     else settings.loadFromFile(argv[1]);
     settings.printSettings();
 
+    // typedef std::conditional<type, DonorCell, CentralDifferences> discr;
     std::shared_ptr<Discretization> discretization;
     //create discretization depending on a settings value
     if (settings.useDonorCell())

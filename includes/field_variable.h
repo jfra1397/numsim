@@ -60,5 +60,5 @@ private:
     vposition pos_;
 
     //meshwidth in each direction
-    double meshx_, meshy_;
+    std::array<double,2> meshWidth_;
 };

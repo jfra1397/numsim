@@ -156,7 +156,7 @@ int Settings::assign_param_(std::string param, std::string value)
         else if (param == "nCellsY")
             nCells_[1] = std::stoi(value);
         else if (param == "useDonorCell")
-            useDonorCell_ = value.compare("true") || value.compare("True");
+            useDonorCell_ = value.compare("true") == 0 || value.compare("True") == 0;
         else if (param == "alpha")
             alpha_ = std::stod(value);
         else if (param == "tau")

@@ -7,7 +7,7 @@
         "name": "g++ build and debug active file",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/bin/numsim.out",
+        "program": "${workspaceFolder}/build/src/numsim",
         "args": ["../parameters.txt"],
         "stopAtEntry": true,
         "cwd": "${workspaceFolder}/src",

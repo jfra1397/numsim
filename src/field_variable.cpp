@@ -16,8 +16,7 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     rightBoundType_ = DIRICHLET;
 
     //calculate meshwidth in each direction
-    meshx_ = physicalSize[0] / (double)size[0];
-    meshy_ = physicalSize[1] / (double)size[1];
+    meshWidth_ = {physicalSize[0] / (double)size[0], physicalSize[1] / (double)size[1]};
 
     //set size in each direction
     int sizex = size[0], sizey = size[1];
@@ -59,7 +58,7 @@ int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype 
 {
     if (top == NEUMANN || bottom == NEUMANN || left == NEUMANN || right == NEUMANN)
     {
-        assert((pos_ == VCENTRE, "Neumann boundary condition not implemented for variable positions at top and right!"));
+        assert(("Neumann boundary condition not implemented for variable positions at top and right!", pos_ == VCENTRE));
     }
     topBoundType_ = top;
     bottomBoundType_ = bottom;
@@ -185,18 +184,24 @@ void FieldVariable::operator=(const Array2D &result)
 //write to .txt file
 void FieldVariable::write_to_file(std::string fileName, std::string name, bool append) const
 {
+    //declare file instance
     std::ofstream myfile;
-
+    
+    //open file either in append mode or overwritte mode
     if (append)
         myfile.open(fileName, std::ios::out | std::ios::app);
     else
         myfile.open(fileName, std::ios::out | std::ios::trunc);
+
+    //write name and size of field variable to file
     myfile << name << " (" << size()[0] << "x" << size()[1] << "):" << std::endl;
 
+    //settings for printing values
     myfile << std::right;
     myfile.precision(4);
-
     int setw = 14;
+    
+    //write header of table
     int ii = -1;
     myfile << std::setw(setw + 1) << "|";
     for (int i = 0; i < size()[0]; i++)
@@ -207,6 +212,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
 
     myfile << std::endl;
 
+    //underline header
     for (int i = 0; i <= setw * (size()[0] + 1); i++)
     {
         myfile << "-";
@@ -214,18 +220,21 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
 
     myfile << std::endl;
 
-    ii = -1;
+    //loop through rows
     for (int j = size()[1] - 1; j >= 0; j--)
     {
-        myfile << std::setw(setw) << ii << "|";
-        ii += 1;
+        //write row header
+        myfile << std::setw(setw) << j-1 << "|";
+        //loop throug columns
         for (int i = 0; i < size()[0]; i++)
         {
+            //write value to file
             myfile << std::setw(setw) << (*this)(i, j);
         }
         myfile << std::endl;
     }
     myfile << std::endl;
+    //close file
     myfile.close();
 }
 
@@ -238,21 +247,21 @@ double FieldVariable::interpolateAt(double x, double y) const
     //check position to calculate offset
     if (pos_ == VCENTRE)
     {
-        horizontalOffset = meshx_ / 2;
-        verticalOffset = meshy_ / 2;
+        horizontalOffset = meshWidth_[0] / 2;
+        verticalOffset = meshWidth_[1] / 2;
     }
     else if (pos_ == VRIGHT)
     {
-        verticalOffset = meshy_ / 2;
+        verticalOffset = meshWidth_[1] / 2;
     }
     else if (pos_ == VTOP)
     {
-        horizontalOffset = meshx_ / 2;
+        horizontalOffset = meshWidth_[0] / 2;
     }
 
     //calculate index of grid point left below or equal to physical point (x,y)
-    int i = (x + horizontalOffset) / meshx_;
-    int j = (y + verticalOffset) / meshy_;
+    int i = (x + horizontalOffset) / meshWidth_[0];
+    int j = (y + verticalOffset) / meshWidth_[1];
 
     //deal with right boundary and top (sketch it!)
     if (pos_ == VRIGHT && i == size()[0] - 1)
@@ -265,10 +274,10 @@ double FieldVariable::interpolateAt(double x, double y) const
     }
 
     //calculate missing grid points that frame the physical position point (x,y) and get corresponding values
-    double xLeft = i * meshx_ - horizontalOffset;
-    double xRight = (i + 1) * meshx_ - horizontalOffset;
-    double yUp = (j + 1) * meshy_ - verticalOffset;
-    double yDown = j * meshy_ - verticalOffset;
+    double xLeft = i * meshWidth_[0] - horizontalOffset;
+    double xRight = (i + 1) * meshWidth_[0] - horizontalOffset;
+    double yUp = (j + 1) * meshWidth_[1] - verticalOffset;
+    double yDown = j * meshWidth_[1] - verticalOffset;
 
     double downLeft = (*this)(i, j);
     double downRight = (*this)(i + 1, j);
