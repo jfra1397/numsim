@@ -3,6 +3,10 @@
 #include <algorithm> //forstr to int,double
 
 #include "../includes/settings.h"
+#include "../includes/donor_cell.h"
+#include "../includes/central_differences.h"
+#include "../includes/sor.h"
+#include "../includes/gauss_seidel.h"
 
 Settings::Settings()
 {
@@ -235,3 +239,34 @@ double Settings::epsilon() const { return epsilon_; }
 
 //return maximum number of iterations in the solver
 int Settings::maximumNumberOfIterations() const { return maximumNumberOfIterations_; }
+
+//get discretization instance depending on settings
+std::shared_ptr<Discretization> Settings::get_discretization()
+    {
+        //create discretization depending on a settings value
+        if (useDonorCell())
+        {
+            //create donor cell discretization
+            return std::make_shared<DonorCell>(nCells(), physicalSize(), alpha());
+        }
+        else
+        {
+            //create central differences
+            return std::make_shared<CentralDifferences>(nCells(), physicalSize());
+        }
+    }
+
+//get solver instance depending on settings
+std::shared_ptr<Solver> Settings::get_solver()
+{
+    if (pressureSolver() == "SOR")   // depending on a settings value
+    {
+        //create donor cell discretization
+        return std::make_shared<SOR>(maximumNumberOfIterations(), epsilon(), omega());
+    }
+    else
+    {
+        //create central differences
+        return std::make_shared<GaussSeidel>(maximumNumberOfIterations(), epsilon());
+    }
+}

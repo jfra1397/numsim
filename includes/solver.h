@@ -1,10 +1,10 @@
 #pragma once
 
-#include "field_variable.h"
 #include <memory>
+
+#include "field_variable.h"
 #include "discretization.h"
 #include "settings.h"
-#include "output_writer_paraview.h"
 
 class Solver
 {

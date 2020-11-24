@@ -1,4 +1,5 @@
 #include "../includes/solver.h"
+#include "../includes/output_writer_paraview.h"
 
 //compute timestep dt
 double Solver::compute_dt(double tau, double re, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v)

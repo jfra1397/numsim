@@ -2,6 +2,13 @@
 
 #include <iostream>
 #include <array>
+#include <memory>
+
+#include "discretization.h"
+
+//get rid of co-depending classes
+class Solver;
+class Discretization;
 
 class Settings
 {
@@ -14,6 +21,12 @@ public:
 
     //output all settings to console
     void printSettings() const;
+
+    //get discretization instance depending on settings
+    std::shared_ptr<Discretization> get_discretization();
+
+    //get solver instance depending on settings
+    std::shared_ptr<Solver> get_solver();
 
     //return number of cells in x and y direction
     const std::array<int, 2> nCells() const;

@@ -59,6 +59,7 @@ public:
     //write output to .txt file (self written)
     void write_to_file(int fileNo, double time) const;
 
+
 private:
     //number of cells in each direction
     std::array<int, 2> nCells_;

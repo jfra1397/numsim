@@ -121,3 +121,4 @@ void Discretization::write_to_file(int fileNo, double time) const
     g().write_to_file(fileName.str(), "g", true);
     rhs().write_to_file(fileName.str(), "rhs", true);
 }
+
