@@ -3,6 +3,8 @@
 #include "field_variable.h"
 #include <memory>
 #include "discretization.h"
+#include "settings.h"
+#include "output_writer_paraview.h"
 
 class Solver
 {
@@ -27,4 +29,7 @@ public:
 
     //compute velocity v in y direction
     void compute_v(double dt, const std::shared_ptr<Discretization> discr);
+
+    //solve for velocities u and v
+    void solve_uv(const Settings &settings, const std::shared_ptr<Discretization> discr);
 };

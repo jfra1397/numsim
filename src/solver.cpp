@@ -98,3 +98,52 @@ void Solver::compute_v(double dt, const std::shared_ptr<Discretization> discr)
         }
     }
 }
+
+void Solver::solve_uv(const Settings &settings, const std::shared_ptr<Discretization> discr)
+{
+
+    OutputWriterParaview writer(discr);
+
+    //initialize time
+    double t = 0;
+    int fileNo = 0;
+
+    //set boundary condition values of u,v
+    discr->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+
+    //iterate until given endtime in settings is reached
+    while (t < settings.endTime())
+    {
+        //compute time step
+        double dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr->meshWidth(), discr->u(), discr->v());
+
+        //set time step s.t. given endtime is not exceeded
+        if (t + dt > settings.endTime())
+            dt = settings.endTime() - t;
+
+        // compute f,g
+        compute_f(settings.re(), settings.g()[0], dt, discr);
+        compute_g(settings.re(), settings.g()[1], dt, discr);
+
+        //set boundary values of f,g to boundary values of u,v
+        discr->set_boundary_fg(discr->u(), discr->v());
+
+        //compute right hand side and pressure (with given pressure solver)
+        compute_rhs(dt, discr);
+        compute_p(discr);
+
+        //compute new u,v
+        compute_u(dt, discr);
+        compute_v(dt, discr);
+
+        //set new boundary values s.t. boundary conditions are met
+        discr->set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+
+        //increment actual time by time step
+        t += dt;
+
+        //write results to output files
+        discr->write_to_file(fileNo++, t);
+        writer.writeFile(t);
+    }
+}

@@ -61,4 +61,7 @@ private:
 
     //meshwidth in each direction
     std::array<double,2> meshWidth_;
+
+    //physical size in each direction
+    std::array<double,2> physicalSize_;
 };

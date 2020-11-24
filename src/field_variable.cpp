@@ -18,6 +18,9 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     //calculate meshwidth in each direction
     meshWidth_ = {physicalSize[0] / (double)size[0], physicalSize[1] / (double)size[1]};
 
+    //physical size in each direction
+    physicalSize_ = physicalSize;
+
     //set size in each direction
     int sizex = size[0], sizey = size[1];
 
@@ -241,6 +244,10 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
 //interpolate matrix values at given physical location (x,y)
 double FieldVariable::interpolateAt(double x, double y) const
 {
+
+    //check if x and y are legal values
+    assert(("Position in x-direction is out of bound!", 0 <= x && x <= physicalSize_[0]));
+    assert(("Position in y-direction is out of bound!", 0 <= y && y <= physicalSize_[1]));
 
     double verticalOffset = 0, horizontalOffset = 0;
 
