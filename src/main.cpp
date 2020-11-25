@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 #include "../includes/settings.h"
 #include "../includes/discretization.h"
@@ -19,10 +20,10 @@ int main(int argc, char *argv[])
     settings.printSettings();
 
     double timeStep;
-    if (argc>=2) 
+    if (argc>=3) 
     {
+        std::cout<< "Using always time step: " << argv[2] << std::endl;
         timeStep = std::stod(argv[2]);
-        std::cout<< "Using always time step: " << timeStep << std::endl;
     } 
     else timeStep = 0; 
 
@@ -35,8 +36,24 @@ int main(int argc, char *argv[])
     //create outputwriter class
     OutputWriterParaview writer(discretization);
 
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     //run loop to solve for new velocities u,v
     solver->solve_uv(settings, *discretization, writer, timeStep);
+
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    //nanoseconds, microseconds, milliseconds, seconds, minutes, hours possible
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+    std::ofstream myfile;
+    
+    //open file in append mode
+    myfile.open("run-times.csv", std::ios::out | std::ios::app);
+    myfile << settings.nCells()[0] << ";" << settings.nCells()[1] << ";" << duration.count() << std::endl;
+    myfile.close();
+
     
     return EXIT_SUCCESS;
 }
