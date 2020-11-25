@@ -18,6 +18,14 @@ int main(int argc, char *argv[])
     else settings.loadFromFile(argv[1]);
     settings.printSettings();
 
+    double timeStep;
+    if (argc>=2) 
+    {
+        timeStep = std::stod(argv[2]);
+        std::cout<< "Using always time step: " << timeStep << std::endl;
+    } 
+    else timeStep = 0; 
+
     //create discretization depending on a settings value
     std::shared_ptr<Discretization> discretization = settings.get_discretization();
 
@@ -28,7 +36,7 @@ int main(int argc, char *argv[])
     OutputWriterParaview writer(discretization);
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, writer);
+    solver->solve_uv(settings, *discretization, writer, timeStep);
     
     return EXIT_SUCCESS;
 }

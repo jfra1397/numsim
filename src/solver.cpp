@@ -99,13 +99,14 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer)
+void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, double manualTimeStep)
 {
 
 
     //initialize time
     double t = 0;
     int fileNo = 0;
+    double dt;
 
     //set boundary condition values of u,v
     discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
@@ -114,7 +115,9 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
     while (t < settings.endTime())
     {
         //compute time step
-        double dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
+        if (manualTimeStep == 0) dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
+        else dt = manualTimeStep;
+        
 
         //set time step s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
@@ -142,7 +145,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         t += dt;
 
         //write results to output files
-        //discr.write_to_file(fileNo++, t);
+        discr.write_to_file(fileNo++, t);
         writer.writeFile(t);
     }
 }
