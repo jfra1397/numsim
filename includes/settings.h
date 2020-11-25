@@ -10,6 +10,11 @@
 class Solver;
 class Discretization;
 
+/** This class contains all parameter values and
+ * loads them from a given *.txt file. Also it creates 
+ * the discretization and solver object with given 
+ * paramters */
+
 class Settings
 {
 

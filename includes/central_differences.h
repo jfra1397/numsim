@@ -2,6 +2,10 @@
 
 #include "discretization.h"
 
+/** This class contains functions to compute first derivatives
+ * of squared u,v corresponding to the central differences scheme and all other derivates inherited from 
+ * discretization.
+ */
 class CentralDifferences : public Discretization
 {
 public:

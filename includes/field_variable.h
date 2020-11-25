@@ -18,7 +18,11 @@ enum btype
     DIRICHLET,
     NEUMANN
 };
-
+/** This class represents a field variable of double values.
+ * It inhertits from Array2D to access and store the values
+ * and additionally it contains methods to set boundary conditions
+ * and interpolated values.
+ */
 class FieldVariable : public Array2D
 {
 public:
@@ -60,8 +64,8 @@ private:
     vposition pos_;
 
     //meshwidth in each direction
-    std::array<double,2> meshWidth_;
+    std::array<double, 2> meshWidth_;
 
     //physical size in each direction
-    std::array<double,2> physicalSize_;
+    std::array<double, 2> physicalSize_;
 };

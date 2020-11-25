@@ -101,11 +101,12 @@ void Settings::loadFromFile(const std::string filename)
         if (found != std::string::npos)
             value = value.substr(0, found);
 
-        if (0 == assign_param_(param, value))
-            std::cout << "assigned " << param << std::endl;
-        else
+        if (0 != assign_param_(param, value))
             std::cout << "Couldn't assign " << param << std::endl;
     }
+
+    //close file
+    file.close();
 }
 
 //output all settings to console

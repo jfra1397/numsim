@@ -2,6 +2,10 @@
 
 #include "discretization.h"
 
+/** This class contains functions to compute first derivatives
+ * of squared u,v corresponding to the donor cell scheme  and all other derivates inherited from 
+ * discretization.
+ */
 class DonorCell : public Discretization
 {
     public:

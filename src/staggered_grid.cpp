@@ -8,14 +8,14 @@ StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<dou
 }
 
 //set boundary values of u and v according to given boundary condition values
-void StaggeredGrid::set_boundary_uv(const std::array<double, 2> bottomBound, const std::array<double, 2> rightBound, const std::array<double, 2> topBound, const std::array<double, 2> leftBound)
+void StaggeredGrid::set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound)
 {
     set_u().set_boundary(bottomBound[0], rightBound[0], topBound[0], leftBound[0]);
     set_v().set_boundary(bottomBound[1], rightBound[1], topBound[1], leftBound[1]);
 }
 
 //set boundary values of F and G equal to u and v
-void StaggeredGrid::set_boundary_fg(const FieldVariable u, const FieldVariable v)
+void StaggeredGrid::set_boundary_fg(const FieldVariable &u, const FieldVariable &v)
 {
     //calculate maximum indices of u and v in each direction
     int iumax = u.size()[0], ivmax = v.size()[0], jumax = u.size()[1], jvmax = v.size()[1];

@@ -4,6 +4,7 @@
 #include "../includes/settings.h"
 #include "../includes/discretization.h"
 #include "../includes/solver.h"
+#include "../includes/output_writer_paraview.h"
 
 
 
@@ -23,8 +24,11 @@ int main(int argc, char *argv[])
     //create discretization
     std::shared_ptr<Solver> solver = settings.get_solver();
 
+    //create outputwriter class
+    OutputWriterParaview writer(discretization);
+
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, discretization);   
+    solver->solve_uv(settings, *discretization, writer);
     
     return EXIT_SUCCESS;
 }

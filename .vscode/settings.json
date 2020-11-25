@@ -50,7 +50,14 @@
         "iterator": "cpp",
         "numeric": "cpp",
         "random": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "bitset": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

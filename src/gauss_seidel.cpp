@@ -11,17 +11,17 @@ GaussSeidel::GaussSeidel(int maximumNumberOfIterations, double epsilon)
     epsilon_ = epsilon;
 }
 
-void GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
+void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p)
 {
-    std::array<int, 2> size = discr->p().size();
+    std::array<int, 2> size = p.size();
 
     //initialize residuum and iteration counter
     double temp_res, norm_res;
     int iter = 0;
 
     //set meshwidth in each direction
-    double hx = discr->meshWidth()[0];
-    double hy = discr->meshWidth()[1];
+    double hx = discr.meshWidth()[0];
+    double hy = discr.meshWidth()[1];
 
     //calculate prefactor
     double factor = hx * hx * hy * hy / (2.0 * (hx * hx + hy * hy));
@@ -30,7 +30,7 @@ void GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
     do
     {
         //adjust boundary values for p
-        discr->set_p().set_boundary(0, 0, 0, 0);
+        p.set_boundary(0, 0, 0, 0);
 
         //reset residuum norm
         norm_res = 0;
@@ -41,10 +41,10 @@ void GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
             for (int j = 1; j < size[1] - 1; j++)
             {
                 //calculate residuum at position (i,j)
-                temp_res = discr->computeD2pDx2(i, j) + discr->computeD2pDy2(i, j) - discr->rhs(i, j);
+                temp_res = discr.computeD2pDx2(i, j) + discr.computeD2pDy2(i, j) - discr.rhs(i, j);
 
                 //calculate new p at position (i,j)
-                discr->set_p(i, j) = discr->p(i, j) + (factor * temp_res);
+                p(i, j) = discr.p(i, j) + (factor * temp_res);
 
                 //update residuum norm
                 norm_res = norm_res + (temp_res * temp_res);
@@ -52,7 +52,7 @@ void GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
         }
 
         //finish calculation of residuum
-        norm_res = norm_res / ((discr->nCells()[0]) * (discr->nCells()[1]));
+        norm_res = norm_res / ((discr.nCells()[0]) * (discr.nCells()[1]));
 
         //next iteration
         iter += 1;
@@ -62,6 +62,6 @@ void GaussSeidel::compute_p(const std::shared_ptr<Discretization> discr)
     while (iter < maximumNumberOfIterations_ && norm_res > epsilon_ * epsilon_);
 
     //set correct boundary values (safety first)
-    discr->set_p().set_boundary(0,0,0,0);
+    p.set_boundary(0,0,0,0);
 
 }

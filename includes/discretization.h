@@ -2,6 +2,10 @@
 
 #include "staggered_grid.h"
 
+
+/** This class contains functions to compute first and second 
+ * derivatives of all needed values. This is a abstarct class!
+ */
 class Discretization : public StaggeredGrid
 {
 public:
