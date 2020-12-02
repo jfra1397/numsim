@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
     //run loop to solve for new velocities u,v
     solver->solve_uv(settings, *discretization, writer, timeStep);
 
+    /**
     auto stop = std::chrono::high_resolution_clock::now();
 
     //nanoseconds, microseconds, milliseconds, seconds, minutes, hours possible
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
     myfile.open("run-times.csv", std::ios::out | std::ios::app);
     myfile << settings.nCells()[0] << ";" << settings.nCells()[1] << ";" << duration.count() << std::endl;
     myfile.close();
-
+    */
     
     return EXIT_SUCCESS;
 }
