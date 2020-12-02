@@ -23,8 +23,8 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
     int iter = 0;
 
     //set meshwidth in each direction
-    double hx = discr.meshWidth()[0];
-    double hy = discr.meshWidth()[1];
+    double hx = discr.dx();
+    double hy = discr.dy();
 
     //calculate prefactor
     double factor =  hx * hx * hy * hy / (2.0*(hx * hx + hy * hy));

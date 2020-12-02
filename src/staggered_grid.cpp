@@ -81,3 +81,17 @@ double &StaggeredGrid::set_p(int i, int j) { return p_(i, j); }
 double &StaggeredGrid::set_f(int i, int j) { return f_(i, j); }
 double &StaggeredGrid::set_g(int i, int j) { return g_(i, j); }
 double &StaggeredGrid::set_rhs(int i, int j) { return rhs_(i, j); }
+
+
+int StaggeredGrid::uIBegin() const{}
+int StaggeredGrid::uIEnd() const{}
+int StaggeredGrid::uJBegin() const{}
+int StaggeredGrid::uJEnd() const{}
+int StaggeredGrid::vIBegin() const{}
+int StaggeredGrid::vIEnd() const{}
+int StaggeredGrid::vJBegin() const{}
+int StaggeredGrid::vJEnd() const{}
+int StaggeredGrid::pIBegin() const{}
+int StaggeredGrid::pIEnd() const{}
+int StaggeredGrid::pJBegin() const{}
+int StaggeredGrid::pJEnd() const{}

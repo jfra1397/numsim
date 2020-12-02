@@ -56,6 +56,10 @@ public:
 
     //get meshwidth in each direction
     const std::array<double, 2> meshWidth() const;
+    //get meshwidth in x-direction
+    double dx() const;
+    //get meshwidth in y-direction
+    double dy() const;
 
     //get number of cells in each direction
     const std::array<int, 2> nCells() const;

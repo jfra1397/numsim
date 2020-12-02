@@ -49,6 +49,19 @@ public:
     double &set_g(int i, int j);
     double &set_rhs(int i, int j);
 
+    int uIBegin() const;
+    int uIEnd() const;
+    int uJBegin() const;
+    int uJEnd() const;
+    int vIBegin() const;
+    int vIEnd() const;
+    int vJBegin() const;
+    int vJEnd() const;
+    int pIBegin() const;
+    int pIEnd() const;
+    int pJBegin() const;
+    int pJEnd() const;
+
 private:
     //field variables
     FieldVariable u_;
