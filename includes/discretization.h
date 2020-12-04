@@ -10,7 +10,7 @@ class Discretization : public StaggeredGrid
 {
 public:
     //construct the object with given number of cells in x and y direction
-    Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize);
+    Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype);
 
     //compute the 1st derivative ∂ u^2 / ∂x
     virtual double computeDu2Dx(int i, int j) const = 0;

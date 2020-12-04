@@ -15,7 +15,7 @@ public:
     GaussSeidel(int maximumNumberOfIterations, double epsilon);
 
     //solve pressure poisson equation by using GS iterations
-    virtual void compute_p(const Discretization &discr, FieldVariable &p);
+    virtual void compute_p(const Discretization &discr, FieldVariable &p, const Partitioning &partition);
 
 private:
 

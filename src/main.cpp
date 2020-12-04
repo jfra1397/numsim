@@ -2,46 +2,42 @@
 #include <memory>
 #include <chrono>
 
+#include <mpi.h>
+
 #include "../includes/settings.h"
+#include "../includes/partitioning.h"
 #include "../includes/discretization.h"
 #include "../includes/solver.h"
-#include "../includes/output_writer_paraview.h"
+#include "../includes/output_writer_paraview_parallel.h"
 
 
 
 int main(int argc, char *argv[])
 
 {
+    MPI_Init(&argc, &argv);
+
+    Partitioning partitioning;
 
     //load settings
     Settings settings;
-    if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
-    else settings.loadFromFile(argv[1]);
-    settings.printSettings();
-
-    double timeStep;
-    if (argc>=3) 
-    {
-        std::cout<< "Using always time step: " << argv[2] << std::endl;
-        timeStep = std::stod(argv[2]);
-    } 
-    else timeStep = 0; 
+    //if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
+    settings.loadFromFile("../parameters.txt");
+    //settings.printSettings();
 
     //create discretization depending on a settings value
-    std::shared_ptr<Discretization> discretization = settings.get_discretization();
-
+    std::shared_ptr<Discretization> discretization = partitioning.get_discretization(settings);
     //create discretization
     std::shared_ptr<Solver> solver = settings.get_solver();
-
     //create outputwriter class
-    OutputWriterParaview writer(discretization);
+    //OutputWriterParaviewParallel writer(discretization, partitioning);
 
 
     auto start = std::chrono::high_resolution_clock::now();
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, writer, timeStep);
-
+    solver->solve_uv(settings, *discretization, partitioning);
+    std::cout << "done" << std::endl;
     /**
     auto stop = std::chrono::high_resolution_clock::now();
 

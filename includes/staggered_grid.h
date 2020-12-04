@@ -3,7 +3,6 @@
 
 #include "field_variable.h"
 
-
 /** This class stores all field variables and 
  * is able to set boundary conditions and values
  */
@@ -11,11 +10,11 @@ class StaggeredGrid
 {
 public:
     //constructor
-    StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize);
+    StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype);
 
-    //set boundary values corresponding to variable
-    void set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound);
-    void set_boundary_fg(const FieldVariable &u, const FieldVariable &v);
+    // //set boundary values corresponding to variable
+    // void set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound);
+    // void set_boundary_fg(const FieldVariable &u, const FieldVariable &v);
 
     //get the whole field variable, declared const, i.e. it is not possible to change it
     const FieldVariable &u() const;

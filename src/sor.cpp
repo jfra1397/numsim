@@ -14,7 +14,7 @@ SOR::SOR(int maximumNumberOfIterations, double epsilon, double omega)
     omega_ = omega;
 }
 
-void SOR::compute_p(const Discretization &discr, FieldVariable &p)
+void SOR::compute_p(const Discretization &discr, FieldVariable &p, const Partitioning &partition)
 {
     std::array<int,2> size = p.size();
 
@@ -33,7 +33,7 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
     do
     {
         //adjust boundary values for p
-        p.set_boundary(0,0,0,0);
+        partition.exchange_p(p);
 
         //reset residuum norm
         norm_res = 0;
@@ -64,6 +64,6 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
     while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_*epsilon_);
 
     //set correct boundary values (safety first)
-    p.set_boundary(0,0,0,0);
+    partition.exchange_p(p);
 
 }

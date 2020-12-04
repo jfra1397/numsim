@@ -4,6 +4,18 @@
 
 #include "array2d.h"
 
+enum edgetype{
+    HALO,
+    GHOST
+};
+
+enum orientation{
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
+};
+
 //describe position of corresponding variable on grid
 enum vposition
 {
@@ -27,13 +39,14 @@ class FieldVariable : public Array2D
 {
 public:
     //constructor
-    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize);
+    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype);
 
     //set boundary condition type of each boundary
     int set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);
 
     //set boundary values at each boundary
-    int set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h = 0);
+    int set_boundary_dirichlet(orientation orient, double boundvalue);
+    int set_boundary_neumann(orientation orient, double boundvalue);
 
     //set field variable matrix to data matrix
     void operator=(const Array2D &data);
@@ -59,6 +72,11 @@ private:
     btype bottomBoundType_;
     btype leftBoundType_;
     btype rightBoundType_;
+
+    edgetype topEdgeType_;
+    edgetype bottomEdgeType_;
+    edgetype leftEdgeType_;
+    edgetype rightEdgeType_;
 
     //position of corresponding variable on grid
     vposition pos_;

@@ -27,9 +27,6 @@ public:
     //output all settings to console
     void printSettings() const;
 
-    //get discretization instance depending on settings
-    std::shared_ptr<Discretization> get_discretization();
-
     //get solver instance depending on settings
     std::shared_ptr<Solver> get_solver();
 

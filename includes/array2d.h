@@ -30,6 +30,26 @@ public:
 
   void operator=(const Array2D &result);
 
+  std::vector<double> get_row(int j) const
+  {
+    std::vector<double> row(size_[0]);
+    for (int i = 0; i < size_[0]; i++) row[i] = (*this)(i,j);
+    return row; 
+  };
+  std::vector<double> get_column(int i) const
+  {
+    std::vector<double> column(size_[1]);
+    for (int j = 0; j < size_[1]; j++) column[j] = (*this)(i,j);
+    return column; 
+  };
+  void set_row(int j, std::vector<double> row)
+  {
+    for (int i = 0; i < size_[0]; i++) (*this)(i,j) = row[i];
+  };
+  void set_column(int i, std::vector<double> column)
+  {
+    for (int j = 0; j < size_[1]; j++) (*this)(i,j)  = column[j];
+  };
   //return maximum of array
   double get_max() const;
 

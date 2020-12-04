@@ -7,7 +7,7 @@ project(numsim)
 # Also specify the source files.
 add_executable(${PROJECT_NAME}
    src/main.cpp
-   src/output_writer/output_writer_paraview.cpp
+   #src/output_writer/output_writer_paraview.cpp
    #src/output_writer/output_writer_text.cpp
    src/output_writer/output_writer.cpp
    src/array2d.cpp
@@ -38,6 +38,21 @@ if (VTK_FOUND)
   include_directories(${VTK_INCLUDE_DIRS})               # add the include directory where the header files are for the compiler
   target_link_libraries(${PROJECT_NAME} ${VTK_LIBRARIES}) # add the libraries for the linker
 endif(VTK_FOUND)
+
+find_package(MPI REQUIRED)
+
+include_directories(${MPI_INCLUDE_PATH})
+target_link_libraries(${PROJECT_NAME} ${MPI_LIBRARIES})
+
+if(MPI_COMPILE_FLAGS)
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    COMPILE_FLAGS "${MPI_COMPILE_FLAGS}")
+endif()
+
+if(MPI_LINK_FLAGS)
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    LINK_FLAGS "${MPI_LINK_FLAGS}")
+endif()
 
 # install numsim executable in build directory
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/../build)

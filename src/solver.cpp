@@ -99,7 +99,7 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, double manualTimeStep)
+void Solver::solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning)
 {
 
 
@@ -109,15 +109,17 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
     double dt;
 
     //set boundary condition values of u,v
-    discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+    partitioning.exchange_uv(discr.set_u(), discr.set_v(), settings);
+    std::cout << "first exchange" << std::endl;
+    //discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
     {
         //compute time step
-        if (manualTimeStep == 0) dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
-        else dt = manualTimeStep;
-        
+        dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
+        //communicate with other process to get minimum time step
+        dt = partitioning.get_time(dt);
 
         //set time step s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
@@ -127,19 +129,23 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         compute_f(settings.re(), settings.g()[0], dt, discr, discr.set_f());
         compute_g(settings.re(), settings.g()[1], dt, discr, discr.set_g());
 
+
         //set boundary values of f,g to boundary values of u,v
-        discr.set_boundary_fg(discr.u(), discr.v());
+        partitioning.exchange_fg(discr.set_f(), discr.set_g(), discr.u(), discr.v());
+        //discr.set_boundary_fg(discr.u(), discr.v());
 
         //compute right hand side and pressure (with given pressure solver)
         compute_rhs(dt, discr, discr.set_rhs());
-        compute_p(discr, discr.set_p());
+        compute_p(discr, discr.set_p(), partitioning);
 
         //compute new u,v
         compute_u(dt, discr, discr.set_u());
         compute_v(dt, discr, discr.set_v());
 
         //set new boundary values s.t. boundary conditions are met
-        discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        //discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        partitioning.exchange_uv(discr.set_u(), discr.set_v(), settings);
+
 
         //increment actual time by time step
         t += dt;
