@@ -1,4 +1,5 @@
 #include <math.h>
+#include <mpi.h>
 
 #include "../includes/sor.h"
 
@@ -56,6 +57,7 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p, const Partiti
         
         //finish calculation of residuum
         norm_res = norm_res/((discr.nCells()[0]) * (discr.nCells()[1]));
+        MPI_Allreduce( &norm_res, &norm_res, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
         //next iteration
         iter += 1;

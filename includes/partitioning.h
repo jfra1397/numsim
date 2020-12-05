@@ -9,8 +9,7 @@
 
 class Partitioning
 {
-    public:
-
+public:
     Partitioning()
     {
         MPI_Comm_rank(MPI_COMM_WORLD, &ownRank_);
@@ -29,32 +28,30 @@ class Partitioning
         if (rightProcess_ != 4)
         {
             MPI_Recv(column.data(), data.size()[1], MPI_DOUBLE, rightProcess_, messageTag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            data.set_column(data.size()[0]-1, column);
+            data.set_column(data.size()[0] - 1, column);
         }
         if (upProcess_ != 4)
         {
             MPI_Recv(row.data(), data.size()[0], MPI_DOUBLE, upProcess_, messageTag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            data.set_row(data.size()[1]-1, row);
+            data.set_row(data.size()[1] - 1, row);
         }
         if (downProcess_ != 4)
         {
             MPI_Recv(row.data(), data.size()[0], MPI_DOUBLE, downProcess_, messageTag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             data.set_row(0, row);
         }
-
     };
 
     double get_time(double myTime) const
     {
         double newTime;
-        MPI_Allreduce( &myTime, &newTime, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
-        
+        MPI_Allreduce(&myTime, &newTime, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+
         return newTime;
     };
 
     int noRanks_;
     int ownRank_;
-
 
     //holds rank of neighbor process if rank equals to nRanks there is no neighbor bc-condition has to be applied
     int leftProcess_;
@@ -65,7 +62,6 @@ class Partitioning
     //holds rank of neighbor process if rank equals to nRanks there is no neighbor bc-condition has to be applied
     std::array<int, 2> nCells_;
     std::array<double, 2> physicalSize_;
-
 
     //get discretization instance depending on settings
     std::shared_ptr<Discretization> get_discretization(const Settings &settings)
@@ -78,10 +74,10 @@ class Partitioning
             rightProcess_ = 1;
             upProcess_ = 4;
             downProcess_ = 2;
-            nCells_[0] = settings.nCells()[0]/2 + settings.nCells()[0]%2;
-            nCells_[1] = settings.nCells()[1]/2 + settings.nCells()[1]%2;
-            physicalSize_[0]  = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
-            physicalSize_[1]  = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
+            nCells_[0] = settings.nCells()[0] / 2 + settings.nCells()[0] % 2;
+            nCells_[1] = settings.nCells()[1] / 2 + settings.nCells()[1] % 2;
+            physicalSize_[0] = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
+            physicalSize_[1] = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
             //top, bottom, left, right
             edgestype = {HALO, GHOST, HALO, GHOST};
         }
@@ -91,10 +87,10 @@ class Partitioning
             rightProcess_ = 4;
             upProcess_ = 4;
             downProcess_ = 3;
-            nCells_[0] = settings.nCells()[0]/2;
-            nCells_[1] = settings.nCells()[1]/2 + settings.nCells()[1]%2;
-            physicalSize_[0]  = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
-            physicalSize_[1]  = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
+            nCells_[0] = settings.nCells()[0] / 2;
+            nCells_[1] = settings.nCells()[1] / 2 + settings.nCells()[1] % 2;
+            physicalSize_[0] = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
+            physicalSize_[1] = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
             edgestype = {HALO, GHOST, GHOST, HALO};
         }
         else if (ownRank_ == 2)
@@ -103,10 +99,10 @@ class Partitioning
             rightProcess_ = 3;
             upProcess_ = 0;
             downProcess_ = 4;
-            nCells_[0] = settings.nCells()[0]/2 + settings.nCells()[0]%2;
-            nCells_[1] = settings.nCells()[1]/2;
-            physicalSize_[0]  = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
-            physicalSize_[1]  = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
+            nCells_[0] = settings.nCells()[0] / 2 + settings.nCells()[0] % 2;
+            nCells_[1] = settings.nCells()[1] / 2;
+            physicalSize_[0] = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
+            physicalSize_[1] = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
             edgestype = {GHOST, HALO, HALO, GHOST};
         }
         else if (ownRank_ == 3)
@@ -115,20 +111,17 @@ class Partitioning
             rightProcess_ = 4;
             upProcess_ = 1;
             downProcess_ = 4;
-            nCells_[0] = settings.nCells()[0]/2;
-            nCells_[1] = settings.nCells()[1]/2;
-            physicalSize_[0]  = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
-            physicalSize_[1]  = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
+            nCells_[0] = settings.nCells()[0] / 2;
+            nCells_[1] = settings.nCells()[1] / 2;
+            physicalSize_[0] = settings.physicalSize()[0] / settings.nCells()[0] * nCells_[0];
+            physicalSize_[1] = settings.physicalSize()[1] / settings.nCells()[1] * nCells_[1];
             edgestype = {GHOST, HALO, GHOST, HALO};
         }
 
-
-    
         //create discretization depending on a settings value
         if (settings.useDonorCell())
         {
             //create donor cell discretization
-            //std::cout << ownRank_ << std::endl;
             return std::make_shared<DonorCell>(nCells_, physicalSize_, settings.alpha(), edgestype);
         }
         else
@@ -138,28 +131,29 @@ class Partitioning
         }
     };
 
-
     void exchange_uv(FieldVariable &u, FieldVariable &v, const Settings &settings) const
     {
         std::vector<MPI_Request> sendRequests;
-        std:: cout << ownRank_ << " left: " << leftProcess_ << " right: " << rightProcess_ << " up: " << upProcess_ << " down: " << downProcess_ << std::endl;
+
         if (leftProcess_ != 4)
         {
-            for (int i = 0 ; i < u.size()[1];i++) std::cout << u.get_column(1)[i];
-            std::cout << u.size()[1] << std::endl;
-            MPI_Send(u.get_column(1).data(), u.size()[1], MPI_DOUBLE, leftProcess_, 1, MPI_COMM_WORLD);
-            MPI_Send(v.get_column(1).data(), v.size()[1], MPI_DOUBLE, leftProcess_, 2, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(u.get_column(1).data(), u.size()[1], MPI_DOUBLE, leftProcess_, 1, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(v.get_column(1).data(), v.size()[1], MPI_DOUBLE, leftProcess_, 2, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
             u.set_boundary_dirichlet(LEFT, settings.dirichletBcLeft()[0]);
             v.set_boundary_dirichlet(LEFT, settings.dirichletBcLeft()[1]);
         }
-        
+
         if (rightProcess_ != 4)
         {
-            MPI_Send(u.get_column(u.size()[0]-2).data(), u.size()[1], MPI_DOUBLE, rightProcess_, 1, MPI_COMM_WORLD);
-            MPI_Send(v.get_column(v.size()[0]-2).data(), v.size()[1], MPI_DOUBLE, rightProcess_, 2, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(u.get_column(u.size()[0] - 2).data(), u.size()[1], MPI_DOUBLE, rightProcess_, 1, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(v.get_column(v.size()[0] - 2).data(), v.size()[1], MPI_DOUBLE, rightProcess_, 2, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
@@ -168,8 +162,10 @@ class Partitioning
         }
         if (upProcess_ != 4)
         {
-            MPI_Send(u.get_row(u.size()[1]-2).data(), u.size()[0], MPI_DOUBLE, upProcess_, 1, MPI_COMM_WORLD);
-            MPI_Send(v.get_row(v.size()[1]-2).data(), v.size()[0], MPI_DOUBLE, upProcess_, 2, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(u.get_row(u.size()[1] - 2).data(), u.size()[0], MPI_DOUBLE, upProcess_, 1, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(v.get_row(v.size()[1] - 2).data(), v.size()[0], MPI_DOUBLE, upProcess_, 2, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
@@ -178,90 +174,104 @@ class Partitioning
         }
         if (downProcess_ != 4)
         {
-            MPI_Send(u.get_row(1).data(), u.size()[0], MPI_DOUBLE, downProcess_, 1, MPI_COMM_WORLD);
-            MPI_Send(v.get_row(1).data(), v.size()[0], MPI_DOUBLE, downProcess_, 2, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(u.get_row(1).data(), u.size()[0], MPI_DOUBLE, downProcess_, 1, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(v.get_row(1).data(), v.size()[0], MPI_DOUBLE, downProcess_, 2, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
             u.set_boundary_dirichlet(BOTTOM, settings.dirichletBcBottom()[0]);
             v.set_boundary_dirichlet(BOTTOM, settings.dirichletBcBottom()[1]);
         }
-        std::cout << "sending worked" << std::endl;
+
+        //wait for all pending send requests to complete
+        MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
         set_ghost(u, 1);
         set_ghost(v, 2);
-        std::cout << "message received" << std::endl;
-        // wait for all pending send requests to complete
-        // MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
 
+        //wait for all pending send requests to complete
+        MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
     };
 
-void exchange_fg(FieldVariable &f, FieldVariable &g, const FieldVariable &u, const FieldVariable &v) const
+    void exchange_fg(FieldVariable &f, FieldVariable &g, const FieldVariable &u, const FieldVariable &v) const
     {
         std::vector<MPI_Request> sendRequests;
+
         if (leftProcess_ != 4)
         {
-            MPI_Send(f.get_column(1).data(), f.size()[1], MPI_DOUBLE, leftProcess_, 3, MPI_COMM_WORLD);
-            MPI_Send(g.get_column(1).data(), g.size()[1], MPI_DOUBLE, leftProcess_, 4, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(f.get_column(1).data(), f.size()[1], MPI_DOUBLE, leftProcess_, 3, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(g.get_column(1).data(), g.size()[1], MPI_DOUBLE, leftProcess_, 4, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
             f.set_column(0, u.get_column(0));
             g.set_column(0, v.get_column(0));
         }
-        
+
         if (rightProcess_ != 4)
         {
-            MPI_Send(f.get_column(f.size()[0]-2).data(), f.size()[1], MPI_DOUBLE, rightProcess_, 3, MPI_COMM_WORLD);
-            MPI_Send(g.get_column(g.size()[0]-2).data(), g.size()[1], MPI_DOUBLE, rightProcess_, 4, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(f.get_column(f.size()[0] - 2).data(), f.size()[1], MPI_DOUBLE, rightProcess_, 3, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(g.get_column(g.size()[0] - 2).data(), g.size()[1], MPI_DOUBLE, rightProcess_, 4, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
-            f.set_column(f.size()[0]-1, u.get_column(f.size()[0]-1));
-            g.set_column(g.size()[0]-1, v.get_column(g.size()[0]-1));
+            f.set_column(f.size()[0] - 1, u.get_column(f.size()[0] - 1));
+            g.set_column(g.size()[0] - 1, v.get_column(g.size()[0] - 1));
         }
         if (upProcess_ != 4)
         {
-            MPI_Send(f.get_row(f.size()[1]-2).data(), f.size()[0], MPI_DOUBLE, upProcess_, 3, MPI_COMM_WORLD);
-            MPI_Send(g.get_row(g.size()[1]-2).data(), g.size()[0], MPI_DOUBLE, upProcess_, 4, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(f.get_row(f.size()[1] - 2).data(), f.size()[0], MPI_DOUBLE, upProcess_, 3, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(g.get_row(g.size()[1] - 2).data(), g.size()[0], MPI_DOUBLE, upProcess_, 4, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
-            f.set_row(f.size()[1]-1, u.get_row(f.size()[1]-1));
-            g.set_row(g.size()[1]-1, v.get_row(g.size()[1]-1));
+            f.set_row(f.size()[1] - 1, u.get_row(f.size()[1] - 1));
+            g.set_row(g.size()[1] - 1, v.get_row(g.size()[1] - 1));
         }
         if (downProcess_ != 4)
         {
-            MPI_Send(f.get_row(1).data(), f.size()[0], MPI_DOUBLE, downProcess_, 3, MPI_COMM_WORLD);
-            MPI_Send(g.get_row(1).data(), g.size()[0], MPI_DOUBLE, downProcess_, 4, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(f.get_row(1).data(), f.size()[0], MPI_DOUBLE, downProcess_, 3, MPI_COMM_WORLD, &sendRequests.back());
+            sendRequests.emplace_back();
+            MPI_Isend(g.get_row(1).data(), g.size()[0], MPI_DOUBLE, downProcess_, 4, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
             f.set_row(0, u.get_row(0));
             g.set_row(0, v.get_row(0));
         }
+
+        //wait for all pending send requests to complete
+        MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
+
         set_ghost(f, 3);
         set_ghost(g, 4);
-        // wait for all pending send requests to complete
-        // MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
     };
-
-
 
     void exchange_p(FieldVariable &p) const
     {
         std::vector<MPI_Request> sendRequests;
         if (leftProcess_ != 4)
         {
-            MPI_Send(p.get_column(1).data(), p.size()[1], MPI_DOUBLE, leftProcess_, 5, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(p.get_column(1).data(), p.size()[1], MPI_DOUBLE, leftProcess_, 5, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
             p.set_boundary_neumann(LEFT, 0);
         }
-        
+
         if (rightProcess_ != 4)
         {
-            MPI_Send(p.get_column(p.size()[0]-2).data(), p.size()[1], MPI_DOUBLE, rightProcess_, 5, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(p.get_column(p.size()[0] - 2).data(), p.size()[1], MPI_DOUBLE, rightProcess_, 5, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
@@ -269,7 +279,8 @@ void exchange_fg(FieldVariable &f, FieldVariable &g, const FieldVariable &u, con
         }
         if (upProcess_ != 4)
         {
-            MPI_Send(p.get_row(p.size()[1]-2).data(), p.size()[0], MPI_DOUBLE, upProcess_, 5, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(p.get_row(p.size()[1] - 2).data(), p.size()[0], MPI_DOUBLE, upProcess_, 5, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
@@ -277,20 +288,17 @@ void exchange_fg(FieldVariable &f, FieldVariable &g, const FieldVariable &u, con
         }
         if (downProcess_ != 4)
         {
-            MPI_Send(p.get_row(1).data(), p.size()[0], MPI_DOUBLE, downProcess_, 5, MPI_COMM_WORLD);
+            sendRequests.emplace_back();
+            MPI_Isend(p.get_row(1).data(), p.size()[0], MPI_DOUBLE, downProcess_, 5, MPI_COMM_WORLD, &sendRequests.back());
         }
         else
         {
             p.set_boundary_neumann(BOTTOM, 0);
         }
+
+        //wait for all pending send requests to complete
+        MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
+
         set_ghost(p, 5);
-        // wait for all pending send requests to complete
-        // MPI_Waitall(sendRequests.size(), sendRequests.data(), MPI_STATUSES_IGNORE);
     };
-
-
-
-
-
-
 };

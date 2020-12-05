@@ -51,6 +51,6 @@ int main(int argc, char *argv[])
     myfile << settings.nCells()[0] << ";" << settings.nCells()[1] << ";" << duration.count() << std::endl;
     myfile.close();
     */
-    
+    MPI_Finalize();
     return EXIT_SUCCESS;
 }

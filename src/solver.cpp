@@ -102,7 +102,6 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
 void Solver::solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning)
 {
 
-
     //initialize time
     double t = 0;
     int fileNo = 0;
@@ -110,32 +109,36 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, const Par
 
     //set boundary condition values of u,v
     partitioning.exchange_uv(discr.set_u(), discr.set_v(), settings);
-    std::cout << "first exchange" << std::endl;
     //discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
     {
-        //compute time step
+        //compute timestep
         dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
         //communicate with other process to get minimum time step
         dt = partitioning.get_time(dt);
 
-        //set time step s.t. given endtime is not exceeded
+        //set timestep s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
             dt = settings.endTime() - t;
+        
+        //set time step s.t. integer timesteps are matched
+        else if (int(t + dt) - t > 0){
+            dt = int(t + dt) - t;
+        }
 
         // compute f,g
         compute_f(settings.re(), settings.g()[0], dt, discr, discr.set_f());
         compute_g(settings.re(), settings.g()[1], dt, discr, discr.set_g());
 
-
         //set boundary values of f,g to boundary values of u,v
         partitioning.exchange_fg(discr.set_f(), discr.set_g(), discr.u(), discr.v());
         //discr.set_boundary_fg(discr.u(), discr.v());
-
+        
         //compute right hand side and pressure (with given pressure solver)
         compute_rhs(dt, discr, discr.set_rhs());
+
         compute_p(discr, discr.set_p(), partitioning);
 
         //compute new u,v
@@ -145,7 +148,6 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, const Par
         //set new boundary values s.t. boundary conditions are met
         //discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
         partitioning.exchange_uv(discr.set_u(), discr.set_v(), settings);
-
 
         //increment actual time by time step
         t += dt;
