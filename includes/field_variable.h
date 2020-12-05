@@ -40,6 +40,7 @@ class FieldVariable : public Array2D
 public:
     //constructor
     FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype);
+    FieldVariable(std::array<int,2> size, std::array<double,2> offset, std::array<double,2> meshWidth);
 
     //set boundary condition type of each boundary
     int set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);

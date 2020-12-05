@@ -61,6 +61,11 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     }
 }
 
+FieldVariable::FieldVariable(std::array<int,2> size, std::array<double,2> offset, std::array<double,2> meshWidth)
+    :Array2D(size)
+{
+}
+
 //set boundary condition type of each boundary
 int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
 {

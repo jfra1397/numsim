@@ -7,7 +7,7 @@ project(numsim)
 # Also specify the source files.
 add_executable(${PROJECT_NAME}
    src/main.cpp
-   #src/output_writer/output_writer_paraview.cpp
+   src/output_writer/output_writer_paraview_parallel.cpp
    #src/output_writer/output_writer_text.cpp
    src/output_writer/output_writer.cpp
    src/array2d.cpp
@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
    src/solver.cpp
    src/sor.cpp
    src/staggered_grid.cpp
+   src/partitioning.cpp
 )
 
 # Add the project directory to include directories, to be able to include all project header files from anywhere

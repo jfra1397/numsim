@@ -30,6 +30,10 @@ public:
 
   void operator=(const Array2D &result);
 
+  void setToZero();
+
+  double * data();
+
   std::vector<double> get_row(int j) const
   {
     std::vector<double> row(size_[0]);

@@ -108,3 +108,15 @@ void Array2D::set_data(const Array2D &result)
   assert(size() == result.size());
   data_ = result();
 }
+
+
+void Array2D::setToZero()
+{
+  std::fill(std::begin(data_), std::end(data_), 0);
+}
+
+
+double * Array2D::data()
+{
+  return data_.data();
+}

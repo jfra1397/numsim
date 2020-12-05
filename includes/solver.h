@@ -5,7 +5,7 @@
 #include "field_variable.h"
 #include "discretization.h"
 #include "settings.h"
-#include "output_writer_paraview.h"
+#include "output_writer_paraview_parallel.h"
 
 
 /** This class contains functions to compute the field variables
@@ -36,5 +36,5 @@ public:
     void compute_v(double dt, const Discretization &discr, FieldVariable &v);
 
     //solve for velocities u and v
-    void solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning);
+    void solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning, OutputWriterParaviewParallel &writer);
 };

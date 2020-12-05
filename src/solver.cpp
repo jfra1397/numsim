@@ -99,7 +99,7 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning)
+void Solver::solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning, OutputWriterParaviewParallel &writer)
 {
 
     //initialize time
@@ -154,6 +154,6 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, const Par
 
         //write results to output files
         //discr.write_to_file(fileNo++, t);
-        //writer.writeFile(t);
+        writer.writeFile(t);
     }
 }

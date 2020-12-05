@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
     //create discretization
     std::shared_ptr<Solver> solver = settings.get_solver();
     //create outputwriter class
-    //OutputWriterParaviewParallel writer(discretization, partitioning);
+    OutputWriterParaviewParallel writer(discretization, partitioning);
 
 
     auto start = std::chrono::high_resolution_clock::now();
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, partitioning);
+    solver->solve_uv(settings, *discretization, partitioning, writer);
     std::cout << "done" << std::endl;
     /**
     auto stop = std::chrono::high_resolution_clock::now();
