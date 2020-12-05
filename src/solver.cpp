@@ -147,7 +147,9 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         t += dt;
 
         //write results to output files
-        //discr.write_to_file(fileNo++, t);
-        if (int(t) == t )writer.writeFile(t);
+        if (int(t) == t ){
+            writer.writeFile(t);
+            discr.write_to_file(fileNo++, t);
+        }
     }
 }
