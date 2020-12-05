@@ -15,6 +15,7 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
 {
     std::array<int, 2> size = p.size();
 
+    int start = (partition.nodeOffset()[0] + partition.nodeOffset()[1])%2;
     //initialize residuum and iteration counter
     double temp_res, norm_res;
     int iter = 0;
@@ -35,11 +36,11 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
 
         //reset residuum norm
         norm_res = 0;
-
+        int jstart =start;
         //GS iteration over whole matrix
         for (int i = 1; i < size[0] - 1; i++)
         {
-            for (int j = 1; j < size[1] - 1; j++)
+            for (int j = jstart%2 + 1; j < size[1] - 1; j += 2)
             {
                 //calculate residuum at position (i,j)
                 temp_res = discr.computeD2pDx2(i, j) + discr.computeD2pDy2(i, j) - discr.rhs(i, j);
@@ -50,6 +51,27 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
                 //update residuum norm
                 norm_res = norm_res + (temp_res * temp_res);
             }
+            jstart++;
+        }
+        
+        partition.exchange_p(p);
+
+        jstart = start + 1;
+        //GS iteration over whole matrix
+        for (int i = 1; i < size[0] - 1; i++)
+        {
+            for (int j =jstart%2 + 1; j < size[1] - 1; j += 2)
+            {
+                //calculate residuum at position (i,j)
+                temp_res = discr.computeD2pDx2(i, j) + discr.computeD2pDy2(i, j) - discr.rhs(i, j);
+
+                //calculate new p at position (i,j)
+                p(i, j) = discr.p(i, j) + (factor * temp_res);
+
+                //update residuum norm
+                norm_res = norm_res + (temp_res * temp_res);
+            }
+            jstart++;
         }
 
         //finish calculation of residuum
