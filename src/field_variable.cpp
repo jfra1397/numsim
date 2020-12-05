@@ -29,36 +29,35 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     //set size in each direction
     int sizex = size[0], sizey = size[1];
 
+
     //if value is at centre, extend matrix in both directions by two (variable types p and rhs)
     if (pos == VCENTRE)
     {
         sizex += 2;
         sizey += 2;
-        // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = true;
         verticalBoundInterpolate_ = true;
     }
     //if value is at right, extend matrix in y-direction by two and x-direction by one (variable types u and F)
     else if (pos == VRIGHT)
     {
+        if (rightEdgeType_  == GHOST) sizex += 1;
         sizex += 1;
         sizey += 2;
-        // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = false;
         verticalBoundInterpolate_ = true;
     }
     //if value is at top, extend matrix in y-direction by one and x-direction by two (variable types v and G)
     else if (pos == VTOP)
     {
+        if (topEdgeType_  == GHOST) sizey += 1;
         sizex += 2;
         sizey += 1;
-        // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = true;
         verticalBoundInterpolate_ = false;
     }
+    // allocate data, initialize to 0
+    resize({sizex, sizey});
 }
 
 FieldVariable::FieldVariable(std::array<int,2> size, std::array<double,2> offset, std::array<double,2> meshWidth)
