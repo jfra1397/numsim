@@ -6,7 +6,8 @@
 
 #include "../includes/discretization.h"
 
-Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize) : StaggeredGrid(nCells, physicalSize)
+Discretization::Discretization(const std::array<int, 2> &nCells, const std::array<double, 2> &physicalSize, std::array<edgetype, 4> &edgestype) 
+        : StaggeredGrid(nCells, physicalSize, edgestype)
 {
     physicalSize_ = physicalSize;
 
@@ -83,19 +84,19 @@ double Discretization::computeD2pDy2(int i, int j) const
 }
 
 //get meshwidth in each direction
-const std::array<double, 2> Discretization::meshWidth() const
+const std::array<double, 2> &Discretization::meshWidth() const
 {
     return meshWidth_;
 }
 
 //get number of cells in each direction
-const std::array<int, 2> Discretization::nCells() const
+const std::array<int, 2> &Discretization::nCells() const
 {
     return nCells_;
 }
 
 //write output to .txt file (self written)
-void Discretization::write_to_file(int fileNo, double time) const
+void Discretization::write_to_file(int fileNo, double time, int ownRank) const
 {
     // create "out" subdirectory if it does not yet exist
     int returnValue = system("mkdir -p out");
@@ -104,7 +105,7 @@ void Discretization::write_to_file(int fileNo, double time) const
 
     // Assemble the filename
     std::stringstream fileName;
-    fileName << "out/output_" << std::setw(4) << std::setfill('0') << fileNo << ".txt";
+    fileName << "out/output_" << std::setw(4) << std::setfill('0') << fileNo << "_" << ownRank << ".txt";
 
     //header in .txt file
     std::ofstream myfile;

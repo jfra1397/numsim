@@ -3,8 +3,6 @@
 #include <algorithm> //forstr to int,double
 
 #include "../includes/settings.h"
-#include "../includes/donor_cell.h"
-#include "../includes/central_differences.h"
 #include "../includes/sor.h"
 #include "../includes/gauss_seidel.h"
 
@@ -23,11 +21,11 @@ Settings::Settings()
     maximumDt_ = 0.1;
 
     //external forces
-    g_ = {0., 0.}; 
+    g_ = {0., 0.};
 
     //if the donor cell scheme schould be used
     useDonorCell_ = false;
-    
+
     //factor for donor-cell scheme
     alpha_ = 0.5;
 
@@ -41,7 +39,7 @@ Settings::Settings()
     epsilon_ = 1e-5;
 
     //maximum number of iterations in the solver
-    maximumNumberOfIterations_ = 1e5; 
+    maximumNumberOfIterations_ = 1e5;
 }
 
 //parse a text file with settings, each line contains "<parameterName> = <value>"
@@ -89,7 +87,7 @@ void Settings::loadFromFile(const std::string filename)
         found = line.find("=");
         if (found == std::string::npos)
         {
-            std::cout << "somhting went wrong in line " << lineNo << ": " << line << std::endl;
+            std::cout << "Something went wrong in line " << lineNo << ": " << line << std::endl;
             continue;
         }
         else
@@ -241,26 +239,10 @@ double Settings::epsilon() const { return epsilon_; }
 //return maximum number of iterations in the solver
 int Settings::maximumNumberOfIterations() const { return maximumNumberOfIterations_; }
 
-//get discretization instance depending on settings
-std::shared_ptr<Discretization> Settings::get_discretization()
-    {
-        //create discretization depending on a settings value
-        if (useDonorCell())
-        {
-            //create donor cell discretization
-            return std::make_shared<DonorCell>(nCells(), physicalSize(), alpha());
-        }
-        else
-        {
-            //create central differences
-            return std::make_shared<CentralDifferences>(nCells(), physicalSize());
-        }
-    }
-
 //get solver instance depending on settings
 std::shared_ptr<Solver> Settings::get_solver()
 {
-    if (pressureSolver() == "SOR")   // depending on a settings value
+    if (pressureSolver() == "SOR") // depending on a settings value
     {
         //create donor cell discretization
         return std::make_shared<SOR>(maximumNumberOfIterations(), epsilon(), omega());

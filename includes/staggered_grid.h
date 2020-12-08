@@ -3,7 +3,6 @@
 
 #include "field_variable.h"
 
-
 /** This class stores all field variables and 
  * is able to set boundary conditions and values
  */
@@ -11,44 +10,41 @@ class StaggeredGrid
 {
 public:
     //constructor
-    StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize);
-
-    //set boundary values corresponding to variable
-    void set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound);
-    void set_boundary_fg(const FieldVariable &u, const FieldVariable &v);
+    StaggeredGrid(const std::array<int, 2> &size, const std::array<double, 2> &physicalSize, std::array<edgetype, 4> &edgestype);
 
     //get the whole field variable, declared const, i.e. it is not possible to change it
-    const FieldVariable &u() const;
-    const FieldVariable &v() const;
-    const FieldVariable &p() const;
-    const FieldVariable &f() const;
-    const FieldVariable &g() const;
-    const FieldVariable &rhs() const;
+    inline const FieldVariable &u() const { return u_; };
+    inline const FieldVariable &v() const { return v_; };
+    inline const FieldVariable &p() const { return p_; };
+    inline const FieldVariable &f() const { return f_; };
+    inline const FieldVariable &g() const { return g_; };
+    inline const FieldVariable &rhs() const { return rhs_; };
 
     //get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
-    double u(int i, int j) const;
-    double v(int i, int j) const;
-    double p(int i, int j) const;
-    double f(int i, int j) const;
-    double g(int i, int j) const;
-    double rhs(int i, int j) const;
+    inline double u(int i, int j) const { return u_(i, j); };
+    inline double v(int i, int j) const { return v_(i, j); };
+    inline double p(int i, int j) const { return p_(i, j); };
+    inline double f(int i, int j) const { return f_(i, j); };
+    inline double g(int i, int j) const { return g_(i, j); };
+    inline double rhs(int i, int j) const { return rhs_(i, j); }
 
     //access the field variable, declared not const, i.e. the values can be changed
-    FieldVariable &set_u();
-    FieldVariable &set_v();
-    FieldVariable &set_p();
-    FieldVariable &set_f();
-    FieldVariable &set_g();
-    FieldVariable &set_rhs();
+    inline FieldVariable &set_u() { return u_; };
+    inline FieldVariable &set_v() { return v_; };
+    inline FieldVariable &set_p() { return p_; };
+    inline FieldVariable &set_f() { return f_; };
+    inline FieldVariable &set_g() { return g_; };
+    inline FieldVariable &set_rhs() { return rhs_; };
 
     //access the value at coordinate (i,j), declared not const, i.e. the value can be changed
-    double &set_u(int i, int j);
-    double &set_v(int i, int j);
-    double &set_p(int i, int j);
-    double &set_f(int i, int j);
-    double &set_g(int i, int j);
-    double &set_rhs(int i, int j);
+    inline double &set_u(int i, int j) { return u_(i, j); };
+    inline double &set_v(int i, int j) { return v_(i, j); };
+    inline double &set_p(int i, int j) { return p_(i, j); };
+    inline double &set_f(int i, int j) { return f_(i, j); };
+    inline double &set_g(int i, int j) { return g_(i, j); };
+    inline double &set_rhs(int i, int j) { return rhs_(i, j); };
 
+    //dummy functions for output_writer_text_parallel
     int uIBegin() const;
     int uIEnd() const;
     int uJBegin() const;

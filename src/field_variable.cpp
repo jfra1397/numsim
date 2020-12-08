@@ -4,7 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize) : Array2D({0, 0})
+FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, const std::array<double, 2> &physicalSize, const std::array<edgetype, 4> &edgestype) : Array2D({0, 0})
 {
     //set position of corresponding variable on grid
     pos_ = pos;
@@ -14,6 +14,12 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     bottomBoundType_ = DIRICHLET;
     leftBoundType_ = DIRICHLET;
     rightBoundType_ = DIRICHLET;
+
+    //set edge type at top/bottom/left/right boundary
+    topEdgeType_ = edgestype[0];
+    bottomEdgeType_ = edgestype[1];
+    leftEdgeType_ = edgestype[2];
+    rightEdgeType_ = edgestype[3];
 
     //calculate meshwidth in each direction
     meshWidth_ = {physicalSize[0] / (double)size[0], physicalSize[1] / (double)size[1]};
@@ -29,153 +35,195 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     {
         sizex += 2;
         sizey += 2;
-        // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = true;
         verticalBoundInterpolate_ = true;
     }
     //if value is at right, extend matrix in y-direction by two and x-direction by one (variable types u and F)
     else if (pos == VRIGHT)
     {
+        //increment size in x-direction in order to be able to calculate the point on the right edge
+        if (rightEdgeType_ == GHOST)
+            sizex += 1;
         sizex += 1;
         sizey += 2;
-        // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = false;
         verticalBoundInterpolate_ = true;
     }
     //if value is at top, extend matrix in y-direction by one and x-direction by two (variable types v and G)
     else if (pos == VTOP)
     {
+        //increment size in y-direction in order to be able to calculate the point on the top edge
+        if (topEdgeType_ == GHOST)
+            sizey += 1;
         sizex += 2;
         sizey += 1;
-        // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = true;
         verticalBoundInterpolate_ = false;
     }
+    // allocate data, initialize to 0
+    resize({sizex, sizey});
+}
+
+//constructor to make things suitable for output_writer
+FieldVariable::FieldVariable(const std::array<int, 2> &size, const std::array<double, 2> &offset, const std::array<double, 2> &meshWidth)
+    : Array2D(size)
+{
 }
 
 //set boundary condition type of each boundary
-int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
+void FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
 {
+#ifdef MY_DEBUG
     if (top == NEUMANN || bottom == NEUMANN || left == NEUMANN || right == NEUMANN)
     {
         assert(("Neumann boundary condition not implemented for variable positions at top and right!", pos_ == VCENTRE));
     }
+#endif
+
     topBoundType_ = top;
     bottomBoundType_ = bottom;
     leftBoundType_ = left;
     rightBoundType_ = right;
-
-    return 0;
 }
 
-//set boundary values at each boundary
-int FieldVariable::set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h)
+//set Dirichlet boundary values at boundary by argument orient
+void FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue)
 {
     int i, j;
-    //iterate over bottom boundary
-    j = size()[1] - 1;
-    for (i = 1; i < size()[0] - 1; i++)
+    //iterate over top boundary
+    if (orient == TOP)
     {
-        //check boundary type
-        if (topBoundType_ == DIRICHLET)
+        j = size()[1] - 1;
+        //check if interpolation is necessary
+        if (verticalBoundInterpolate_)
         {
-            //check if interpolation is necessary
-            if (verticalBoundInterpolate_)
+            for (i = 1; i < size()[0] - 1; i++)
             {
                 //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * topBound - (*this)(i, j - 1);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = topBound;
+                (*this)(i, j) = 2 * boundvalue - (*this)(i, j - 1);
             }
         }
-        else if (topBoundType_ == NEUMANN)
+        else
         {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = topBound * h + (*this)(i, j - 1);
+            for (i = 1; i < size()[0] - 1; i++)
+            {
+                //set value to boundary condition value
+                (*this)(i, j) = boundvalue;
+            }
         }
     }
-    //iterate over top boundary
-    j = 0;
-    for (i = 1; i < size()[0] - 1; i++)
+    //iterate over bottom boundary
+    else if (orient == BOTTOM)
     {
-        //check boundary type
-        if (bottomBoundType_ == DIRICHLET)
+        j = 0;
+        //check if interpolation is necessary
+        if (verticalBoundInterpolate_)
         {
-            //check if interpolation is necessary
-            if (verticalBoundInterpolate_)
+            for (i = 1; i < size()[0] - 1; i++)
             {
                 //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * bottomBound - (*this)(i, j + 1);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = bottomBound;
+                (*this)(i, j) = 2 * boundvalue - (*this)(i, j + 1);
             }
         }
-        else if (bottomBoundType_ == NEUMANN)
+        else
         {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = bottomBound * h + (*this)(i, j + 1);
+            for (i = 1; i < size()[0] - 1; i++)
+            {
+                //set value to boundary condition value
+                (*this)(i, j) = boundvalue;
+            }
         }
     }
     //iterate over left boundary
-    i = 0;
-    for (j = 0; j < size()[1]; j++)
+    else if (orient == LEFT)
     {
-        //check boundary type
-        if (leftBoundType_ == DIRICHLET)
+        i = 0;
+        //check if interpolation is necessary
+        if (horizontalBoundInterpolate_)
         {
-            //check if interpolation is necessary
-            if (horizontalBoundInterpolate_)
+            for (j = 0; j < size()[1]; j++)
             {
                 //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * leftBound - (*this)(i + 1, j);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = leftBound;
+                (*this)(i, j) = 2 * boundvalue - (*this)(i + 1, j);
             }
         }
-        else if (leftBoundType_ == NEUMANN)
+        else
         {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = leftBound * h + (*this)(i + 1, j);
+            for (j = 0; j < size()[1]; j++)
+            {
+                //set value to boundary condition value
+                (*this)(i, j) = boundvalue;
+            }
         }
     }
     //iterate over right boundary
-    i = size()[0] - 1;
-    for (j = 0; j < size()[1]; j++)
+    else if (orient == RIGHT)
     {
-        //check boundary type
-        if (rightBoundType_ == DIRICHLET)
+        i = size()[0] - 1;
+        //check if interpolation is necessary
+        if (horizontalBoundInterpolate_)
         {
-            //check if interpolation is necessary
-            if (horizontalBoundInterpolate_)
+            for (j = 0; j < size()[1]; j++)
             {
                 //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * rightBound - (*this)(i - 1, j);
+                (*this)(i, j) = 2 * boundvalue - (*this)(i - 1, j);
             }
-            else
+        }
+        else
+        {
+            for (j = 0; j < size()[1]; j++)
             {
                 //set value to boundary condition value
-                (*this)(i, j) = rightBound;
+                (*this)(i, j) = boundvalue;
             }
         }
-        else if (rightBoundType_ == NEUMANN)
+    }
+}
+
+//set Neumann boundary values at boundary by argument orient
+void FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
+{
+    int i, j;
+    //iterate over top boundary
+    if (orient == TOP)
+    {
+        j = size()[1] - 1;
+        for (i = 1; i < size()[0] - 1; i++)
         {
             //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = rightBound * h + (*this)(i - 1, j);
+            (*this)(i, j) = boundvalue * meshWidth_[1] + (*this)(i, j - 1);
         }
     }
-    return 0;
+    //iterate over bottom boundary
+    else if (orient == BOTTOM)
+    {
+        j = 0;
+        for (i = 1; i < size()[0] - 1; i++)
+        {
+            //set value such that derivation at boundary matches boundary condition
+            (*this)(i, j) = boundvalue * meshWidth_[1] + (*this)(i, j + 1);
+        }
+    }
+    //iterate over left boundary
+    else if (orient == LEFT)
+    {
+        i = 0;
+        for (j = 0; j < size()[1]; j++)
+        {
+            //set value such that derivation at boundary matches boundary condition
+            (*this)(i, j) = boundvalue * meshWidth_[0] + (*this)(i + 1, j);
+        }
+    }
+    //iterate over right boundary
+    else if (orient == RIGHT)
+    {
+        i = size()[0] - 1;
+        for (j = 0; j < size()[1]; j++)
+        {
+            //set value such that derivation at boundary matches boundary condition
+            (*this)(i, j) = boundvalue * meshWidth_[0] + (*this)(i - 1, j);
+        }
+    }
 }
 
 //set field variable matrix to data matrix
@@ -185,11 +233,11 @@ void FieldVariable::operator=(const Array2D &result)
 }
 
 //write to .txt file
-void FieldVariable::write_to_file(std::string fileName, std::string name, bool append) const
+void FieldVariable::write_to_file(const std::string &fileName, const std::string &name, bool append) const
 {
     //declare file instance
     std::ofstream myfile;
-    
+
     //open file either in append mode or overwritte mode
     if (append)
         myfile.open(fileName, std::ios::out | std::ios::app);
@@ -203,7 +251,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
     myfile << std::right;
     myfile.precision(4);
     int setw = 14;
-    
+
     //write header of table
     int ii = -1;
     myfile << std::setw(setw + 1) << "|";
@@ -227,7 +275,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
     for (int j = size()[1] - 1; j >= 0; j--)
     {
         //write row header
-        myfile << std::setw(setw) << j-1 << "|";
+        myfile << std::setw(setw) << j - 1 << "|";
         //loop throug columns
         for (int i = 0; i < size()[0]; i++)
         {
@@ -245,9 +293,11 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
 double FieldVariable::interpolateAt(double x, double y) const
 {
 
+#ifdef MY_DEBUG
     //check if x and y are legal values
     assert(("Position in x-direction is out of bound!", 0 <= x && x <= physicalSize_[0]));
     assert(("Position in y-direction is out of bound!", 0 <= y && y <= physicalSize_[1]));
+#endif
 
     double verticalOffset = 0, horizontalOffset = 0;
 

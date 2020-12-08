@@ -4,8 +4,6 @@
 #include <array>
 #include <memory>
 
-#include "discretization.h"
-
 //get rid of co-depending classes
 class Solver;
 class Discretization;
@@ -26,9 +24,6 @@ public:
 
     //output all settings to console
     void printSettings() const;
-
-    //get discretization instance depending on settings
-    std::shared_ptr<Discretization> get_discretization();
 
     //get solver instance depending on settings
     std::shared_ptr<Solver> get_solver();
@@ -60,7 +55,6 @@ public:
     //return factor for donor-cell scheme
     double alpha() const;
 
-
     //return prescribed values of u,v at bottom of domain
     const std::array<double, 2> dirichletBcBottom() const;
 
@@ -72,7 +66,6 @@ public:
 
     //return prescribed values of u,v at right of domain
     const std::array<double, 2> dirichletBcRight() const;
-
 
     //return which pressure solver to use, "GaussSeidel" or "SOR"
     const std::string pressureSolver() const;
@@ -86,12 +79,9 @@ public:
     //return maximum number of iterations in the solver
     int maximumNumberOfIterations() const;
 
-
 private:
-
     //assign value to parameter named param and cast datatype
     int assign_param_(std::string param, std::string value);
-
 
     //number of cells in x and y direction
     std::array<int, 2> nCells_;
@@ -109,7 +99,7 @@ private:
     double tau_;
 
     //maximum time step width
-    double maximumDt_; 
+    double maximumDt_;
 
     //external forces
     std::array<double, 2> g_;
@@ -119,7 +109,6 @@ private:
 
     //factor for donor-cell scheme
     double alpha_;
-
 
     //prescribed values of u,v at bottom of domain
     std::array<double, 2> dirichletBcBottom_;
@@ -132,7 +121,6 @@ private:
 
     //prescribed values of u,v at right of domain
     std::array<double, 2> dirichletBcRight_;
-
 
     //which pressure solver to use, "GaussSeidel" or "SOR"
     std::string pressureSolver_;

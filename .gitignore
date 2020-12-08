@@ -3,7 +3,7 @@ build/*
 .vscode/
 out/*
 build/out/*
-src/out*
+comparing/build*
 
 # Prerequisites
 *.d

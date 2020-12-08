@@ -37,6 +37,7 @@ void Solver::compute_f(double re, double gx, double dt, const Discretization &di
     }
 }
 
+//compute G
 void Solver::compute_g(double re, double gy, double dt, const Discretization &discr, FieldVariable &g)
 {
     std::array<int, 2> size = g.size();
@@ -52,6 +53,7 @@ void Solver::compute_g(double re, double gy, double dt, const Discretization &di
     }
 }
 
+//compute right hand side
 void Solver::compute_rhs(double dt, const Discretization &discr, FieldVariable &rhs)
 {
     std::array<int, 2> size = rhs.size();
@@ -99,57 +101,62 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, double manualTimeStep)
+//solve for velocities u and v
+void Solver::solve_uv(const Settings &settings, Discretization &discr, const Partitioning &partitioning, OutputWriterParaviewParallel &writer)
 {
-
-
     //initialize time
     double t = 0;
-    int fileNo = 0;
+    //int fileNo = 0;
     double dt;
 
-    //set boundary condition values of u,v
-    discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+    //set boundary condition or exchange values of the edges of u, v
+    partitioning.exchange_uv(discr.set_u(), discr.set_v(), settings);
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
     {
-        //compute time step
-        if (manualTimeStep == 0) dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
-        else dt = manualTimeStep;
-        
+        //compute timestep
+        dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
+        //communicate with other process to get minimum time step
+        dt = partitioning.get_time(dt);
 
         //set timestep s.t. given endtime is not exceeded
-        //set time step s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
             dt = settings.endTime() - t;
-        else if (int(t+dt) -t > 0) dt = int(t + dt) -t;
+        
+        //set time step s.t. integer timesteps are matched
+        else if (int(t + dt) - t > 0){
+            dt = int(t + dt) - t;
+        }
 
-        // compute f,g
+        // compute F, G
         compute_f(settings.re(), settings.g()[0], dt, discr, discr.set_f());
         compute_g(settings.re(), settings.g()[1], dt, discr, discr.set_g());
 
-        //set boundary values of f,g to boundary values of u,v
-        discr.set_boundary_fg(discr.u(), discr.v());
+        //set boundary condition or exchange values of the edges of f, g
+        partitioning.exchange_fg(discr.set_f(), discr.set_g(), discr.u(), discr.v());
 
+        
         //compute right hand side and pressure (with given pressure solver)
         compute_rhs(dt, discr, discr.set_rhs());
-        compute_p(discr, discr.set_p());
+        compute_p(discr, discr.set_p(), partitioning);
 
         //compute new u,v
         compute_u(dt, discr, discr.set_u());
         compute_v(dt, discr, discr.set_v());
 
-        //set new boundary values s.t. boundary conditions are met
-        discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        //set boundary condition or exchange values of the edges of u, v
+        partitioning.exchange_uv(discr.set_u(), discr.set_v(), settings);
 
         //increment actual time by time step
         t += dt;
 
         //write results to output files
-        if (int(t) == t ){
+        if ((int) t == t) 
+        {
             writer.writeFile(t);
-            discr.write_to_file(fileNo++, t);
+            //discr.write_to_file(fileNo++, t, partitioning.ownRankNo());
         }
     }
+
 }
