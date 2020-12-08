@@ -6,7 +6,7 @@
 
 #include "../includes/discretization.h"
 
-Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype) 
+Discretization::Discretization(const std::array<int, 2> &nCells, const std::array<double, 2> &physicalSize, std::array<edgetype, 4> &edgestype) 
         : StaggeredGrid(nCells, physicalSize, edgestype)
 {
     physicalSize_ = physicalSize;
@@ -84,13 +84,13 @@ double Discretization::computeD2pDy2(int i, int j) const
 }
 
 //get meshwidth in each direction
-const std::array<double, 2> Discretization::meshWidth() const
+const std::array<double, 2> &Discretization::meshWidth() const
 {
     return meshWidth_;
 }
 
 //get number of cells in each direction
-const std::array<int, 2> Discretization::nCells() const
+const std::array<int, 2> &Discretization::nCells() const
 {
     return nCells_;
 }

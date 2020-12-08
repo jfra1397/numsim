@@ -39,21 +39,21 @@ class FieldVariable : public Array2D
 {
 public:
     //constructor
-    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype);
-    FieldVariable(std::array<int,2> size, std::array<double,2> offset, std::array<double,2> meshWidth);
+    FieldVariable(const std::array<int, 2> &size, vposition pos, const std::array<double, 2> &physicalSize, const std::array<edgetype, 4> &edgestype);
+    FieldVariable(const std::array<int,2> &size, const std::array<double,2> &offset, const std::array<double,2> &meshWidth);
 
     //set boundary condition type of each boundary
-    int set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);
+    void set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);
 
     //set boundary values at each boundary
-    int set_boundary_dirichlet(orientation orient, double boundvalue);
-    int set_boundary_neumann(orientation orient, double boundvalue);
+    void set_boundary_dirichlet(orientation orient, double boundvalue);
+    void set_boundary_neumann(orientation orient, double boundvalue);
 
     //set field variable matrix to data matrix
     void operator=(const Array2D &data);
 
     //write to .txt file
-    void write_to_file(std::string fileName, std::string name, bool append = false) const;
+    void write_to_file(const std::string &fileName,const std::string &name, bool append = false) const;
 
     //interpolate matrix values at given physical location (x,y)
     double interpolateAt(double x, double y) const;

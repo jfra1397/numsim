@@ -4,7 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype) : Array2D({0, 0})
+FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, const std::array<double, 2> &physicalSize, const std::array<edgetype, 4> &edgestype) : Array2D({0, 0})
 {
     //set position of corresponding variable on grid
     pos_ = pos;
@@ -60,13 +60,13 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     resize({sizex, sizey});
 }
 
-FieldVariable::FieldVariable(std::array<int,2> size, std::array<double,2> offset, std::array<double,2> meshWidth)
+FieldVariable::FieldVariable(const std::array<int,2> &size, const std::array<double,2> &offset, const std::array<double,2> &meshWidth)
     :Array2D(size)
 {
 }
 
 //set boundary condition type of each boundary
-int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
+void FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
 {
     if (top == NEUMANN || bottom == NEUMANN || left == NEUMANN || right == NEUMANN)
     {
@@ -76,15 +76,13 @@ int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype 
     bottomBoundType_ = bottom;
     leftBoundType_ = left;
     rightBoundType_ = right;
-
-    return 0;
 }
 
 //set boundary values at each boundary
-int FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue)
+void FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue)
 {
     int i, j;
-    //iterate over bottom boundary
+    //iterate over top boundary
     if (orient == TOP)
     {
         j = size()[1] - 1;
@@ -106,8 +104,8 @@ int FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue)
             }
         }
     }
-    //iterate over top boundary
-    else if (orient == TOP)
+    //iterate over bottom boundary
+    else if (orient == BOTTOM)
     {
         j = 0;
         //check if interpolation is necessary
@@ -174,14 +172,13 @@ int FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue)
             }
         }
     }
-    return 0;
 }
 
 
-int FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
+void FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
 {
     int i, j;
-    //iterate over bottom boundary
+    //iterate over top boundary
     if (orient == TOP)
     {
         j = size()[1] - 1;
@@ -192,8 +189,8 @@ int FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
             
         }
     }
-    //iterate over top boundary
-    else if (orient == TOP)
+    //iterate over bottom boundary
+    else if (orient == BOTTOM)
     {
         j = 0;
         for (i = 1; i < size()[0] - 1; i++)
@@ -222,7 +219,6 @@ int FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
             (*this)(i, j) = boundvalue * meshWidth_[0] + (*this)(i - 1, j);
         }
     }
-    return 0;
 }
 
 //set field variable matrix to data matrix
@@ -232,7 +228,7 @@ void FieldVariable::operator=(const Array2D &result)
 }
 
 //write to .txt file
-void FieldVariable::write_to_file(std::string fileName, std::string name, bool append) const
+void FieldVariable::write_to_file(const std::string &fileName,const std::string &name, bool append) const
 {
     //declare file instance
     std::ofstream myfile;

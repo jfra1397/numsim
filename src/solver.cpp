@@ -156,7 +156,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, const Par
         if ((int) t == t) 
         {
             writer.writeFile(t);
-            discr.write_to_file(fileNo++, t, partitioning.ownRankNo());
+            //discr.write_to_file(fileNo++, t, partitioning.ownRankNo());
         }
     }
 

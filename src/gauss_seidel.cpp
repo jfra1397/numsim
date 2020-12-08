@@ -32,7 +32,7 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
     {
         //adjust boundary values for p
         //p.set_boundary(0, 0, 0, 0);
-        partition.exchange_p(p);
+        partition.exchange_p(p, false);
 
         //reset residuum norm
         norm_res = 0;
@@ -54,7 +54,7 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
             jstart++;
         }
         
-        partition.exchange_p(p);
+        partition.exchange_p(p, true);
 
         jstart = start + 1;
         //GS iteration over whole matrix
@@ -75,8 +75,8 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
         }
 
         //finish calculation of residuum
-        norm_res = norm_res / ((discr.nCells()[0]) * (discr.nCells()[1]));
         MPI_Allreduce( &norm_res, &norm_res, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        norm_res = norm_res / ((partition.nCellsGlobal()[0]) * (partition.nCellsGlobal()[1]));
 
         //next iteration
         iter += 1;
@@ -87,35 +87,6 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
 
     //set correct boundary values (safety first)
     // p.set_boundary(0,0,0,0);
-    partition.exchange_p(p);
+    partition.exchange_p(p, false);
 
 }
-
-
-
-// float compute_p_onestep(const Discretization &discr, FieldVariable &p, int start, int stepSize)
-// {
-//     float norm_res = 0;
-
-//         int itter = 0;
-//         //GS iteration over whole matrix
-//         for (int i = start + 1; i < size[0] - 1; i += stepSize)
-//         {
-//             for (int j = itter%2 + 1 ; j < size[1] - 1; i += stepSize)
-//             {
-//                 //calculate residuum at position (i,j)
-//                 temp_res = discr.computeD2pDx2(i, j) + discr.computeD2pDy2(i, j) - discr.rhs(i, j);
-
-//                 //calculate new p at position (i,j)
-//                 p(i, j) = discr.p(i, j) + (factor * temp_res);
-
-//                 //update residuum norm
-//                 norm_res = norm_res + (temp_res * temp_res);
-//             }
-
-//         itter++;
-//         }
-
-//         //finish calculation of residuum
-//         norm_res = norm_res / ((discr.nCells()[0]) * (discr.nCells()[1]));
-// }

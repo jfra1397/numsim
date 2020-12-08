@@ -1,3 +1,0 @@
-/home/jfra/projects/simtech/numsim/comparing/build/CMakeFiles/rebuild_cache.dir
-/home/jfra/projects/simtech/numsim/comparing/build/CMakeFiles/edit_cache.dir
-/home/jfra/projects/simtech/numsim/comparing/build/CMakeFiles/compare_output.dir

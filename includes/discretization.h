@@ -10,7 +10,7 @@ class Discretization : public StaggeredGrid
 {
 public:
     //construct the object with given number of cells in x and y direction
-    Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, std::array<edgetype, 4> edgestype);
+    Discretization(const std::array<int, 2> &nCells, const std::array<double, 2> &physicalSize, std::array<edgetype, 4> &edgestype);
 
     //compute the 1st derivative ∂ u^2 / ∂x
     virtual double computeDu2Dx(int i, int j) const = 0;
@@ -55,14 +55,14 @@ public:
     double computeD2pDy2(int i, int j) const;
 
     //get meshwidth in each direction
-    const std::array<double, 2> meshWidth() const;
+    const std::array<double, 2> &meshWidth() const;
     //get meshwidth in x-direction
     double dx() const;
     //get meshwidth in y-direction
     double dy() const;
 
     //get number of cells in each direction
-    const std::array<int, 2> nCells() const;
+    const std::array<int, 2> &nCells() const;
 
     //write output to .txt file (self written)
     void write_to_file(int fileNo, double time, int ownRank) const;

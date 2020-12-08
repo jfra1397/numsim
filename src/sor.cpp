@@ -34,7 +34,7 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p, const Partiti
     do
     {
         //adjust boundary values for p
-        partition.exchange_p(p);
+        //partition.exchange_p(p);
 
         //reset residuum norm
         norm_res = 0;
@@ -56,7 +56,7 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p, const Partiti
             jstart++;
         }
 
-        partition.exchange_p(p);
+        partition.exchange_p(p, (start+1)%2);
 
         jstart = start + 1;
         //SOR iteration over whole matrix
@@ -75,10 +75,11 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p, const Partiti
             }
             jstart++;
         }
+        partition.exchange_p(p, start);
         
         ///finish calculation of residuum
-        norm_res = norm_res / ((discr.nCells()[0]) * (discr.nCells()[1]));
         MPI_Allreduce( &norm_res, &norm_res, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        norm_res = norm_res / ((partition.nCellsGlobal()[0]) * (partition.nCellsGlobal()[1]));
 
         //next iteration
         iter += 1;
@@ -87,6 +88,6 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p, const Partiti
     while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_*epsilon_);
 
     //set correct boundary values (safety first)
-    partition.exchange_p(p);
+    //partition.exchange_p(p);
 
 }

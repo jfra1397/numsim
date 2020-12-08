@@ -6,20 +6,20 @@
 #include "../includes/array2d.h"
 
 //constructor
-Array2D::Array2D(std::array<int, 2> size) : size_(size)
+Array2D::Array2D(const std::array<int, 2> &size) : size_(size)
 {
   //allocate data, initialize to 0
   data_.resize(size_[0] * size_[1], 0.0);
 }
 
 //get the size
-const std::array<int, 2> Array2D::size() const
+const std::array<int, 2> &Array2D::size() const
 {
   return size_;
 }
 
 //get the whole matrix, declared const, i.e. it is not possible to change the matrix
-const std::vector<double> Array2D::operator()() const
+const std::vector<double> &Array2D::operator()() const
 {
   return data_;
 }
@@ -28,36 +28,8 @@ const std::vector<double> Array2D::operator()() const
 void Array2D::operator=(const Array2D &result)
 {
   //check if result matrix size corresponds to size of this matrix
-  assert(size() == result.size());
+  assert(size_ == result.size());
   data_ = result();
-}
-
-//access the value at coordinate (i,j), declared not const, i.e. the value can be changed
-double &Array2D::operator()(int i, int j)
-{
-  //calculate position of (i,j) in data array
-  const int index = j * size_[0] + i;
-
-  //assert that indices are in range
-  assert(0 <= i && i < size_[0]);
-  assert(0 <= j && j < size_[1]);
-  assert(j * size_[0] + i < (int)data_.size());
-
-  return data_[index];
-}
-
-//get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
-double Array2D::operator()(int i, int j) const
-{
-  //calculate position of (i,j) in data array
-  const int index = j * size_[0] + i;
-
-  //assert that indices are in range
-  assert(0 <= i && i < size_[0]);
-  assert(0 <= j && j < size_[1]);
-  assert(j * size_[0] + i < (int)data_.size());
-
-  return data_[index];
 }
 
 //return maximum of array
@@ -90,10 +62,10 @@ void Array2D::resize(const std::array<int, 2> size)
 void Array2D::print() const
 {
   //start iteration on the top for correct dsplaying (indexing start at bottom left corner)
-  for (int j = size()[1] - 1; j >= 0; j--)
+  for (int j = size_[1] - 1; j >= 0; j--)
   {
     //start iteration on the left for correct dsplaying (indexing start at bottom left corner)
-    for (int i = 0; i < size()[0]; i++)
+    for (int i = 0; i < size_[0]; i++)
     {
       std::cout << (*this)(i, j) << "  ";
     }
@@ -105,7 +77,7 @@ void Array2D::print() const
 void Array2D::set_data(const Array2D &result)
 {
   //assert that matrix sizes match
-  assert(size() == result.size());
+  assert(size_ == result.size());
   data_ = result();
 }
 
@@ -119,4 +91,32 @@ void Array2D::setToZero()
 double * Array2D::data()
 {
   return data_.data();
+}
+
+
+std::vector<double> Array2D::get_row(int j, int start, int stepsize) const
+{
+  int size = size_[0]/stepsize + (1-start)*size_[0]%2;
+  int k = 0;
+  std::vector<double> row(size);
+  for (int i = start; i < size_[0]; i+=stepsize) row[k++] = (*this)(i,j);
+  return row; 
+}
+std::vector<double> Array2D::get_column(int i, int start, int stepsize) const
+{
+  int size = size_[1]/stepsize + (1-start)*size_[1]%2;
+  int k = 0;
+  std::vector<double> column(size);
+  for (int j = start; j < size_[1]; j+=stepsize) column[k++] = (*this)(i,j);
+  return column; 
+}
+void Array2D::set_row(int j, std::vector<double> row, int start, int stepsize)
+{
+  int k = 0;
+  for (int i = start; i < size_[0]; i+=stepsize) (*this)(i,j) = row[k++];
+}
+void Array2D::set_column(int i, std::vector<double> column, int start, int stepsize)
+{
+  int k=0;
+  for (int j = start; j < size_[1]; j+=stepsize) (*this)(i,j)  = column[k++];
 }

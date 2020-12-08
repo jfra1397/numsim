@@ -17,12 +17,13 @@ int main(int argc, char *argv[])
 {
     MPI_Init(&argc, &argv);
 
+
     Partitioning partitioning;
 
     //load settings
     Settings settings;
-    //if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
-    settings.loadFromFile("../parameters.txt");
+    if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
+    settings.loadFromFile(argv[1]);
     //settings.printSettings();
 
     //create discretization depending on a settings value
@@ -37,20 +38,18 @@ int main(int argc, char *argv[])
 
     //run loop to solve for new velocities u,v
     solver->solve_uv(settings, *discretization, partitioning, writer);
-    std::cout << "done" << std::endl;
-    /**
-    auto stop = std::chrono::high_resolution_clock::now();
+
+    //auto stop = std::chrono::high_resolution_clock::now();
 
     //nanoseconds, microseconds, milliseconds, seconds, minutes, hours possible
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-
-    std::ofstream myfile;
+    //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    //std::cout << duration.count() << std::endl;
     
-    //open file in append mode
+    /** //open file in append mode
     myfile.open("run-times.csv", std::ios::out | std::ios::app);
     myfile << settings.nCells()[0] << ";" << settings.nCells()[1] << ";" << duration.count() << std::endl;
     myfile.close();
-    */
+    **/
     MPI_Finalize();
     return EXIT_SUCCESS;
 }
