@@ -4,9 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/local/include/vtk-9.0",
-                "${default}",
-                "${workspaceFolder}/VTK-build/lib"
+                "${vcpkgRoot}/x64-linux/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",
