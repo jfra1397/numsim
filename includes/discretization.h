@@ -4,7 +4,7 @@
 
 
 /** This class contains functions to compute first and second 
- * derivatives of all needed values. This is a abstarct class!
+ * derivatives of all needed values. This is an abstract class!
  */
 class Discretization : public StaggeredGrid
 {

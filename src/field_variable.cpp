@@ -15,6 +15,7 @@ FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, cons
     leftBoundType_ = DIRICHLET;
     rightBoundType_ = DIRICHLET;
 
+    //set edge type at top/bottom/left/right boundary
     topEdgeType_ = edgestype[0];
     bottomEdgeType_ = edgestype[1];
     leftEdgeType_ = edgestype[2];
@@ -29,7 +30,6 @@ FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, cons
     //set size in each direction
     int sizex = size[0], sizey = size[1];
 
-
     //if value is at centre, extend matrix in both directions by two (variable types p and rhs)
     if (pos == VCENTRE)
     {
@@ -41,7 +41,9 @@ FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, cons
     //if value is at right, extend matrix in y-direction by two and x-direction by one (variable types u and F)
     else if (pos == VRIGHT)
     {
-        if (rightEdgeType_  == GHOST) sizex += 1;
+        //increment size in x-direction in order to be able to calculate the point on the right edge
+        if (rightEdgeType_ == GHOST)
+            sizex += 1;
         sizex += 1;
         sizey += 2;
         horizontalBoundInterpolate_ = false;
@@ -50,7 +52,9 @@ FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, cons
     //if value is at top, extend matrix in y-direction by one and x-direction by two (variable types v and G)
     else if (pos == VTOP)
     {
-        if (topEdgeType_  == GHOST) sizey += 1;
+        //increment size in y-direction in order to be able to calculate the point on the top edge
+        if (topEdgeType_ == GHOST)
+            sizey += 1;
         sizex += 2;
         sizey += 1;
         horizontalBoundInterpolate_ = true;
@@ -60,25 +64,29 @@ FieldVariable::FieldVariable(const std::array<int, 2> &size, vposition pos, cons
     resize({sizex, sizey});
 }
 
-FieldVariable::FieldVariable(const std::array<int,2> &size, const std::array<double,2> &offset, const std::array<double,2> &meshWidth)
-    :Array2D(size)
+//constructor to make things suitable for output_writer
+FieldVariable::FieldVariable(const std::array<int, 2> &size, const std::array<double, 2> &offset, const std::array<double, 2> &meshWidth)
+    : Array2D(size)
 {
 }
 
 //set boundary condition type of each boundary
 void FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
 {
+#ifdef MY_DEBUG
     if (top == NEUMANN || bottom == NEUMANN || left == NEUMANN || right == NEUMANN)
     {
         assert(("Neumann boundary condition not implemented for variable positions at top and right!", pos_ == VCENTRE));
     }
+#endif
+
     topBoundType_ = top;
     bottomBoundType_ = bottom;
     leftBoundType_ = left;
     rightBoundType_ = right;
 }
 
-//set boundary values at each boundary
+//set Dirichlet boundary values at boundary by argument orient
 void FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue)
 {
     int i, j;
@@ -135,16 +143,16 @@ void FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue
         {
             for (j = 0; j < size()[1]; j++)
             {
-                    //average values to match "real" boundary conditon value in the middle
-                    (*this)(i, j) = 2 * boundvalue - (*this)(i + 1, j);
+                //average values to match "real" boundary conditon value in the middle
+                (*this)(i, j) = 2 * boundvalue - (*this)(i + 1, j);
             }
         }
         else
         {
             for (j = 0; j < size()[1]; j++)
             {
-                    //set value to boundary condition value
-                    (*this)(i, j) = boundvalue;
+                //set value to boundary condition value
+                (*this)(i, j) = boundvalue;
             }
         }
     }
@@ -157,9 +165,8 @@ void FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue
         {
             for (j = 0; j < size()[1]; j++)
             {
-                    //average values to match "real" boundary conditon value in the middle
-                    (*this)(i, j) = 2 * boundvalue - (*this)(i - 1, j);
-
+                //average values to match "real" boundary conditon value in the middle
+                (*this)(i, j) = 2 * boundvalue - (*this)(i - 1, j);
             }
         }
         else
@@ -168,13 +175,12 @@ void FieldVariable::set_boundary_dirichlet(orientation orient, double boundvalue
             {
                 //set value to boundary condition value
                 (*this)(i, j) = boundvalue;
-
             }
         }
     }
 }
 
-
+//set Neumann boundary values at boundary by argument orient
 void FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
 {
     int i, j;
@@ -183,10 +189,9 @@ void FieldVariable::set_boundary_neumann(orientation orient, double boundvalue)
     {
         j = size()[1] - 1;
         for (i = 1; i < size()[0] - 1; i++)
-        { 
+        {
             //set value such that derivation at boundary matches boundary condition
             (*this)(i, j) = boundvalue * meshWidth_[1] + (*this)(i, j - 1);
-            
         }
     }
     //iterate over bottom boundary
@@ -228,11 +233,11 @@ void FieldVariable::operator=(const Array2D &result)
 }
 
 //write to .txt file
-void FieldVariable::write_to_file(const std::string &fileName,const std::string &name, bool append) const
+void FieldVariable::write_to_file(const std::string &fileName, const std::string &name, bool append) const
 {
     //declare file instance
     std::ofstream myfile;
-    
+
     //open file either in append mode or overwritte mode
     if (append)
         myfile.open(fileName, std::ios::out | std::ios::app);
@@ -246,7 +251,7 @@ void FieldVariable::write_to_file(const std::string &fileName,const std::string 
     myfile << std::right;
     myfile.precision(4);
     int setw = 14;
-    
+
     //write header of table
     int ii = -1;
     myfile << std::setw(setw + 1) << "|";
@@ -270,7 +275,7 @@ void FieldVariable::write_to_file(const std::string &fileName,const std::string 
     for (int j = size()[1] - 1; j >= 0; j--)
     {
         //write row header
-        myfile << std::setw(setw) << j-1 << "|";
+        myfile << std::setw(setw) << j - 1 << "|";
         //loop throug columns
         for (int i = 0; i < size()[0]; i++)
         {
@@ -288,9 +293,11 @@ void FieldVariable::write_to_file(const std::string &fileName,const std::string 
 double FieldVariable::interpolateAt(double x, double y) const
 {
 
+#ifdef MY_DEBUG
     //check if x and y are legal values
     assert(("Position in x-direction is out of bound!", 0 <= x && x <= physicalSize_[0]));
     assert(("Position in y-direction is out of bound!", 0 <= y && y <= physicalSize_[1]));
+#endif
 
     double verticalOffset = 0, horizontalOffset = 0;
 

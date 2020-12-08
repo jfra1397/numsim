@@ -11,11 +11,12 @@ GaussSeidel::GaussSeidel(int maximumNumberOfIterations, double epsilon)
     epsilon_ = epsilon;
 }
 
+//solve pressure poisson equation by using GS iterations
 void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const Partitioning &partition)
 {
     std::array<int, 2> size = p.size();
 
-    int start = (partition.nodeOffset()[0] + partition.nodeOffset()[1])%2;
+    int start = (partition.nodeOffset()[0] + partition.nodeOffset()[1]) % 2;
     //initialize residuum and iteration counter
     double temp_res, norm_res;
     int iter = 0;
@@ -30,17 +31,13 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
     //GS algorithm
     do
     {
-        //adjust boundary values for p
-        //p.set_boundary(0, 0, 0, 0);
-        partition.exchange_p(p, false);
-
         //reset residuum norm
         norm_res = 0;
-        int jstart =start;
-        //GS iteration over whole matrix
+        int jstart = start;
+        //GS iteration over "red" part of matrix
         for (int i = 1; i < size[0] - 1; i++)
         {
-            for (int j = jstart%2 + 1; j < size[1] - 1; j += 2)
+            for (int j = jstart % 2 + 1; j < size[1] - 1; j += 2)
             {
                 //calculate residuum at position (i,j)
                 temp_res = discr.computeD2pDx2(i, j) + discr.computeD2pDy2(i, j) - discr.rhs(i, j);
@@ -53,14 +50,16 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
             }
             jstart++;
         }
-        
-        partition.exchange_p(p, true);
+
+        //exchange edge values of pressure
+        partition.exchange_p(p, (start + 1) % 2);
 
         jstart = start + 1;
-        //GS iteration over whole matrix
+
+        //GS iteration over "black" part of matrix
         for (int i = 1; i < size[0] - 1; i++)
         {
-            for (int j =jstart%2 + 1; j < size[1] - 1; j += 2)
+            for (int j = jstart % 2 + 1; j < size[1] - 1; j += 2)
             {
                 //calculate residuum at position (i,j)
                 temp_res = discr.computeD2pDx2(i, j) + discr.computeD2pDy2(i, j) - discr.rhs(i, j);
@@ -74,8 +73,11 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
             jstart++;
         }
 
+        //exchange edge values of pressure
+        partition.exchange_p(p, start);
+
         //finish calculation of residuum
-        MPI_Allreduce( &norm_res, &norm_res, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&norm_res, &norm_res, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         norm_res = norm_res / ((partition.nCellsGlobal()[0]) * (partition.nCellsGlobal()[1]));
 
         //next iteration
@@ -84,9 +86,4 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p, const
     }
     //check if stopping criteria achieved (error tolerance, maximum number of iterations)
     while (iter < maximumNumberOfIterations_ && norm_res > epsilon_ * epsilon_);
-
-    //set correct boundary values (safety first)
-    // p.set_boundary(0,0,0,0);
-    partition.exchange_p(p, false);
-
 }
