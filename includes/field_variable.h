@@ -4,12 +4,18 @@
 
 #include "array2d.h"
 
-enum edgetype{
+//describe edge type
+enum edgetype
+{
+    //actual boundary edge
     HALO,
+    //edge for communication between processes
     GHOST
 };
 
-enum orientation{
+//describe orientation of the corresponding edge
+enum orientation
+{
     LEFT,
     RIGHT,
     TOP,
@@ -30,8 +36,9 @@ enum btype
     DIRICHLET,
     NEUMANN
 };
+
 /** This class represents a field variable of double values.
- * It inhertits from Array2D to access and store the values
+ * It inherits from Array2D to access and store the values
  * and additionally it contains methods to set boundary conditions
  * and interpolated values.
  */
@@ -40,7 +47,8 @@ class FieldVariable : public Array2D
 public:
     //constructor
     FieldVariable(const std::array<int, 2> &size, vposition pos, const std::array<double, 2> &physicalSize, const std::array<edgetype, 4> &edgestype);
-    FieldVariable(const std::array<int,2> &size, const std::array<double,2> &offset, const std::array<double,2> &meshWidth);
+    //constructor to make things suitable for output_writer
+    FieldVariable(const std::array<int, 2> &size, const std::array<double, 2> &offset, const std::array<double, 2> &meshWidth);
 
     //set boundary condition type of each boundary
     void set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);
@@ -53,7 +61,7 @@ public:
     void operator=(const Array2D &data);
 
     //write to .txt file
-    void write_to_file(const std::string &fileName,const std::string &name, bool append = false) const;
+    void write_to_file(const std::string &fileName, const std::string &name, bool append = false) const;
 
     //interpolate matrix values at given physical location (x,y)
     double interpolateAt(double x, double y) const;
@@ -74,6 +82,7 @@ private:
     btype leftBoundType_;
     btype rightBoundType_;
 
+    //edge type at top/bottom/left/right boundary
     edgetype topEdgeType_;
     edgetype bottomEdgeType_;
     edgetype leftEdgeType_;

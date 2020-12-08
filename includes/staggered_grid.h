@@ -12,10 +12,6 @@ public:
     //constructor
     StaggeredGrid(const std::array<int, 2> &size, const std::array<double, 2> &physicalSize, std::array<edgetype, 4> &edgestype);
 
-    // //set boundary values corresponding to variable
-    // void set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound);
-    // void set_boundary_fg(const FieldVariable &u, const FieldVariable &v);
-
     //get the whole field variable, declared const, i.e. it is not possible to change it
     inline const FieldVariable &u() const { return u_; };
     inline const FieldVariable &v() const { return v_; };
@@ -48,6 +44,7 @@ public:
     inline double &set_g(int i, int j) { return g_(i, j); };
     inline double &set_rhs(int i, int j) { return rhs_(i, j); };
 
+    //dummy functions for output_writer_text_parallel
     int uIBegin() const;
     int uIEnd() const;
     int uJBegin() const;

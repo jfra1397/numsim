@@ -3,9 +3,9 @@
 #include "solver.h"
 
 
-/** This class contains the iterative GS-solver to solve 
+/** This class contains the iterative red-black GS-solver to solve 
  * the pressure-poisson-equation. All other needed methods 
- * to sovler for the other field variables are inherited 
+ * to solve for the other field variables are inherited 
  * from abstract class solver.
  */
 class GaussSeidel : public Solver

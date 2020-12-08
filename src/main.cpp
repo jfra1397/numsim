@@ -1,6 +1,5 @@
 #include <iostream>
 #include <memory>
-#include <chrono>
 
 #include <mpi.h>
 
@@ -15,9 +14,10 @@
 int main(int argc, char *argv[])
 
 {
+    //initialize MPI
     MPI_Init(&argc, &argv);
 
-
+    //create instance of partitioning
     Partitioning partitioning;
 
     //load settings
@@ -33,23 +33,9 @@ int main(int argc, char *argv[])
     //create outputwriter class
     OutputWriterParaviewParallel writer(discretization, partitioning);
 
-
-    auto start = std::chrono::high_resolution_clock::now();
-
     //run loop to solve for new velocities u,v
     solver->solve_uv(settings, *discretization, partitioning, writer);
 
-    //auto stop = std::chrono::high_resolution_clock::now();
-
-    //nanoseconds, microseconds, milliseconds, seconds, minutes, hours possible
-    //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    //std::cout << duration.count() << std::endl;
-    
-    /** //open file in append mode
-    myfile.open("run-times.csv", std::ios::out | std::ios::app);
-    myfile << settings.nCells()[0] << ";" << settings.nCells()[1] << ";" << duration.count() << std::endl;
-    myfile.close();
-    **/
     MPI_Finalize();
     return EXIT_SUCCESS;
 }
