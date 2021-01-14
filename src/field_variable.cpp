@@ -4,7 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize) : Array2D({0, 0})
+FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize) : Array2D<double>({0, 0})
 {
     //set position of corresponding variable on grid
     pos_ = pos;
@@ -179,7 +179,7 @@ int FieldVariable::set_boundary(double bottomBound, double rightBound, double to
 }
 
 //set field variable matrix to data matrix
-void FieldVariable::operator=(const Array2D &result)
+void FieldVariable::operator=(const Array2D<double> &result)
 {
     set_data(result);
 }

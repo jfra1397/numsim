@@ -89,7 +89,7 @@ void Settings::loadFromFile(const std::string filename)
         found = line.find("=");
         if (found == std::string::npos)
         {
-            std::cout << "somhting went wrong in line " << lineNo << ": " << line << std::endl;
+            std::cout << "something went wrong in line " << lineNo << ": " << line << std::endl;
             continue;
         }
         else
@@ -112,15 +112,15 @@ void Settings::loadFromFile(const std::string filename)
 //output all settings to console
 void Settings::printSettings() const
 {
-    std::cout << "Settings: " << std::endl
-              << "  physicalSize: " << physicalSize()[0] << " x " << physicalSize()[1] << ", nCells: " << nCells()[0] << " x " << nCells()[1] << std::endl
-              << "  endTime: " << endTime() << " s, re: " << re() << ", g: (" << g()[0] << "," << g()[1] << "), tau: " << tau() << ", maximum dt: " << maximumDt() << std::endl
-              << "  dirichletBC: bottom: (" << dirichletBcBottom()[0] << "," << dirichletBcBottom()[1] << ")"
-              << ", top: (" << dirichletBcTop()[0] << "," << dirichletBcTop()[1] << ")"
-              << ", left: (" << dirichletBcLeft()[0] << "," << dirichletBcLeft()[1] << ")"
-              << ", right: (" << dirichletBcRight()[0] << "," << dirichletBcRight()[1] << ")" << std::endl
-              << "  useDonorCell: " << std::boolalpha << useDonorCell() << ", alpha: " << alpha() << std::endl
-              << "  pressureSolver: " << pressureSolver() << ", omega: " << omega() << ", epsilon: " << epsilon() << ", maximumNumberOfIterations: " << maximumNumberOfIterations() << std::endl;
+    // std::cout << "Settings: " << std::endl
+    //           << "  physicalSize: " << physicalSize()[0] << " x " << physicalSize()[1] << ", nCells: " << nCells()[0] << " x " << nCells()[1] << std::endl
+    //           << "  endTime: " << endTime() << " s, re: " << re() << ", g: (" << g()[0] << "," << g()[1] << "), tau: " << tau() << ", maximum dt: " << maximumDt() << std::endl
+    //           << "  dirichletBC: bottom: (" << dirichletBcBottom()[0] << "," << dirichletBcBottom()[1] << ")"
+    //           << ", top: (" << dirichletBcTop()[0] << "," << dirichletBcTop()[1] << ")"
+    //           << ", left: (" << dirichletBcLeft()[0] << "," << dirichletBcLeft()[1] << ")"
+    //           << ", right: (" << dirichletBcRight()[0] << "," << dirichletBcRight()[1] << ")" << std::endl
+    //           << "  useDonorCell: " << std::boolalpha << useDonorCell() << ", alpha: " << alpha() << std::endl
+    //           << "  pressureSolver: " << pressureSolver() << ", omega: " << omega() << ", epsilon: " << epsilon() << ", maximumNumberOfIterations: " << maximumNumberOfIterations() << std::endl;
 }
 
 //assign value to parameter named param and cast datatype
@@ -140,22 +140,6 @@ int Settings::assign_param_(std::string param, std::string value)
             g_[0] = std::stod(value);
         else if (param == "gY")
             g_[1] = std::stod(value);
-        else if (param == "dirichletBottomX")
-            dirichletBcBottom_[0] = std::stod(value);
-        else if (param == "dirichletBottomY")
-            dirichletBcBottom_[1] = std::stod(value);
-        else if (param == "dirichletTopX")
-            dirichletBcTop_[0] = std::stod(value);
-        else if (param == "dirichletTopY")
-            dirichletBcTop_[1] = std::stod(value);
-        else if (param == "dirichletLeftX")
-            dirichletBcLeft_[0] = std::stod(value);
-        else if (param == "dirichletLeftY")
-            dirichletBcLeft_[1] = std::stod(value);
-        else if (param == "dirichletRightX")
-            dirichletBcRight_[0] = std::stod(value);
-        else if (param == "dirichletRightY")
-            dirichletBcRight_[1] = std::stod(value);
         else if (param == "nCellsX")
             nCells_[0] = std::stoi(value);
         else if (param == "nCellsY")
@@ -176,6 +160,11 @@ int Settings::assign_param_(std::string param, std::string value)
             epsilon_ = std::stod(value);
         else if (param == "maximumNumberOfIterations")
             maximumNumberOfIterations_ = (int)std::stod(value);
+        else if (param == "bottomBound") bottomBound_.push_back(value);
+        else if (param == "topBound") topBound_.push_back(value);
+        else if (param == "rightBound") rightBound_.push_back(value);
+        else if (param == "leftBound") leftBound_.push_back(value);
+        else if (param == "object") objects_.push_back(value);
 
         else
             return 1;
@@ -217,18 +206,6 @@ bool Settings::useDonorCell() const { return useDonorCell_; }
 //return factor for donor-cell scheme
 double Settings::alpha() const { return alpha_; }
 
-//returnprescribed values of u,v at bottom of domain
-const std::array<double, 2> Settings::dirichletBcBottom() const { return dirichletBcBottom_; }
-
-//return prescribed values of u,v at top of domain
-const std::array<double, 2> Settings::dirichletBcTop() const { return dirichletBcTop_; }
-
-//return prescribed values of u,v at left of domain
-const std::array<double, 2> Settings::dirichletBcLeft() const { return dirichletBcLeft_; }
-
-//return prescribed values of u,v at right of domain
-const std::array<double, 2> Settings::dirichletBcRight() const { return dirichletBcRight_; }
-
 //return which pressure solver to use, "GaussSeidel" or "SOR"
 const std::string Settings::pressureSolver() const { return pressureSolver_; }
 
@@ -244,17 +221,21 @@ int Settings::maximumNumberOfIterations() const { return maximumNumberOfIteratio
 //get discretization instance depending on settings
 std::shared_ptr<Discretization> Settings::get_discretization()
     {
+        std::shared_ptr<Discretization> discr;
         //create discretization depending on a settings value
         if (useDonorCell())
         {
             //create donor cell discretization
-            return std::make_shared<DonorCell>(nCells(), physicalSize(), alpha());
+            discr = std::make_shared<DonorCell>(nCells(), physicalSize(), alpha());
         }
         else
         {
             //create central differences
-            return std::make_shared<CentralDifferences>(nCells(), physicalSize());
+            discr = std::make_shared<CentralDifferences>(nCells(), physicalSize());
         }
+        discr->set_boundary_condition(leftBound_, rightBound_, topBound_, bottomBound_);
+        discr->set_object_condition(objects_);
+        return discr;
     }
 
 //get solver instance depending on settings

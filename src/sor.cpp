@@ -32,8 +32,9 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
     //SOR algorithm
     do
     {
+        int count = 0;
         //adjust boundary values for p
-        p.set_boundary(0,0,0,0);
+        discr.set_boundary_p(p);
 
         //reset residuum norm
         norm_res = 0;
@@ -42,7 +43,9 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
         for (int i = 1 ; i < size[0] - 1; i++)
         {
             for (int j = 1; j < size[1] - 1; j++)
-            {   
+            {
+                if(discr.flag(i,j) != FLUID) continue; 
+                count++;  
                 //calculate residuum at position (i,j)
                 temp_res =  discr.computeD2pDx2(i,j) + discr.computeD2pDy2(i,j)-discr.rhs(i,j);
 
@@ -55,7 +58,7 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
         }
         
         //finish calculation of residuum
-        norm_res = norm_res/((discr.nCells()[0]) * (discr.nCells()[1]));
+        norm_res = norm_res/count;
 
         //next iteration
         iter += 1;
@@ -64,6 +67,5 @@ void SOR::compute_p(const Discretization &discr, FieldVariable &p)
     while (iter < maximumNumberOfIterations_ &&  norm_res > epsilon_*epsilon_);
 
     //set correct boundary values (safety first)
-    p.set_boundary(0,0,0,0);
-
+    discr.set_boundary_p(p);
 }

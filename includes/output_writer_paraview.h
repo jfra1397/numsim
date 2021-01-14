@@ -3,7 +3,7 @@
 #include "output_writer.h"
 
 #include <vtkSmartPointer.h>
-#include <vtkXMLImageDataWriter.h>
+#include <vtkXMLStructuredGridWriter.h>
 
 #include <memory>
 
@@ -25,5 +25,5 @@ public:
 
 private:
 
-  vtkSmartPointer<vtkXMLImageDataWriter> vtkWriter_;   //< vtk writer to write ImageData
+  vtkSmartPointer<vtkXMLStructuredGridWriter> vtkWriter_;   //< vtk writer to write ImageData
 };

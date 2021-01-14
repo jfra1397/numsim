@@ -9,15 +9,6 @@ re = 1000             # Reynolds number
 gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
 gY = 0.0
 
-# Dirichlet boundary conditions
-dirichletBottomX = 0
-dirichletBottomY = 0
-dirichletTopX    = 1
-dirichletTopY    = 0
-dirichletLeftX   = 0
-dirichletLeftY   = 0
-dirichletRightX  = 0
-dirichletRightY  = 0
 
 # Discretization parameters
 nCellsX =20         # number of cells in x and y direction
@@ -32,3 +23,26 @@ pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeid
 omega = 1.6           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
 maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
+
+
+# Dirichlet boundary conditions
+                                #  x1;  x2;   u;   v
+bottomBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
+topBound= Velocity; Dirichlet; 0.0; 1.0; 1.0; 0.0
+leftBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
+rightBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
+
+#                   x1;  y1;  x2; y2
+#object= Rectangle; 1.5; 0.75; 2.0; 1.25
+#object= Rectangle; 1.75; 1.0; 2.0; 1.25; FLUID
+#                x;  y;  a;  b
+object= Ellipse; 1.0; 1.0; 0.5; 0.5
+
+#dirichletBottomX = 0
+#dirichletBottomY = 0
+#dirichletTopX    = 1
+#dirichletTopY    = 0
+#dirichletLeftX   = 0
+#dirichletLeftY   = 0
+#dirichletRightX  = 0
+#dirichletRightY  = 0

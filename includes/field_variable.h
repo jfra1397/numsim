@@ -23,7 +23,7 @@ enum btype
  * and additionally it contains methods to set boundary conditions
  * and interpolated values.
  */
-class FieldVariable : public Array2D
+class FieldVariable : public Array2D<double>
 {
 public:
     //constructor
@@ -36,7 +36,7 @@ public:
     int set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h = 0);
 
     //set field variable matrix to data matrix
-    void operator=(const Array2D &data);
+    void operator=(const Array2D<double> &data);
 
     //write to .txt file
     void write_to_file(std::string fileName, std::string name, bool append = false) const;

@@ -8,12 +8,6 @@
 
 Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize) : StaggeredGrid(nCells, physicalSize)
 {
-    physicalSize_ = physicalSize;
-
-    //calculate meshwidth in each direction
-    meshWidth_[0] = physicalSize[0] / (double)nCells[0];
-    meshWidth_[1] = physicalSize[1] / (double)nCells[1];
-    nCells_ = nCells;
 }
 
 //compute the 2nd derivative ∂^2 u / ∂x^2

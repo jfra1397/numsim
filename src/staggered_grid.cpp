@@ -1,52 +1,294 @@
 #include "../includes/staggered_grid.h"
 
-StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize) : u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize)
-{   
-    //pressure uses Neummann boundary conditions
-    set_p().set_boundary_type(NEUMANN, NEUMANN, NEUMANN, NEUMANN);
+StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize) 
+: Mesh(size, physicalSize), u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize)
+{
+    
+
+    // flag_(18,18) = OBJTOPRIGHT;
+    // flag_(17,18) = OBJTOP;
+    // flag_(16,18) = OBJTOPLEFT;
+    // flag_(18,17) = OBJRIGHT;
+    // flag_(18,16) = OBJBOTTOMRIGHT;
+    // flag_(17,17) = EMPTY;
+    // flag_(17,16) = OBJBOTTOM;
+    // flag_(16,17) = OBJLEFT;
+    // flag_(16,16) = OBJBOTTOMLEFT;     
 
 }
 
 //set boundary values of u and v according to given boundary condition values
-void StaggeredGrid::set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound)
+void StaggeredGrid::set_boundary_uvfg()
 {
-    set_u().set_boundary(bottomBound[0], rightBound[0], topBound[0], leftBound[0]);
-    set_v().set_boundary(bottomBound[1], rightBound[1], topBound[1], leftBound[1]);
+    for (int j = 1; j < flag_.size()[1]-1; j++)
+    {
+        for (int i = 1; i < flag_.size()[0]-1; i++)
+        {
+            switch (flag_(i,j))
+            {
+            case FLUID:
+            case EMPTY:
+                break;
+            case OBJLEFT:
+                u_(i-1,j) = 0;
+                v_(i,j) = - v_(i-1,j);
+                v_(i,j-1) = - v_(i-1,j-1);
+                f_(i-1,j) = 0;
+                g_(i,j) = - v_(i-1,j);
+                g_(i,j-1) = - v_(i-1,j-1);
+                break;
+            case OBJRIGHT:
+                u_(i,j) = 0;
+                v_(i,j) = - v_(i+1,j);
+                v_(i,j-1) = - v_(i+1,j-1);
+                f_(i,j) = 0;
+                g_(i,j) = - v_(i+1,j);
+                g_(i,j-1) = - v_(i+1,j-1);
+                break;
+            case OBJTOP:
+                u_(i,j) = -u_(i,j+1);
+                u_(i-1,j) = -u_(i-1,j+1);
+                v_(i,j) = 0;
+                f_(i,j) = -u_(i,j+1);
+                f_(i-1,j) = -u_(i-1,j+1);
+                g_(i,j) = 0;
+                break;
+            case OBJBOTTOM:
+                u_(i,j) = -u_(i,j-1);
+                u_(i-1,j) = -u_(i-1,j-1);
+                v_(i,j-1) = 0;
+                f_(i,j) = -u_(i,j-1);
+                f_(i-1,j) = -u_(i-1,j-1);
+                g_(i,j-1) = 0;
+                break;
+            case OBJBOTTOMLEFT:
+                u_(i,j) = -u_(i,j-1);
+                u_(i-1,j) = f_(i-1,j) = 0;
+                v_(i,j) = -v_(i-1,j);
+                v_(i,j-1) = g_(i,j-1) = 0;
+                break;
+            case OBJBOTTOMRIGHT:
+                u_(i,j) = f_(i,j) = 0;
+                u_(i-1,j) = -u_(i-1,j-1);
+                v_(i,j) = -v_(i+1,j);
+                v_(i,j-1) = g_(i,j-1) =  0;
+                break;
+            case OBJTOPLEFT:
+                u_(i,j) = -u_(i,j+1);
+                u_(i-1,j) = f_(i-1,j) = 0;
+                v_(i,j) = g_(i,j) = 0;
+                v_(i,j-1) = -v_(i-1,j-1);
+                break;
+            case OBJTOPRIGHT:
+                u_(i,j) = f_(i,j) = 0;
+                u_(i-1,j) = -u_(i-1,j+1);
+                v_(i,j) = g_(i,j) = 0;
+                v_(i,j-1) = -v_(i+1,j-1);
+                break;
+            
+            default:
+                assert(false);
+            }
+        }
+    }
+    for (int i = 0; i < u_.size()[0]; i++)
+    {
+        switch (bottomBoundVelFlag_[i])
+        {
+        case DIRICHLET:
+            u_(i,0) = f_(i,0) = 2*bottomBoundValues_[i][0] - u_(i,1);
+            break;
+        case NEUMANN:
+            u_(i,0) = f_(i,0) = u_(i,1);
+            break;
+        default:
+            assert(false);
+        }
+        
+        switch (topBoundVelFlag_[i])
+        {
+        case DIRICHLET:
+            u_(i, u_.size()[1]-1) = f_(i, u_.size()[1]-1) = 2*topBoundValues_[i][0] - u_(i, u_.size()[1]-2);
+            break;
+        case NEUMANN:
+            u_(i, u_.size()[1]-1) =  f_(i, u_.size()[1]-1) = u_(i, u_.size()[1]-2);
+            break;
+        default:
+            assert(false);
+        }
+    }
+    for (int j = 0; j < u_.size()[1]; j++)
+    {
+        switch (leftBoundVelFlag_[j])
+        {
+        case DIRICHLET:
+            u_(0,j) = f_(0,j) =  leftBoundValues_[j][0];
+            break;
+        case NEUMANN:
+            u_(0,j) = f_(0,j) = u_(1,j);
+            break;
+        default:
+            assert(false);
+        }
+        
+        switch (rightBoundVelFlag_[j])
+        {
+        case DIRICHLET:
+            u_(u_.size()[0]-1,j) = f_(u_.size()[0]-1,j) = rightBoundValues_[j][0];
+            break;
+        case NEUMANN:
+            u_(u_.size()[0]-1,j) = f_(u_.size()[0]-1,j) = u_(u_.size()[0]-2,j);
+            break;
+        default:
+            assert(false);
+        }
+    }
+    for (int i = 0; i < v_.size()[0]; i++)
+    {
+        switch (bottomBoundVelFlag_[i])
+        {
+        case DIRICHLET:
+            v_(i,0) = g_(i,0) = bottomBoundValues_[i][1];
+            break;
+        case NEUMANN:
+            v_(i,0) = g_(i,0) = v_(i,1);
+            break;
+        default:
+            assert(false);
+        }
+        
+        switch (topBoundVelFlag_[i])
+        {
+        case DIRICHLET:
+            v_(i, v_.size()[1]-1) = g_(i, v_.size()[1]-1) = topBoundValues_[i][1];
+            break;
+        case NEUMANN:
+            v_(i, v_.size()[1]-1) = g_(i, v_.size()[1]-1) = v_(i, v_.size()[1]-2);
+            break;
+        default:
+            assert(false);
+        }
+    }
+    for (int j = 0; j < v_.size()[1]; j++)
+    {
+        switch (leftBoundVelFlag_[j])
+        {
+        case DIRICHLET:
+            v_(0,j) = g_(0,j) = 2*leftBoundValues_[j][1] - v_(1,j);
+            break;
+        case NEUMANN:
+            v_(0,j) = g_(0,j) = v_(1,j);
+            break;
+        default:
+            assert(false);
+        }
+        
+        switch (rightBoundVelFlag_[j])
+        {
+        case DIRICHLET:
+            v_(v_.size()[0]-1,j) = g_(v_.size()[0]-1,j) = 2*rightBoundValues_[j][1] - v_(v_.size()[0]-2,j);
+            break;
+        case NEUMANN:
+            v_(v_.size()[0]-1,j) = g_(v_.size()[0]-1,j) = v_(v_.size()[0]-2,j);
+            break;
+        default:
+            assert(false);
+        }
+    }
 }
 
-//set boundary values of F and G equal to u and v
-void StaggeredGrid::set_boundary_fg(const FieldVariable &u, const FieldVariable &v)
+void StaggeredGrid::set_boundary_p(FieldVariable &p) const
 {
-    //calculate maximum indices of u and v in each direction
-    int iumax = u.size()[0], ivmax = v.size()[0], jumax = u.size()[1], jvmax = v.size()[1];
-    int i, j;
-
-    //set boundary values of F at bottom and top boundary
-    for (i = 0; i < iumax; i++)
+    for (int j = 1; j < flag_.size()[1]-1; j++)
     {
-        set_f(i, 0) = u(i, 0);
-        set_f(i, jumax - 1) = u(i, jumax - 1);
+        for (int i = 1; i < flag_.size()[0]-1; i++)
+        {
+            switch (flag_(i,j))
+            {
+            case FLUID:
+            case EMPTY:
+                break;
+            case OBJLEFT:
+                p(i,j) = p(i-1,j);
+                break;
+            case OBJRIGHT:
+                p(i,j) = p(i+1,j);
+                break;
+            case OBJTOP:
+                p(i,j) = p(i,j+1);
+                break;
+            case OBJBOTTOM:
+                p(i,j) = p(i,j-1);
+                break;
+            case OBJBOTTOMLEFT:
+                p(i,j) = (p(i-1,j) + p(i,j-1))/2;
+                break;
+            case OBJBOTTOMRIGHT:
+                p(i,j) = (p(i+1,j) + p(i,j-1))/2;
+                break;
+            case OBJTOPLEFT:
+                p(i,j) = (p(i-1,j) + p(i,j+1))/2;
+                break;
+            case OBJTOPRIGHT:
+                p(i,j) = (p(i+1,j) + p(i,j+1))/2;
+                break;
+            
+            default:
+                assert(false);
+            }
+        }
     }
-
-    //set boundary values of G at bottom and top boundary
-    for (i = 0; i < ivmax; i++)
+    for (int i = 0; i < u_.size()[0]; i++)
     {
-        set_g(i, 0) = v(i, 0);
-        set_g(i, jvmax - 1) = v(i, jvmax - 1);
+        switch (bottomBoundVelFlag_[i])
+        {
+        case DIRICHLET:
+            p(i,0) = p(i,1);
+            break;
+        case NEUMANN:
+            p(i,0) = 2*bottomBoundValues_[i][2] - p(i,1);
+            break;
+        default:
+            assert(false);
+        }
+        
+        switch (topBoundVelFlag_[i])
+        {
+        case DIRICHLET:
+            p(i, p.size()[1]-1) = p(i, p.size()[1]-2);
+            break;
+        case NEUMANN:
+            p(i, p.size()[1]-1) = 2*topBoundValues_[i][2] - p(i, p.size()[1]-2);
+            break;
+        default:
+            assert(false);
+        }
     }
-
-    //set boundary values of F at left and right boundary
-    for (j = 1; j < jumax - 1; j++)
+    for (int j = 0; j < p.size()[1]; j++)
     {
-        set_f(0, j) = u(0, j);
-        set_f(iumax - 1, j) = u(iumax - 1, j);
-    }
-
-    //set boundary values of G at left and right boundary
-    for (j = 0; j < jvmax; j++)
-    {
-        set_g(0, j) = v(0, j);
-        set_g(ivmax - 1, j) = v(ivmax - 1, j);
+        switch (leftBoundVelFlag_[j])
+        {
+        case DIRICHLET:
+            p(0,j) = p(1,j);
+            break;
+        case NEUMANN:
+            p(0,j) = 2*leftBoundValues_[j][2] - p(1,j);
+            break;
+        default:
+            assert(false);
+        }
+        
+        switch (rightBoundVelFlag_[j])
+        {
+        case DIRICHLET:
+            p(p.size()[0]-1,j) = p(p.size()[0]-2,j);
+            break;
+        case NEUMANN:
+            p(p.size()[0]-1,j) = 2*rightBoundValues_[j][2] - p(p.size()[0]-2,j);
+            break;
+        default:
+            assert(false);
+        }
     }
 }
 
@@ -65,6 +307,8 @@ double StaggeredGrid::p(int i, int j) const { return p_(i, j); }
 double StaggeredGrid::f(int i, int j) const { return f_(i, j); }
 double StaggeredGrid::g(int i, int j) const { return g_(i, j); }
 double StaggeredGrid::rhs(int i, int j) const { return rhs_(i, j); }
+
+CELLTYPE StaggeredGrid::flag(int i, int j) const { return flag_(i, j); }
 
 //access the field variable, declared not const, i.e. the values can be changed
 FieldVariable &StaggeredGrid::set_u() { return u_; }

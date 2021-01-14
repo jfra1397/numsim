@@ -67,14 +67,4 @@ public:
     //write output to .txt file (self written)
     void write_to_file(int fileNo, double time) const;
 
-
-private:
-    //number of cells in each direction
-    std::array<int, 2> nCells_;
-
-    //meshwidth in each direction
-    std::array<double, 2> meshWidth_;
-
-    //physical size of mesh in each direction
-    std::array<double, 2> physicalSize_;
 };

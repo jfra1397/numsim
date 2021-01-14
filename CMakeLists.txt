@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
    src/solver.cpp
    src/sor.cpp
    src/staggered_grid.cpp
+   src/mesh.cpp
 )
 
 # Add the project directory to include directories, to be able to include all project header files from anywhere

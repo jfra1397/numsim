@@ -1,5 +1,11 @@
 {
     "files.associations": {
+        "*Dict": "OpenFOAM",
+        "*Properties": "OpenFOAM",
+        "fvSchemes": "OpenFOAM",
+        "fvSolution": "OpenFOAM",
+        "**/constant/g": "OpenFOAM",
+        "**/0/*": "OpenFOAM",
         "*.tcc": "cpp",
         "array": "cpp",
         "atomic": "cpp",
@@ -58,7 +64,13 @@
         "unordered_set": "cpp",
         "typeindex": "cpp",
         "variant": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "strstream": "cpp",
+        "condition_variable": "cpp",
+        "ratio": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "*.txx": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

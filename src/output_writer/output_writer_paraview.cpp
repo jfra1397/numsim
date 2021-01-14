@@ -3,12 +3,13 @@
 #include <vtkImageData.h>
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
+#include <vtkStructuredGrid.h>
 
 OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization) :
    OutputWriter(discretization)
 {
   // Create a vtkWriter_
-  vtkWriter_ = vtkSmartPointer<vtkXMLImageDataWriter>::New();
+  vtkWriter_ = vtkSmartPointer<vtkXMLStructuredGridWriter>::New();
 }
 
 void OutputWriterParaview::writeFile(double currentTime)
@@ -24,18 +25,30 @@ void OutputWriterParaview::writeFile(double currentTime)
   vtkWriter_->SetFileName(fileName.str().c_str());
   
   // initialize data set that will be output to the file
-  vtkSmartPointer<vtkImageData> dataSet = vtkSmartPointer<vtkImageData>::New();
-  dataSet->SetOrigin(0, 0, 0);
+  vtkSmartPointer<vtkStructuredGrid> dataSet = vtkSmartPointer<vtkStructuredGrid>::New();
+  //dataSet->SetOrigin(0, 0, 0);
 
   // set spacing of mesh
   const double dx = discretization_->meshWidth()[0];
   const double dy = discretization_->meshWidth()[1];
   const double dz = 1;
-  dataSet->SetSpacing(dx, dy, dz);
+  //dataSet->SetSpacing(dx, dy, dz);
 
   // set number of points in each dimension, 1 cell in z direction
   std::array<int,2> nCells = discretization_->nCells();
+  vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+  for (int j = 0; j < nCells[1]+1; j++)
+  {
+    for (int i = 0; i < nCells[0]+1; i++)
+    {
+      const double x = i*dx;
+      const double y = j*dy;
+      points->InsertNextPoint(x, y, 0);
+    }
+  }
+  dataSet->SetPoints(points);
   dataSet->SetDimensions(nCells[0]+1, nCells[1]+1, 1);  // we want to have points at each corner of each cell
+      
   
   // add pressure field variable
   // ---------------------------
@@ -94,8 +107,9 @@ void OutputWriterParaview::writeFile(double currentTime)
       const double x = i*dx;
 
       std::array<double,3> velocityVector;
-      velocityVector[0] = discretization_->u().interpolateAt(x,y);
-      velocityVector[1] = discretization_->v().interpolateAt(x,y);
+        velocityVector[0] = discretization_->u().interpolateAt(x,y);
+        velocityVector[1] = discretization_->v().interpolateAt(x,y);
+      
       velocityVector[2] = 0.0;    // z-direction is 0
 
       arrayVelocity->SetTuple(index, velocityVector.data());
@@ -106,6 +120,16 @@ void OutputWriterParaview::writeFile(double currentTime)
 
   // add the field variable to the data set
   dataSet->GetPointData()->AddArray(arrayVelocity);
+
+  index = 0;
+  for (int j = 1; j < nCells[1]+1; j++)
+  {
+
+    for (int i = 1; i < nCells[0]+1; i++, index++)
+    {
+      if (discretization_->flag(i,j) != FLUID) dataSet->BlankCell(index);
+    }
+  }
   
   // add current time 
   vtkSmartPointer<vtkDoubleArray> arrayTime = vtkDoubleArray::New();

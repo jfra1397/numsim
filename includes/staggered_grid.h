@@ -2,20 +2,23 @@
 #pragma once
 
 #include "field_variable.h"
+#include "mesh.h"
+
 
 
 /** This class stores all field variables and 
  * is able to set boundary conditions and values
  */
-class StaggeredGrid
+class StaggeredGrid: public Mesh
 {
 public:
     //constructor
     StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize);
 
     //set boundary values corresponding to variable
-    void set_boundary_uv(const std::array<double, 2> &bottomBound, const std::array<double, 2> &rightBound, const std::array<double, 2> &topBound, const std::array<double, 2> &leftBound);
-    void set_boundary_fg(const FieldVariable &u, const FieldVariable &v);
+    void set_boundary_uvfg();
+    void set_boundary_fg();
+    void set_boundary_p(FieldVariable &p) const;
 
     //get the whole field variable, declared const, i.e. it is not possible to change it
     const FieldVariable &u() const;
@@ -32,6 +35,8 @@ public:
     double f(int i, int j) const;
     double g(int i, int j) const;
     double rhs(int i, int j) const;
+
+    CELLTYPE flag(int i, int j) const;
 
     //access the field variable, declared not const, i.e. the values can be changed
     FieldVariable &set_u();
@@ -70,4 +75,6 @@ private:
     FieldVariable f_;
     FieldVariable g_;
     FieldVariable rhs_;
+    
+    
 };

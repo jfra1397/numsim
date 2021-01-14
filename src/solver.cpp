@@ -32,6 +32,7 @@ void Solver::compute_f(double re, double gx, double dt, const Discretization &di
         for (int j = 1; j < size[1] - 1; j++)
         {
             //calculate F at position (i,j)
+            if(discr.flag(i,j) != FLUID || discr.flag(i+1,j) != FLUID) continue;
             f(i, j) = discr.u(i, j) + dt * (1 / re * (discr.computeD2uDx2(i, j) + discr.computeD2uDy2(i, j)) - discr.computeDu2Dx(i, j) - discr.computeDuvDy(i, j) + gx);
         }
     }
@@ -47,6 +48,7 @@ void Solver::compute_g(double re, double gy, double dt, const Discretization &di
         for (int j = 1; j < size[1] - 1; j++)
         {
             //calculate G at position (i,j)
+            if(discr.flag(i,j) != FLUID || discr.flag(i,j+1) != FLUID) continue;
             g(i, j) = discr.v(i, j) + dt * (1 / re * (discr.computeD2vDx2(i, j) + discr.computeD2vDy2(i, j)) - discr.computeDv2Dy(i, j) - discr.computeDuvDx(i, j) + gy);
         }
     }
@@ -62,6 +64,7 @@ void Solver::compute_rhs(double dt, const Discretization &discr, FieldVariable &
         for (int j = 1; j < size[1] - 1; j++)
         {
             //calculate right hand side at position (i,j)
+            if(discr.flag(i,j) != FLUID) continue;
             rhs(i, j) = 1 / dt * (discr.computeDFDx(i, j) + discr.computeDGDy(i, j));
         }
     }
@@ -78,6 +81,7 @@ void Solver::compute_u(double dt, const Discretization &discr, FieldVariable &u)
         for (int j = 1; j < size[1] - 1; j++)
         {
             //calculate u at position (i,j)
+            if(discr.flag(i,j) != FLUID || discr.flag(i+1,j) != FLUID) continue;
             u(i, j) = discr.f(i, j) - dt * discr.computeDpDx(i, j);
         }
     }
@@ -94,6 +98,7 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
         for (int j = 1; j < size[1] - 1; j++)
         {
             //calculate v at position (i,j)
+            if(discr.flag(i,j) != FLUID || discr.flag(i,j+1) != FLUID) continue;
             v(i, j) = discr.g(i, j) - dt * discr.computeDpDy(i, j);
         }
     }
@@ -102,14 +107,17 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
 void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, double manualTimeStep)
 {
 
-
     //initialize time
     double t = 0;
     int fileNo = 0;
     double dt;
+    
+    writer.writeFile(t);
+    return;
 
     //set boundary condition values of u,v
-    discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+    discr.set_boundary_uvfg();
+    //return;
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
@@ -130,7 +138,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         compute_g(settings.re(), settings.g()[1], dt, discr, discr.set_g());
 
         //set boundary values of f,g to boundary values of u,v
-        discr.set_boundary_fg(discr.u(), discr.v());
+        //discr.set_boundary_fg(discr.u(), discr.v());
 
         //compute right hand side and pressure (with given pressure solver)
         compute_rhs(dt, discr, discr.set_rhs());
@@ -141,7 +149,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         compute_v(dt, discr, discr.set_v());
 
         //set new boundary values s.t. boundary conditions are met
-        discr.set_boundary_uv(settings.dirichletBcBottom(), settings.dirichletBcRight(), settings.dirichletBcTop(), settings.dirichletBcLeft());
+        discr.set_boundary_uvfg();
 
         //increment actual time by time step
         t += dt;

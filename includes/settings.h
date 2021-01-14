@@ -3,6 +3,7 @@
 #include <iostream>
 #include <array>
 #include <memory>
+#include <string>
 
 #include "discretization.h"
 
@@ -60,20 +61,6 @@ public:
     //return factor for donor-cell scheme
     double alpha() const;
 
-
-    //return prescribed values of u,v at bottom of domain
-    const std::array<double, 2> dirichletBcBottom() const;
-
-    //return prescribed values of u,v at top of domain
-    const std::array<double, 2> dirichletBcTop() const;
-
-    //return prescribed values of u,v at left of domain
-    const std::array<double, 2> dirichletBcLeft() const;
-
-    //return prescribed values of u,v at right of domain
-    const std::array<double, 2> dirichletBcRight() const;
-
-
     //return which pressure solver to use, "GaussSeidel" or "SOR"
     const std::string pressureSolver() const;
 
@@ -87,7 +74,7 @@ public:
     int maximumNumberOfIterations() const;
 
 
-private:
+//private:
 
     //assign value to parameter named param and cast datatype
     int assign_param_(std::string param, std::string value);
@@ -121,17 +108,13 @@ private:
     double alpha_;
 
 
-    //prescribed values of u,v at bottom of domain
-    std::array<double, 2> dirichletBcBottom_;
-
-    //prescribed values of u,v at top of domain
-    std::array<double, 2> dirichletBcTop_;
-
-    //prescribed values of u,v at left of domain
-    std::array<double, 2> dirichletBcLeft_;
-
-    //prescribed values of u,v at right of domain
-    std::array<double, 2> dirichletBcRight_;
+    std::vector<btype> leftBoundVelFlag_;
+    // u,v,p
+    std::vector<std::string> leftBound_;
+    std::vector<std::string> rightBound_;
+    std::vector<std::string> topBound_;
+    std::vector<std::string> bottomBound_;
+    std::vector<std::string> objects_;
 
 
     //which pressure solver to use, "GaussSeidel" or "SOR"
