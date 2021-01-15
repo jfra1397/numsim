@@ -171,9 +171,9 @@ void Mesh::set_object_condition(std::vector<std::string> objects)
             double x3 = std::stod(substr[5])/physicalSize_[0]*nCells_[0], y3 = std::stod(substr[6])/physicalSize_[1]*nCells_[1];
             for (int j = int(std::min(y1,std::min(y2,y3))); j <= int(ceil(std::max(y1,std::max(y2,y3)))); j++)
             {
-            for (int i = int(std::min(x1,std::min(x2,x3))); j <= int(ceil(std::max(x1,std::max(x2,x3)))); i++)
+            for (int i = int(std::min(x1,std::min(x2,x3))); i <= int(ceil(std::max(x1,std::max(x2,x3)))); i++)
                 {
-                    
+
                     double d1,d2,d3;
                     d1 = (i-0.5 - x2) * (y1 - y2) - (x1 - x2) * (j-0.5 - y2);
                     d2 = (i-0.5 - x3) * (y2 - y3) - (x2 - x3) * (j-0.5 - y3);

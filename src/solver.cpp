@@ -112,8 +112,8 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
     int fileNo = 0;
     double dt;
     
-    writer.writeFile(t);
-    return;
+    //writer.writeFile(t);
+    //return;
 
     //set boundary condition values of u,v
     discr.set_boundary_uvfg();
@@ -156,7 +156,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
 
         //write results to output files
         //if (int(t) == t ){
-            writer.writeFile(t);
+        writer.writeFile(t);
             //discr.write_to_file(fileNo++, t);
         //}
     }

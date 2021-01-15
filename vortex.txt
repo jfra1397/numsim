@@ -32,19 +32,6 @@ topBound= Velocity; Dirichlet; 0.0; 5.0; 0.0; 0.0
 leftBound= Velocity; Dirichlet; 0.0; 1.0; 1.0; 0.0
 rightBound= Pressure; Dirichlet; 0.0; 1.0; 0.0; 0.0
 
-#                   x1;  y1;  x2; y2
-object= Rectangle; 0.0; 0.0; 0.5; 0.5;
-#object= Rectangle; 1.75; 1.0; 2.0; 1.25; FLUID
-#                x;  y;  a;  b
-#object= Ellipse; 0.5; 0.5; 0.1; 0.1
-#                  x1;  y1;  x2; y2; x3; y3
-#object = Triangle; 0.5; 0.5; 1.5; 1.0; 1.0; 1.5
 
-#dirichletBottomX = 0
-#dirichletBottomY = 0
-#dirichletTopX    = 1
-#dirichletTopY    = 0
-#dirichletLeftX   = 0
-#dirichletLeftY   = 0
-#dirichletRightX  = 0
-#dirichletRightY  = 0
+#                x;  y;  a;  b
+object= Ellipse; 0.5; 0.5; 0.1; 0.1
