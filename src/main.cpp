@@ -43,12 +43,12 @@ int main(int argc, char *argv[])
 
     //create outputwriter class
     OutputWriterParaview writer(discretization);
+    writer.writeFile(0);
 
-
-    auto start = std::chrono::high_resolution_clock::now();
+    // auto start = std::chrono::high_resolution_clock::now();
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, writer, timeStep);
+    // solver->solve_uv(settings, *discretization, writer, timeStep);
 
     /**
     auto stop = std::chrono::high_resolution_clock::now();

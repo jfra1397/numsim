@@ -4,6 +4,15 @@
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
 #include <vtkStructuredGrid.h>
+#include <vtkVersion.h>
+#include <vtkSmartPointer.h>
+#include <vtkActor.h>
+#include <vtkDataSetMapper.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkMath.h>
+
 
 OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization) :
    OutputWriter(discretization)
@@ -148,5 +157,31 @@ void OutputWriterParaview::writeFile(double currentTime)
   vtkWriter_->SetDataModeToBinary();      // set file mode to binary files: smaller file sizes
 
   // finally write out the data
-  vtkWriter_->Write();
+  // vtkWriter_->Write();
+
+    // Create a mapper and actor
+  vtkSmartPointer<vtkDataSetMapper> mapper = 
+    vtkSmartPointer<vtkDataSetMapper>::New();
+  mapper->SetInputData(dataSet);
+  vtkSmartPointer<vtkActor> actor = 
+    vtkSmartPointer<vtkActor>::New();
+  actor->SetMapper(mapper);
+ 
+  // Create a renderer, render window, and interactor
+  vtkSmartPointer<vtkRenderer> renderer = 
+    vtkSmartPointer<vtkRenderer>::New();
+  vtkSmartPointer<vtkRenderWindow> renderWindow = 
+    vtkSmartPointer<vtkRenderWindow>::New();
+  renderWindow->AddRenderer(renderer);
+  vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor = 
+    vtkSmartPointer<vtkRenderWindowInteractor>::New();
+  renderWindowInteractor->SetRenderWindow(renderWindow);
+ 
+  // Add the actor to the scene
+  renderer->AddActor(actor);
+  renderer->SetBackground(.2, .3, .4);
+ 
+  // Render and interact
+  renderWindow->Render();
+  renderWindowInteractor->Start();
 }
