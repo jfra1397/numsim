@@ -131,7 +131,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         //set time step s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
             dt = settings.endTime() - t;
-        else if (int(t+dt) -t > 0) dt = int(t + dt) -t;
+        //else if (int(t+dt) -t > 0) dt = int(t + dt) -t;
 
         // compute f,g
         compute_f(settings.re(), settings.g()[0], dt, discr, discr.set_f());
@@ -155,9 +155,9 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         t += dt;
 
         //write results to output files
-        if (int(t) == t ){
+        //if (int(t) == t ){
             writer.writeFile(t);
             //discr.write_to_file(fileNo++, t);
-        }
+        //}
     }
 }

@@ -4,15 +4,15 @@
 # Problem description
 physicalSizeX = 2.0   # physical size of the domain
 physicalSizeY = 2.0
-endTime = 10.0        # duration of the simulation
-re = 1000             # Reynolds number
+endTime = 20.0        # duration of the simulation
+re = 1500             # Reynolds number
 gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
 gY = 0.0
 
 
 # Discretization parameters
-nCellsX =20         # number of cells in x and y direction
-nCellsY = 20
+nCellsX = 50        # number of cells in x and y direction
+nCellsY = 50
 useDonorCell = true   # if donor cell discretization should be used, possible values: true false
 alpha = 0.5           # factor for donor-cell scheme, 0 is equivalent to central differences
 tau = 0.5             # safety factor for time step width
@@ -27,16 +27,18 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
 
 # Dirichlet boundary conditions
                                 #  x1;  x2;   u;   v
-bottomBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
-topBound= Velocity; Dirichlet; 0.0; 1.0; 1.0; 0.0
-leftBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
-rightBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
+#bottomBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
+#topBound= Velocity; Dirichlet; 0.0; 2.0; 0.0; 0.0
+#leftBound= Velocity; Dirichlet; 0.0; 1.0; 1.0; 0.0
+#rightBound= Pressure; Dirichlet; 0.0; 1.0; 0.0; 0.0
 
 #                   x1;  y1;  x2; y2
-#object= Rectangle; 1.5; 0.75; 2.0; 1.25
+#object= Rectangle; 0.0; 0.0; 0.5; 0.5;
 #object= Rectangle; 1.75; 1.0; 2.0; 1.25; FLUID
 #                x;  y;  a;  b
-object= Ellipse; 1.0; 1.0; 0.5; 0.5
+#object= Ellipse; 0.5; 0.5; 0.1; 0.1
+#                  x1;  y1;  x2; y2; x3; y3
+object = Triangle; 0.5; 0.5; 1.5; 0.5; 1.0; 1.5
 
 #dirichletBottomX = 0
 #dirichletBottomY = 0
