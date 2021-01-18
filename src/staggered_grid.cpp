@@ -62,28 +62,28 @@ void StaggeredGrid::set_boundary_uvfg()
                 g_(i,j-1) = 0;
                 break;
             case OBJBOTTOMLEFT:
-                u_(i,j) = -u_(i,j-1);
+                u_(i,j) = f_(i,j) = -u_(i,j-1);
                 u_(i-1,j) = f_(i-1,j) = 0;
-                v_(i,j) = -v_(i-1,j);
+                v_(i,j) = g_(i,j) = -v_(i-1,j);
                 v_(i,j-1) = g_(i,j-1) = 0;
                 break;
             case OBJBOTTOMRIGHT:
                 u_(i,j) = f_(i,j) = 0;
-                u_(i-1,j) = -u_(i-1,j-1);
-                v_(i,j) = -v_(i+1,j);
+                u_(i-1,j) = f_(i-1,j)= -u_(i-1,j-1);
+                v_(i,j) = g_(i,j) = -v_(i+1,j);
                 v_(i,j-1) = g_(i,j-1) =  0;
                 break;
             case OBJTOPLEFT:
-                u_(i,j) = -u_(i,j+1);
+                u_(i,j) = f_(i,j) = -u_(i,j+1);
                 u_(i-1,j) = f_(i-1,j) = 0;
                 v_(i,j) = g_(i,j) = 0;
-                v_(i,j-1) = -v_(i-1,j-1);
+                v_(i,j-1) = g_(i,j-1) = -v_(i-1,j-1);
                 break;
             case OBJTOPRIGHT:
                 u_(i,j) = f_(i,j) = 0;
-                u_(i-1,j) = -u_(i-1,j+1);
+                u_(i-1,j) = f_(i-1,j) = -u_(i-1,j+1);
                 v_(i,j) = g_(i,j) = 0;
-                v_(i,j-1) = -v_(i+1,j-1);
+                v_(i,j-1) = g_(i,j-1) = -v_(i+1,j-1);
                 break;
             
             default:

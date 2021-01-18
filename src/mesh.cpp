@@ -208,6 +208,8 @@ void Mesh::set_object_condition(std::vector<std::string> objects)
         }
 
     }
+
+
     bool flatten = true;
 
     while (flatten)
@@ -215,7 +217,7 @@ void Mesh::set_object_condition(std::vector<std::string> objects)
         flatten = false;
         for (int j = 1; j < flag_.size()[1]-1; j++)
         {
-            for (int i = 1; i < flag_.size()[1]-1; i++)
+            for (int i = 1; i < flag_.size()[0]-1; i++)
             {
                 if (flag_(i,j) != FLUID)
                 {
