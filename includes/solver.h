@@ -17,7 +17,7 @@ public:
     virtual void compute_p(const Discretization &discr, FieldVariable &p) = 0;
 
     //compute timestep dt
-    double compute_dt(double tau, double re, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v);
+    double compute_dt(double tau, double re,double pr, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v);
 
     //compute F
     void compute_f(double re, double gx, double dt, double beta, const Discretization &discr, FieldVariable &f);

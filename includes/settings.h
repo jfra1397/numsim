@@ -7,6 +7,28 @@
 
 #include "discretization.h"
 
+enum BOUNDARYTYPE
+{
+    LEFTBOUND,
+    RIGHTBOUND,
+    TOPBOUND,
+    BOTTOMBOUND,
+    RECTANGLE,
+    TRIANGLE,
+    CIRLCE,
+    NM,
+    DR
+};
+
+enum DICT{
+    U=0,
+    V=1,
+    P=2,
+    T=3,
+    POSITION=4,
+    TYPE=4
+};
+
 //get rid of co-depending classes
 class Solver;
 class Discretization;
@@ -131,13 +153,15 @@ public:
     //factor for donor-cell scheme temperature
     double gamma_;
 
-    std::vector<btype> leftBoundVelFlag_;
-    // u,v,p
-    std::vector<std::string> leftBound_;
-    std::vector<std::string> rightBound_;
-    std::vector<std::string> topBound_;
-    std::vector<std::string> bottomBound_;
-    std::vector<std::string> objects_;
+    // std::vector<btype> leftBoundVelFlag_;
+    // // u,v,p
+    // std::vector<std::string> leftBound_;
+    // std::vector<std::string> rightBound_;
+    // std::vector<std::string> topBound_;
+    // std::vector<std::string> bottomBound_;
+    // std::vector<std::string> objects_;
+    std::vector<std::vector<double>> boundValues_;
+    std::vector<std::array<BOUNDARYTYPE,5>> boundTypes_;
 
 
     //which pressure solver to use, "GaussSeidel" or "SOR"
@@ -152,4 +176,10 @@ public:
 
     //maximum number of iterations in the solver
     int maximumNumberOfIterations_;
+
+    void handle_dict(std::ifstream &file, std::string line);
+
+    std::vector<std::string> cut (const std::string &str);
+
+    BOUNDARYTYPE string2enum(std::string str);
 };

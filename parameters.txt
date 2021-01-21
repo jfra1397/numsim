@@ -31,12 +31,23 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
 # third and fourth entry: x1; x2; (top, bottom) or y1; y2; (left, right) as area where boundary value is set
 # fifth (and sixth) entry: u; v (Velocity) or p (Pressure)
 
-bottomBound= Velocity; Dirichlet; 0.0; 5.0; 0.0; 0.0
+bottomBound= Velocity; Dirichlet; 0.0; 5.0; 0.0; 0.0; Temperature; Dirichlet; 5
 topBound= Velocity; Dirichlet; 0.0; 5.0; 0.0; 0.0
 leftBound= Velocity; Dirichlet; 0.0; 1.0; 1.0; 0.0
 rightBound= Pressure; Dirichlet; 0.0; 1.0; 0.0; 0.0
 
-
+bottomBound
+{
+    Velocity= Dirichlet; 5; 5
+    Pressure= Neumann; 0
+    Temperature = Dirichlet; 5
+    Position = 1; 2
+}
+object{
+        Type = Rectangle
+        Position= 0.5;0.5;1.5;1.5
+        Temperature= Neumann; 3
+}
 
 # Objects
 # first entry: Rectangle, Ellipse, Triangle

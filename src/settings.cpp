@@ -89,20 +89,30 @@ void Settings::loadFromFile(const std::string filename)
         found = line.find("=");
         if (found == std::string::npos)
         {
-            std::cout << "something went wrong in line " << lineNo << ": " << line << std::endl;
-            continue;
+            found = line.find("{");
+            if (found == std::string::npos)
+            {
+                std::cout << "something went wrong in line " << lineNo << ": " << line << std::endl;
+                continue;
+            }
+            line = line.substr(found+1);
+            handle_dict(file, line);
+
         }
         else
+        {
+
             param = line.substr(0, found);
 
-        //get value of parameter
-        value = line.substr(found + 1);
-        found = value.find_first_of("#");
-        if (found != std::string::npos)
-            value = value.substr(0, found);
+            //get value of parameter
+            value = line.substr(found + 1);
+            found = value.find_first_of("#");
+            if (found != std::string::npos)
+                value = value.substr(0, found);
 
-        if (0 != assign_param_(param, value))
-            std::cout << "Couldn't assign " << param << std::endl;
+            if (0 != assign_param_(param, value))
+                std::cout << "Couldn't assign " << param << std::endl;
+        }
     }
 
     //close file
@@ -168,11 +178,11 @@ int Settings::assign_param_(std::string param, std::string value)
             gamma_ = std::stod(value);
         else if (param == "maximumNumberOfIterations")
             maximumNumberOfIterations_ = (int)std::stod(value);
-        else if (param == "bottomBound") bottomBound_.push_back(value);
-        else if (param == "topBound") topBound_.push_back(value);
-        else if (param == "rightBound") rightBound_.push_back(value);
-        else if (param == "leftBound") leftBound_.push_back(value);
-        else if (param == "object") objects_.push_back(value);
+        // else if (param == "bottomBound") bottomBound_.push_back(value);
+        // else if (param == "topBound") topBound_.push_back(value);
+        // else if (param == "rightBound") rightBound_.push_back(value);
+        // else if (param == "leftBound") leftBound_.push_back(value);
+        // else if (param == "object") objects_.push_back(value);
 
         else
             return 1;
@@ -253,8 +263,8 @@ std::shared_ptr<Discretization> Settings::get_discretization()
             //create central differences
             discr = std::make_shared<CentralDifferences>(nCells(), physicalSize());
         }
-        discr->set_boundary_condition(leftBound_, rightBound_, topBound_, bottomBound_);
-        discr->set_object_condition(objects_);
+        // discr->set_boundary_condition(leftBound_, rightBound_, topBound_, bottomBound_);
+        // discr->set_object_condition(objects_);
         return discr;
     }
 
@@ -271,4 +281,100 @@ std::shared_ptr<Solver> Settings::get_solver()
         //create central differences
         return std::make_shared<GaussSeidel>(maximumNumberOfIterations(), epsilon());
     }
+}
+
+
+void Settings::handle_dict(std::ifstream &file, std::string line)
+{
+    bool loop = true;
+    std::string param;
+    std::vector<std::string> valuesString;
+    std::vector<double> values = {0,0,0,0};
+    std::array<BOUNDARYTYPE,5> types = {DR, DR, NM, NM, LEFTBOUND};
+
+    while (loop)
+    {
+        size_t found = line.find("}");
+        if (found != std::string::npos)
+        {
+            line = line.substr(0,found);
+            loop = false;
+        }
+        found = line.find("#");
+        if (found != std::string::npos) line = line.substr(0,found);
+        found = line.find("=");
+        if (found != std::string::npos) 
+        {
+            param = line.substr(0,found);
+            valuesString = cut(line.substr(found+1));
+            if (param == "Velocity")
+            {
+                types[U] = string2enum(valuesString[0]);
+                types[V] = string2enum(valuesString[0]);
+                values[U] = std::stod(valuesString[1]);
+                values[V] = std::stod(valuesString[2]);
+            }
+            else if (param == "Pressure")
+            {
+                types[P] = string2enum(valuesString[0]);
+                values[P] = std::stod(valuesString[1]);
+            }
+            else if (param == "Temperature")
+            {
+                types[T] = string2enum(valuesString[0]);
+                values[T] = std::stod(valuesString[1]);
+            }
+            else if (param == "Type")
+            {
+                types[TYPE] = string2enum(valuesString[0]);
+            }
+            else if (param == "Position")
+            {
+                for(auto it = std::begin(valuesString); it != std::end(valuesString); ++it) values.push_back(std::stod(*it));
+            }
+            
+        }
+        if(loop) getline(file, line);
+        //get rid of spaces
+        std::string::iterator end_pos = std::remove(line.begin(), line.end(), ' ');
+        line.erase(end_pos, line.end());
+    }
+    boundTypes_.push_back(types);
+    boundValues_.push_back(values);
+
+}
+
+std::vector<std::string> Settings::cut (const std::string &str)
+{
+    std::vector<std::string> substr;
+        std::string temp = str;
+        size_t found;
+        while (true) 
+        {
+            found = temp.find(";");
+            if (found == std::string::npos)
+            {
+                substr.push_back(temp);
+                break;
+            }
+            substr.push_back(temp.substr(0,found));
+            temp = temp.substr(found+1);
+
+        }
+
+        return substr;
+}
+
+BOUNDARYTYPE Settings::string2enum(std::string str)
+{
+    if (str == "Leftbound") return LEFTBOUND;
+    else if(str == "Rightbound") return RIGHTBOUND;
+    else if(str == "Topbound") return TOPBOUND;
+    else if(str == "Bottombound") return BOTTOMBOUND;
+    else if(str == "Rectangle") return RECTANGLE;
+    else if(str == "Triangle") return TRIANGLE;
+    else if(str == "Cirlce") return CIRLCE;
+    else if(str == "Neumann") return NM;
+    else if(str == "Dirichlet") return DR;
+    else assert(false);
 }

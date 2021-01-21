@@ -96,7 +96,7 @@ void Solver::compute_T(double re, double pr, double q, double dt, const Discreti
     {
         for (int j = 1; j < size[1] - 1; j++)
         {
-            T(i, j) = tempT(i, j)
+            T(i, j) = tempT(i, j);
         }
     }
 }
@@ -166,7 +166,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
             dt = int(t + dt) - t;
 
         //compute T
-        compute_T(settings.re() settings.pr(), settings.q(), dt, discr, discr.T());
+        compute_T(settings.re(), settings.pr(), settings.q(), dt, discr, discr.set_T());
 
         // compute f,g
         compute_f(settings.re(), settings.g()[0], dt, settings.beta(), discr, discr.set_f());
