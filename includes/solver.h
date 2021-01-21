@@ -7,7 +7,6 @@
 #include "settings.h"
 #include "output_writer_paraview.h"
 
-
 /** This class contains functions to compute the field variables
  * after a certain time step. This is an abstract class! 
  */
@@ -21,13 +20,16 @@ public:
     double compute_dt(double tau, double re, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v);
 
     //compute F
-    void compute_f(double re, double gx, double dt, const Discretization &discr, FieldVariable &f);
+    void compute_f(double re, double gx, double dt, double beta, const Discretization &discr, FieldVariable &f);
 
     //compute G
-    void compute_g(double re, double gy, double dt, const Discretization &discr, FieldVariable &g);
+    void compute_g(double re, double gy, double dt, double beta, const Discretization &discr, FieldVariable &g);
 
     //compute right hand side of pressure poisson equation
     void compute_rhs(double dt, const Discretization &discr, FieldVariable &rhs);
+
+    //compute right hand side of pressure poisson equation
+    void compute_T(double re, double pr, double q, double dt, const Discretization &discr, FieldVariable &T);
 
     //compute velocity u in x direciton
     void compute_u(double dt, const Discretization &discr, FieldVariable &u);

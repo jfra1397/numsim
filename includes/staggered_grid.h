@@ -19,6 +19,7 @@ public:
     void set_boundary_uvfg();
     void set_boundary_fg();
     void set_boundary_p(FieldVariable &p) const;
+    void set_boundary_T(FieldVariable &T) const;
 
     //get the whole field variable, declared const, i.e. it is not possible to change it
     const FieldVariable &u() const;

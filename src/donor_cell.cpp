@@ -2,10 +2,11 @@
 
 #include "../includes/donor_cell.h"
 
-DonorCell::DonorCell(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, double alpha) : Discretization(nCells, physicalSize)
-{   
+DonorCell::DonorCell(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, double alpha, double gamma) : Discretization(nCells, physicalSize)
+{
     //weighting factor
     alpha_ = alpha;
+    gamma_ = gamma;
 }
 
 //compute the 1st derivative ∂ u^2 / ∂x
@@ -43,12 +44,15 @@ double DonorCell::computeDuvDy(int i, int j) const
 //compute the 1st derivative ∂ uT / ∂x
 double DonorCell::computeDuTDx(int i, int j) const
 {
-    return 0;
+    double TLeft = (T(i - 1, j) + T(i, j)) / 2;
+    double TRight = (T(i + 1, j) + T(i, j)) / 2;
+    return (u(i, j) * TRight - u(i - 1, j) * TLeft + gamma_ * (fabs(u(i, j)) * (T(i, j) - T(i + 1, j)) / 2 - fabs(u(i - 1, j)) * (T(i - 1, j) - T(i, j)) / 2)) / dx();
 }
 
 //compute the 1st derivative ∂ vT / ∂y
 double DonorCell::computeDvTDy(int i, int j) const
 {
-
-    return 0;
+    double TTop = (T(i, j + 1) + T(i, j)) / 2;
+    double TBottom = (T(i, j - 1) + T(i, j)) / 2;
+    return (v(i, j) * TTop - v(i, j - 1) * TBottom + gamma_ * (fabs(v(i, j)) * (T(i, j) - T(i, j + 1)) / 2 - fabs(v(i, j - 1)) * (T(i, j - 1) - T(i, j)) / 2)) / dy();
 }
