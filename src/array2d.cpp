@@ -18,6 +18,12 @@ Array2D<CELLTYPE>::Array2D(std::array<int, 2> size) : size_(size)
   //allocate data, initialize to 0
   data_.resize(size_[0] * size_[1], FLUID);
 }
+template<>
+Array2D<OBJECTTEMPTYPE>::Array2D(std::array<int, 2> size) : size_(size)
+{
+  //allocate data, initialize to 0
+  data_.resize(size_[0] * size_[1], NOOBJECT);
+}
 
 // //get the size
 // template <typename T>

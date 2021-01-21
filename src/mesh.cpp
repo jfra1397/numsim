@@ -28,152 +28,89 @@ Mesh::Mesh(std::array<int,2> nCells, const std::array<double, 2> physicalSize): 
     for (int j = 0; j < flag_.size()[1]; j++) flag_(0,j) = flag_(flag_.size()[0]-1, j) = BOUND;
 }
 
-void Mesh::set_boundary_condition(std::vector<std::string> left, std::vector<std::string> right, std::vector<std::string> top, std::vector<std::string> bottom)
+void Mesh::set_boundary_condition(std::vector<std::vector<double>> boundValues, std::vector<std::array<BOUNDARYTYPE,5>> boundTypes)
 {
-    for(auto it = std::begin(bottom); it != std::end(bottom); ++it)
+    for (int iter = 0; iter < boundTypes.size() && iter < boundValues.size(); iter++)
     {
-        std::vector<std::string> substr = cut(*it);
-
-        for (int i = int(round(std::stod(substr[2])/physicalSize_[0]*nCells_[0])); i <= int(round(std::stod(substr[3])/physicalSize_[0]*nCells_[0])); i++)
+        if (boundTypes[iter][TYPE] == BOTTOMBOUND)
         {
-            if (substr[0] == "Velocity")
+            for (int i = int(round(boundValues[iter][POSITION]/physicalSize_[0]*nCells_[0])); i <= int(round(boundValues[iter][POSITION+1]/physicalSize_[0]*nCells_[0])); i++)
             {
-                bottomBoundValues_[i][0] = std::stod(substr[4]);
-                bottomBoundValues_[i][1] = std::stod(substr[5]);
-                if (substr[1] == "Dirichlet") bottomBoundVelFlag_[i] = DIRICHLET;
-                //else if(substr[1] == "Neumann") bottomBoundVelFlag_[i] = NEUMANN;
-                else assert(false);
+
+                bottomBoundValues_[i][0] = boundValues[iter][U];
+                bottomBoundValues_[i][1] = boundValues[iter][V];
+                bottomBoundValues_[i][2] = boundValues[iter][P];
+                bottomBoundValues_[i][3] = boundValues[iter][T];
+                if (boundTypes[iter][U] == NM) bottomBoundVelFlag_[i] = NEUMANN;
+                else bottomBoundVelFlag_[i] = DIRICHLET;
+                if (boundTypes[iter][T] == NM) bottomBoundTempFlag_[i] = NEUMANN;
+                else bottomBoundTempFlag_[i] = DIRICHLET;
             }
-            else if (substr[0] == "Pressure")
-            {
-                bottomBoundValues_[i][2] = std::stod(substr[4]);
-                if (substr[1] == "Dirichlet") bottomBoundVelFlag_[i] = NEUMANN;
-                //else if(substr[1] == "Neumann") bottomBoundVelFlag_[i] = DIRICHLET;
-                else assert(false);
-            }
-            else assert(false);
         }
-        
-
-    }
-
-    for(auto it = std::begin(top); it != std::end(top); ++it)
-    {
-        std::vector<std::string> substr = cut(*it);
-
-        for (int i = int(round(std::stod(substr[2])/physicalSize_[0]*nCells_[0])); i <= int(round(std::stod(substr[3])/physicalSize_[0]*nCells_[0])); i++)
+        else if (boundTypes[iter][TYPE] == TOPBOUND)
         {
-            if (substr[0] == "Velocity")
+            for (int i = int(round(boundValues[iter][POSITION]/physicalSize_[0]*nCells_[0])); i <= int(round(boundValues[iter][POSITION+1]/physicalSize_[0]*nCells_[0])); i++)
             {
-                topBoundValues_[i][0] = std::stod(substr[4]);
-                topBoundValues_[i][1] = std::stod(substr[5]);
-                if (substr[1] == "Dirichlet") topBoundVelFlag_[i] = DIRICHLET;
-                //else if(substr[1] == "Neumann") topBoundVelFlag_[i] = NEUMANN;
-                else assert(false);
+                topBoundValues_[i][0] = boundValues[iter][U];
+                topBoundValues_[i][1] = boundValues[iter][V];
+                topBoundValues_[i][2] = boundValues[iter][P];
+                topBoundValues_[i][3] = boundValues[iter][T];
+                if (boundTypes[iter][U] == NM) topBoundVelFlag_[i] = NEUMANN;
+                else topBoundVelFlag_[i] = DIRICHLET;
+                if (boundTypes[iter][T] == NM) topBoundTempFlag_[i] = NEUMANN;
+                else topBoundTempFlag_[i] = DIRICHLET;
             }
-            else if (substr[0] == "Pressure")
-            {
-                bottomBoundValues_[i][2] = std::stod(substr[4]);
-                if (substr[1] == "Dirichlet") topBoundVelFlag_[i] = NEUMANN;
-                //else if(substr[1] == "Neumann") topBoundVelFlag_[i] = DIRICHLET;
-                else assert(false);
-            }
-            else assert(false);
         }
-        
-
-    }
-
-    for(auto it = std::begin(left); it != std::end(left); ++it)
-    {
-        std::vector<std::string> substr = cut(*it);
-
-        for (int i = int(round(std::stod(substr[2])/physicalSize_[1]*nCells_[1])); i <= int(round(std::stod(substr[3])/physicalSize_[1]*nCells_[1])); i++)
+        else if (boundTypes[iter][TYPE] == LEFTBOUND)
         {
-            if (substr[0] == "Velocity")
+            for (int i = int(round(boundValues[iter][POSITION]/physicalSize_[1]*nCells_[1])); i <= int(round(boundValues[iter][POSITION+1]/physicalSize_[1]*nCells_[1])); i++)
             {
-                leftBoundValues_[i][0] = std::stod(substr[4]);
-                leftBoundValues_[i][1] = std::stod(substr[5]);
-                if (substr[1] == "Dirichlet") leftBoundVelFlag_[i] = DIRICHLET;
-                //else if(substr[1] == "Neumann") leftBoundVelFlag_[i] = NEUMANN;
-                else assert(false);
+                leftBoundValues_[i][0] = boundValues[iter][U];
+                leftBoundValues_[i][1] = boundValues[iter][V];
+                leftBoundValues_[i][2] = boundValues[iter][P];
+                leftBoundValues_[i][3] = boundValues[iter][T];
+                if (boundTypes[iter][U] == NM) leftBoundVelFlag_[i] = NEUMANN;
+                else leftBoundVelFlag_[i] = DIRICHLET;
+                if (boundTypes[iter][T] == NM) leftBoundTempFlag_[i] = NEUMANN;
+                else leftBoundTempFlag_[i] = DIRICHLET;   
             }
-            else if (substr[0] == "Pressure")
-            {
-                leftBoundValues_[i][2] = std::stod(substr[4]);
-                if (substr[1] == "Dirichlet") leftBoundVelFlag_[i] = NEUMANN;
-                //else if(substr[1] == "Neumann") leftBoundVelFlag_[i] = DIRICHLET;
-                else assert(false);
-            }
-            else assert(false);
         }
-        
-
-    }
-    for(auto it = std::begin(right); it != std::end(right); ++it)
-    {
-        std::vector<std::string> substr = cut(*it);
-
-        for (int i = int(round(std::stod(substr[2])/physicalSize_[1]*nCells_[1])); i <= int(round(std::stod(substr[3])/physicalSize_[1]*nCells_[1])); i++)
+        else if (boundTypes[iter][TYPE] == RIGHTBOUND)
         {
-            if (substr[0] == "Velocity")
+            for (int i = int(round(boundValues[iter][POSITION]/physicalSize_[1]*nCells_[1])); i <= int(round(boundValues[iter][POSITION+1]/physicalSize_[1]*nCells_[1])); i++)
             {
-                rightBoundValues_[i][0] = std::stod(substr[4]);
-                rightBoundValues_[i][1] = std::stod(substr[5]);
-                if (substr[1] == "Dirichlet") rightBoundVelFlag_[i] = DIRICHLET;
-                //else if(substr[1] == "Neumann") rightBoundVelFlag_[i] = NEUMANN;
-                else assert(false);
+                rightBoundValues_[i][0] = boundValues[iter][U];
+                rightBoundValues_[i][1] = boundValues[iter][V];
+                rightBoundValues_[i][2] = boundValues[iter][P];
+                rightBoundValues_[i][3] = boundValues[iter][T];
+                if (boundTypes[iter][U] == NM) rightBoundVelFlag_[i] = NEUMANN;
+                else rightBoundVelFlag_[i] = DIRICHLET;
+                if (boundTypes[iter][T] == NM) rightBoundVelFlag_[i] = NEUMANN;
+                else rightBoundVelFlag_[i] = DIRICHLET; 
             }
-            else if (substr[0] == "Pressure")
-            {
-                rightBoundValues_[i][2] = std::stod(substr[4]);
-                if (substr[1] == "Dirichlet") rightBoundVelFlag_[i] = NEUMANN;
-                //else if(substr[1] == "Neumann") rightBoundVelFlag_[i] = DIRICHLET;
-                else assert(false);
-            }
-            else assert(false);
         }
-        
-
-    }
-}
-
-
-void Mesh::set_object_condition(std::vector<std::string> objects)
-{
-    for(auto it = std::begin(objects); it != std::end(objects); ++it)
-    {
-        std::vector<std::string> substr = cut(*it);
-        CELLTYPE temp = EMPTY;
-        if (substr[0] == "Rectangle")
+        else if (boundTypes[iter][TYPE] == RECTANGLE)
         {
-            if (substr.size() == 6)
+            for (int j = int(ceil(boundValues[iter][POSITION]/physicalSize_[1]*nCells_[1]))+1; j <= int(boundValues[iter][POSITION+2]/physicalSize_[1]*nCells_[1]); j++)
             {
-                if (substr[5] == "FLUID") temp = FLUID;
-            }
-            for (int j = int(ceil(std::stod(substr[2])/physicalSize_[1]*nCells_[1]))+1; j <= int(std::stod(substr[4])/physicalSize_[1]*nCells_[1]); j++)
-            {
-                for (int i = int(ceil(std::stod(substr[1])/physicalSize_[0]*nCells_[0]))+1; i <= int(std::stod(substr[3])/physicalSize_[0]*nCells_[0]); i++)
+                for (int i = int(ceil(boundValues[iter][POSITION+1]/physicalSize_[0]*nCells_[0]))+1; i <= int(boundValues[iter][POSITION+3]/physicalSize_[0]*nCells_[0]); i++)
                 {
-                    flag_(i,j) = temp;
-
+                    flag_(i,j) = EMPTY;
+                    if (boundTypes[iter][T] == NM) objTemperatureFlag_(i,j) = ;
+                    else objTemperatureFlag_(i,j) = ;
+                    objTemperatureValues_(i,j) = boundValues[iter][T];
                 }
             }
         }
-        else if (substr[0] == "Triangle")
+        else if (boundTypes[iter][TYPE] == TRIANGLE)
         {
-            if (substr.size() == 6)
-            {
-                if (substr[5] == "FLUID") temp = FLUID;
-            }
-            double x1 = std::stod(substr[1])/physicalSize_[0]*nCells_[0], y1 = std::stod(substr[2])/physicalSize_[1]*nCells_[1];
-            double x2 = std::stod(substr[3])/physicalSize_[0]*nCells_[0], y2 = std::stod(substr[4])/physicalSize_[1]*nCells_[1];
-            double x3 = std::stod(substr[5])/physicalSize_[0]*nCells_[0], y3 = std::stod(substr[6])/physicalSize_[1]*nCells_[1];
+            double x1 = boundValues[iter][POSITION]/physicalSize_[0]*nCells_[0], y1 = boundValues[iter][POSITION+1]/physicalSize_[1]*nCells_[1];
+            double x2 = boundValues[iter][POSITION+2]/physicalSize_[0]*nCells_[0], y2 = boundValues[iter][POSITION+3]/physicalSize_[1]*nCells_[1];
+            double x3 = boundValues[iter][POSITION+4]/physicalSize_[0]*nCells_[0], y3 = boundValues[iter][POSITION+5]/physicalSize_[1]*nCells_[1];
             for (int j = int(std::min(y1,std::min(y2,y3))); j <= int(ceil(std::max(y1,std::max(y2,y3)))); j++)
             {
-            for (int i = int(std::min(x1,std::min(x2,x3))); i <= int(ceil(std::max(x1,std::max(x2,x3)))); i++)
+                for (int i = int(std::min(x1,std::min(x2,x3))); i <= int(ceil(std::max(x1,std::max(x2,x3)))); i++)
                 {
-
                     double d1,d2,d3;
                     d1 = (i-0.5 - x2) * (y1 - y2) - (x1 - x2) * (j-0.5 - y2);
                     d2 = (i-0.5 - x3) * (y2 - y3) - (x2 - x3) * (j-0.5 - y3);
@@ -181,35 +118,35 @@ void Mesh::set_object_condition(std::vector<std::string> objects)
                     bool has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
                     bool has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
 
-                    if (!(has_neg && has_pos)){
-                        flag_(i,j) = temp;
-                    } 
+                    if (!(has_neg && has_pos))
+                    {
+                        flag_(i,j) = EMPTY;
+                        if (boundTypes[iter][T] == NM) objTemperatureFlag_(i,j) = ;
+                        else objTemperatureFlag_(i,j) = ;
+                        objTemperatureValues_(i,j) = boundValues[iter][T];
+                    }
                 }
             }
         }
-        else if (substr[0] == "Ellipse")
+        else if (boundTypes[iter][TYPE] == CIRLCE)
         {
-            if (substr.size() == 6)
-            {
-                if (substr[5] == "FLUID") temp = FLUID;
-            }
-            double x = std::stod(substr[1])/physicalSize_[0]*nCells_[0], y = std::stod(substr[2])/physicalSize_[1]*nCells_[1];
-            double a = std::stod(substr[3])/physicalSize_[0]*nCells_[0], b = std::stod(substr[4])/physicalSize_[1]*nCells_[1];
+            double x = boundValues[iter][POSITION]/physicalSize_[0]*nCells_[0], y = boundValues[iter][POSITION+1]/physicalSize_[1]*nCells_[1];
+            double a = boundValues[iter][POSITION+2]/physicalSize_[0]*nCells_[0], b = boundValues[iter][POSITION+3]/physicalSize_[1]*nCells_[1];
             for (int j = int(ceil(y-b)); j <= int((y+b+0.5)); j++)
             {
                 for (int i = int(ceil(x-a)); i <= int((x+a+0.5)); i++)
                 {
                     if ((i-0.5-x)*(i-0.5-x)/(a*a) + (j-0.5-y)*(j-0.5-y)/(b*b) <= 1){
-                        flag_(i,j) = temp;
+                        flag_(i,j) = EMPTY;
+                        if (boundTypes[iter][T] == NM) objTemperatureFlag_(i,j) = ;
+                        else objTemperatureFlag_(i,j) = ;
+                        objTemperatureValues_(i,j) = boundValues[iter][T];
                     } 
                 
                 }
             }
         }
-
     }
-
-
     bool flatten = true;
 
     while (flatten)
@@ -244,32 +181,4 @@ void Mesh::set_object_condition(std::vector<std::string> objects)
         }
 
     }
-}
-
-
-
-
-
-
-
-
-std::vector<std::string> Mesh::cut (const std::string &str)
-{
-    std::vector<std::string> substr;
-        std::string temp = str;
-        size_t found;
-        while (true) 
-        {
-            found = temp.find(";");
-            if (found == std::string::npos)
-            {
-                substr.push_back(temp);
-                break;
-            }
-            substr.push_back(temp.substr(0,found));
-            temp = temp.substr(found+1);
-
-        }
-
-        return substr;
 }

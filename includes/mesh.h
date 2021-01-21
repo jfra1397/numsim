@@ -2,12 +2,13 @@
 
 #include "array2d.h"
 #include "field_variable.h"
+#include "settings.h"
 
 class Mesh
 {
     public:
     Mesh(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize);
-    void set_boundary_condition(std::vector<std::string> left, std::vector<std::string> right, std::vector<std::string> top, std::vector<std::string> bottom);
+    void set_boundary_condition(std::vector<std::vector<double>> boundValues, std::vector<std::array<BOUNDARYTYPE,5>> boundTypes);
     void set_object_condition(std::vector<std::string> objects);
     
     protected:
@@ -37,7 +38,4 @@ class Mesh
     std::vector<btype> bottomBoundVelFlag_;
     std::vector<btype> bottomBoundTempFlag_;
     std::vector<std::array<double,4>> bottomBoundValues_;
-
-    private:
-    std::vector<std::string> cut (const std::string &str);
 };

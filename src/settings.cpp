@@ -263,8 +263,7 @@ std::shared_ptr<Discretization> Settings::get_discretization()
             //create central differences
             discr = std::make_shared<CentralDifferences>(nCells(), physicalSize());
         }
-        // discr->set_boundary_condition(leftBound_, rightBound_, topBound_, bottomBound_);
-        // discr->set_object_condition(objects_);
+        discr->set_boundary_condition(boundValues_, boundTypes_);
         return discr;
     }
 
