@@ -2,11 +2,13 @@
 
 #include <iostream>
 
-OutputWriter::OutputWriter(std::shared_ptr<Discretization> discretization)
+OutputWriter::OutputWriter(std::shared_ptr<Discretization> discretization, std::string outputPath)
  : discretization_(discretization), fileNo_(0)
 {
   // create "out" subdirectory if it does not yet exist
-  int returnValue = system("mkdir -p out");
+  std::string temp = ("mkdir -p " + outputPath).c_str();
+  int returnValue = system(("mkdir -p " + outputPath).c_str());
   if (returnValue != 0)
-    std::cout << "Could not create subdirectory \"out\"." << std::endl;
+    std::cout << "Could not create subdirectory \"" << outputPath << "\"." << std::endl;
+  outputPath_ = outputPath; 
 }

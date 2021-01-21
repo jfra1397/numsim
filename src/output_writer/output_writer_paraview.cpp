@@ -14,8 +14,8 @@
 #include <vtkMath.h>
 
 
-OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization) :
-   OutputWriter(discretization)
+OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization, std::string outputPath) :
+   OutputWriter(discretization, outputPath)
 {
   // Create a vtkWriter_
   vtkWriter_ = vtkSmartPointer<vtkXMLStructuredGridWriter>::New();
@@ -25,7 +25,7 @@ void OutputWriterParaview::writeFile(double currentTime)
 {
   // Assemble the filename
   std::stringstream fileName;
-  fileName << "out/output_" << std::setw(4) << setfill('0') << fileNo_ << "." << vtkWriter_->GetDefaultFileExtension();
+  fileName << outputPath_ << "/output_" << std::setw(4) << setfill('0') << fileNo_ << "." << vtkWriter_->GetDefaultFileExtension();
   
   // increment file no.
   fileNo_++;
@@ -129,6 +129,39 @@ void OutputWriterParaview::writeFile(double currentTime)
 
   // add the field variable to the data set
   dataSet->GetPointData()->AddArray(arrayVelocity);
+
+  // add temperature field variable
+  // ---------------------------
+  vtkSmartPointer<vtkDoubleArray> arrayTemperature = vtkDoubleArray::New();
+
+  // the temperature is a scalar which means the number of components is 1
+  arrayTemperature->SetNumberOfComponents(1);
+
+  // Set the number of temperature values and allocate memory for it. We already know the number, it has to be the same as there are nodes in the mesh.
+  arrayTemperature->SetNumberOfTuples(dataSet->GetNumberOfPoints());
+  
+  arrayTemperature->SetName("temperature");
+
+  // loop over the nodes of the mesh and assign the interpolated t values in the vtk data structure
+  // we only consider the cells that are the actual computational domain, not the helper values in the "halo"
+
+  index = 0;   // index for the vtk data structure, will be incremented in the inner loop
+  for (int j = 0; j < nCells[1]+1; j++)
+  {
+    for (int i = 0; i < nCells[0]+1; i++, index++)
+    {
+      const double x = i*dx;
+      const double y = j*dy;
+
+      arrayTemperature->SetValue(index, discretization_->T().interpolateAt(x,y));
+    }
+  }
+
+  // now, we should have added as many values as there are points in the vtk data structure
+  assert(index == dataSet->GetNumberOfPoints());
+
+  // add the field variable to the data set
+  dataSet->GetPointData()->AddArray(arrayTemperature);
 
   index = 0;
   for (int j = 1; j < nCells[1]+1; j++)

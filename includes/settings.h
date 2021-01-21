@@ -43,6 +43,12 @@ public:
     //return reynolds number
     double re() const;
 
+    //return prandtl number
+    double pr() const;
+
+    //return volume expansion coefficient
+    double beta() const;
+
     //return end time of the simulation
     double endTime() const;
 
@@ -55,11 +61,17 @@ public:
     //return external forces
     const std::array<double, 2> g() const;
 
+    //return heat flux
+    double q() const;
+
     //return if the donor cell scheme schould be used
     bool useDonorCell() const;
 
-    //return factor for donor-cell scheme
+    //return factor for donor-cell scheme velocities
     double alpha() const;
+
+    //return factor for donor-cell scheme temperature
+    double gamma() const;
 
     //return which pressure solver to use, "GaussSeidel" or "SOR"
     const std::string pressureSolver() const;
@@ -89,6 +101,12 @@ public:
     //reynolds number
     double re_;
 
+    //prandtl number
+    double pr_;
+
+    //volume expansion coefficient
+    double beta_;
+
     //end time of the simulation
     double endTime_;
 
@@ -101,12 +119,17 @@ public:
     //external forces
     std::array<double, 2> g_;
 
+    //heat flux
+    double q_;
+
     //if the donor cell scheme schould be used
     bool useDonorCell_;
 
-    //factor for donor-cell scheme
+    //factor for donor-cell scheme velocities
     double alpha_;
 
+    //factor for donor-cell scheme temperature
+    double gamma_;
 
     std::vector<btype> leftBoundVelFlag_;
     // u,v,p
@@ -120,8 +143,9 @@ public:
     //which pressure solver to use, "GaussSeidel" or "SOR"
     std::string pressureSolver_;
 
-    //overrelaxation factor
+    //overrelaxation factor velocities
     double omega_;
+
 
     //tolerance for the residual in the pressure solver
     double epsilon_;

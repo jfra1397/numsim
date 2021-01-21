@@ -16,6 +16,7 @@
 int main(int argc, char *argv[])
 
 {
+    std::string outputPath = "";
 
     //load settings
     bool meshOnly = false;
@@ -24,9 +25,11 @@ int main(int argc, char *argv[])
 
     for (int i = 1; i < argc; i++)
     {
-        if (std::string(argv[i]) == "-m" || std::string(argv[i]) == "--mesh")
+        if (std::string(argv[i]) == "-m" || std::string(argv[i]) == "--mesh") meshOnly = true;
+        else if (std::string(argv[i]) == "-o" || std::string(argv[i]) == "--output") outputPath = std::string(argv[i+1]);
+        else if (std::string(argv[i]) == "-h" || std::string(argv[i]) == "--help")
         {
-            meshOnly = true;
+            std::cout << "help" <<std::endl;
         }
         else
         {
@@ -52,7 +55,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Solver> solver = settings.get_solver();
 
     //create outputwriter class
-    OutputWriterParaview writer(discretization);
+    OutputWriterParaview writer(discretization, outputPath);
 
     if (meshOnly)
     {

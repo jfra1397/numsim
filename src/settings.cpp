@@ -158,6 +158,14 @@ int Settings::assign_param_(std::string param, std::string value)
             omega_ = std::stod(value);
         else if (param == "epsilon")
             epsilon_ = std::stod(value);
+        else if (param == "beta")
+            beta_ = std::stod(value);
+        else if (param == "pr")
+            pr_ = std::stod(value);
+        else if (param == "q")
+            q_ = std::stod(value);
+        else if (param == "gamma")
+            gamma_ = std::stod(value);
         else if (param == "maximumNumberOfIterations")
             maximumNumberOfIterations_ = (int)std::stod(value);
         else if (param == "bottomBound") bottomBound_.push_back(value);
@@ -188,6 +196,12 @@ const std::array<double, 2> Settings::physicalSize() const { return physicalSize
 //return reynolds number
 double Settings::re() const { return re_; }
 
+//return prandtl number
+double Settings::pr() const { return pr_; }
+
+//return volume expansion coefficient
+double Settings::beta() const { return beta_; }
+
 //return end time of the simulation
 double Settings::endTime() const { return endTime_; }
 
@@ -200,11 +214,17 @@ double Settings::maximumDt() const { return maximumDt_; }
 //return external forces
 const std::array<double, 2> Settings::g() const { return g_; }
 
+//return heat flux
+double Settings::q() const {return q_;}
+
 //return if the donor cell scheme schould be used
 bool Settings::useDonorCell() const { return useDonorCell_; }
 
-//return factor for donor-cell scheme
+//return factor for donor-cell scheme velocities
 double Settings::alpha() const { return alpha_; }
+
+//return factor for donor-cell scheme temperature
+double Settings::gamma() const {return gamma_;}
 
 //return which pressure solver to use, "GaussSeidel" or "SOR"
 const std::string Settings::pressureSolver() const { return pressureSolver_; }
@@ -226,7 +246,7 @@ std::shared_ptr<Discretization> Settings::get_discretization()
         if (useDonorCell())
         {
             //create donor cell discretization
-            discr = std::make_shared<DonorCell>(nCells(), physicalSize(), alpha());
+            discr = std::make_shared<DonorCell>(nCells(), physicalSize(), alpha(), gamma());
         }
         else
         {
