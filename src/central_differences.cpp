@@ -45,12 +45,15 @@ double CentralDifferences::computeDuvDy(int i, int j) const
 //compute the 1st derivative ∂ uT / ∂x
 double CentralDifferences::computeDuTDx(int i, int j) const
 {
-    return 0;
+    double TLeft = (T(i-1,j)+T(i,j))/2;
+    double TRight = (T(i+1,j)+T(i,j))/2;
+    return (u(i,j)*TRight - u(i-1,j)*TLeft)/dx();
 }
 
 //compute the 1st derivative ∂ vT / ∂y
 double CentralDifferences::computeDvTDy(int i, int j) const
 {
-
-    return 0;
+    double TTop = (T(i,j+1)+T(i,j))/2;
+    double TBottom = (T(i,j-1)+T(i,j))/2;
+    return (v(i,j)*TTop -v(i,j-1)*TBottom)/dy();
 }

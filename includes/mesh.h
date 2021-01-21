@@ -23,14 +23,17 @@ class Mesh
 
     Array2D<CELLTYPE> flag_;
     std::vector<btype> leftBoundVelFlag_;
-    // u,v,p
-    std::vector<std::array<double,3>> leftBoundValues_;
+    std::vector<btype> leftBoundTempFlag_;
+    std::vector<std::array<double,4>> leftBoundValues_;     // u,v,p,T
     std::vector<btype> rightBoundVelFlag_;
-    std::vector<std::array<double,3>> rightBoundValues_;
+    std::vector<btype> rightBoundTempFlag_;    
+    std::vector<std::array<double,4>> rightBoundValues_;
     std::vector<btype> topBoundVelFlag_;
-    std::vector<std::array<double,3>> topBoundValues_;
+    std::vector<btype> topBoundTempFlag_;
+    std::vector<std::array<double,4>> topBoundValues_;
     std::vector<btype> bottomBoundVelFlag_;
-    std::vector<std::array<double,3>> bottomBoundValues_;
+    std::vector<btype> bottomBoundTempFlag_;
+    std::vector<std::array<double,4>> bottomBoundValues_;
 
     private:
     std::vector<std::string> cut (const std::string &str);
