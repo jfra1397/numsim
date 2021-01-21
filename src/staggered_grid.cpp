@@ -296,34 +296,43 @@ void StaggeredGrid::set_boundary_T(FieldVariable &T) const
     {
         for (int i = 1; i < flag_.size()[0] - 1; i++)
         {
+
             switch (flag_(i, j))
             {
             case FLUID:
             case EMPTY:
                 break;
             case OBJLEFT:
-                T(i, j) = T(i - 1, j);
+                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i - 1, j);
+                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i - 1, j);
                 break;
             case OBJRIGHT:
-                T(i, j) = T(i + 1, j);
+                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i + 1, j);
+                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i + 1, j);
                 break;
             case OBJTOP:
-                T(i, j) = T(i, j + 1);
+                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i, j + 1);
+                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j + 1);
                 break;
             case OBJBOTTOM:
-                T(i, j) = T(i, j - 1);
+                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i, j - 1);
+                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j - 1);
                 break;
             case OBJBOTTOMLEFT:
-                T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
+                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i-1,j))/2;
                 break;
             case OBJBOTTOMRIGHT:
-                T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
+                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i+1,j))/2;
                 break;
             case OBJTOPLEFT:
-                T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
+                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i-1,j))/2;
                 break;
             case OBJTOPRIGHT:
-                T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
+                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i+1,j))/2;
                 break;
 
             default:

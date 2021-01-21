@@ -22,6 +22,9 @@ class Mesh
     std::array<double, 2> physicalSize_;
 
     Array2D<CELLTYPE> flag_;
+    Array2D<OBJECTTEMPTYPE> objTemperatureFlag_;
+    Array2D<double> objTemperatureValues_;
+
     std::vector<btype> leftBoundVelFlag_;
     std::vector<btype> leftBoundTempFlag_;
     std::vector<std::array<double,4>> leftBoundValues_;     // u,v,p,T

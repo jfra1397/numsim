@@ -23,6 +23,14 @@ enum CELLTYPE
     OBJBOTTOMRIGHT
 };
 
+enum OBJECTTEMPTYPE
+{
+  HEATED,
+  ISOLATED,
+  NOOBJECT
+
+};
+
 
 
 /** This class represents a 2D array as template values.
