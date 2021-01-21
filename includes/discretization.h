@@ -36,6 +36,12 @@ public:
     //compute the 2nd derivative ∂^2 v / ∂y^2
     double computeD2vDy2(int i, int j) const;
 
+     //compute the 2nd derivative ∂^2 u / ∂x^2
+    double computeD2TDx2(int i, int j) const;
+
+    //compute the 2nd derivative ∂^2 u / ∂y^2
+    double computeD2TDy2(int i, int j) const;
+
     //compute the 1st derivative ∂ F / ∂x
     double computeDFDx(int i, int j) const;
 

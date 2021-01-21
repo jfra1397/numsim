@@ -104,7 +104,7 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, double manualTimeStep)
+void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer)
 {
 
     //initialize time
@@ -123,15 +123,14 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
     while (t < settings.endTime())
     {
         //compute time step
-        if (manualTimeStep == 0) dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
-        else dt = manualTimeStep;
+         dt = compute_dt(settings.tau(), settings.re(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
         
 
         //set timestep s.t. given endtime is not exceeded
         //set time step s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
             dt = settings.endTime() - t;
-        //else if (int(t+dt) -t > 0) dt = int(t + dt) -t;
+        else if (int(t+dt) -t > 0) dt = int(t + dt) -t;
 
         // compute f,g
         compute_f(settings.re(), settings.g()[0], dt, discr, discr.set_f());
@@ -155,9 +154,9 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         t += dt;
 
         //write results to output files
-        //if (int(t) == t ){
+        if (int(t) == t ){
         writer.writeFile(t);
         //discr.write_to_file(fileNo++, t);
-        //}
+        }
     }
 }

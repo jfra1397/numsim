@@ -39,3 +39,16 @@ double DonorCell::computeDuvDy(int i, int j) const
     double vMidRight = (v(i, j) + v(i + 1, j)) / 2, vDownRight = (v(i, j - 1) + v(i + 1, j - 1)) / 2;
     return (vMidRight * (u(i, j + 1) + u(i, j)) / 2 - vDownRight * (u(i, j) + u(i, j - 1)) / 2 + alpha_ * (fabs(vMidRight) * (u(i, j) - u(i, j + 1)) / 2 - fabs(vDownRight) * (u(i, j - 1) - u(i, j)) / 2)) / dy();
 }
+
+//compute the 1st derivative ∂ uT / ∂x
+double DonorCell::computeDuTDx(int i, int j) const
+{
+    return 0;
+}
+
+//compute the 1st derivative ∂ vT / ∂y
+double DonorCell::computeDvTDy(int i, int j) const
+{
+
+    return 0;
+}

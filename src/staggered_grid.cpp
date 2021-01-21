@@ -1,7 +1,7 @@
 #include "../includes/staggered_grid.h"
 
 StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize) 
-: Mesh(size, physicalSize), u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize)
+: Mesh(size, physicalSize), u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize), T_(size, VCENTRE, physicalSize)
 {
     
 
@@ -299,6 +299,7 @@ const FieldVariable &StaggeredGrid::p() const { return p_; }
 const FieldVariable &StaggeredGrid::f() const { return f_; }
 const FieldVariable &StaggeredGrid::g() const { return g_; }
 const FieldVariable &StaggeredGrid::rhs() const { return rhs_; }
+const FieldVariable &StaggeredGrid::T() const { return T_; }
 
 //get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
 double StaggeredGrid::u(int i, int j) const { return u_(i, j); }
@@ -307,6 +308,7 @@ double StaggeredGrid::p(int i, int j) const { return p_(i, j); }
 double StaggeredGrid::f(int i, int j) const { return f_(i, j); }
 double StaggeredGrid::g(int i, int j) const { return g_(i, j); }
 double StaggeredGrid::rhs(int i, int j) const { return rhs_(i, j); }
+double StaggeredGrid::T(int i, int j) const { return T_(i, j); }
 
 CELLTYPE StaggeredGrid::flag(int i, int j) const { return flag_(i, j); }
 
@@ -317,6 +319,7 @@ FieldVariable &StaggeredGrid::set_p() { return p_; }
 FieldVariable &StaggeredGrid::set_f() { return f_; }
 FieldVariable &StaggeredGrid::set_g() { return g_; }
 FieldVariable &StaggeredGrid::set_rhs() { return rhs_; }
+FieldVariable &StaggeredGrid::set_T() { return T_; }
 
 //access the value at coordinate (i,j), declared not const, i.e. the value can be changed
 double &StaggeredGrid::set_u(int i, int j) { return u_(i, j); }
@@ -325,6 +328,7 @@ double &StaggeredGrid::set_p(int i, int j) { return p_(i, j); }
 double &StaggeredGrid::set_f(int i, int j) { return f_(i, j); }
 double &StaggeredGrid::set_g(int i, int j) { return g_(i, j); }
 double &StaggeredGrid::set_rhs(int i, int j) { return rhs_(i, j); }
+double &StaggeredGrid::set_T(int i, int j) { return T_(i, j); }
 
 
 int StaggeredGrid::uIBegin() const{}

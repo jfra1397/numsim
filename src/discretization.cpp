@@ -38,6 +38,20 @@ double Discretization::computeD2vDy2(int i, int j) const
     return (v(i, j + 1) - 2 * v(i, j) + v(i, j - 1)) / denominator;
 }
 
+//compute the 2nd derivative ∂^2 T / ∂x^2
+double Discretization::computeD2TDx2(int i, int j) const
+{
+    double denominator = (dx() * dx());
+    return (T(i + 1, j) - 2 * T(i, j) + T(i - 1, j)) / denominator;
+}
+
+//compute the 2nd derivative ∂^2 T / ∂y^2
+double Discretization::computeD2TDy2(int i, int j) const
+{
+    double denominator = (dy() * dy());
+    return (T(i, j + 1) - 2 * T(i, j) + T(i, j - 1)) / denominator;
+}
+
 //compute the 1st derivative ∂ F / ∂x
 double Discretization::computeDFDx(int i, int j) const
 {

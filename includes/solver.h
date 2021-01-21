@@ -36,5 +36,5 @@ public:
     void compute_v(double dt, const Discretization &discr, FieldVariable &v);
 
     //solve for velocities u and v
-    void solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, double manualTimeStep = 0);
+    void solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer);
 };

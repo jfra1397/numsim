@@ -27,6 +27,8 @@ public:
     const FieldVariable &f() const;
     const FieldVariable &g() const;
     const FieldVariable &rhs() const;
+    const FieldVariable &T() const;
+
 
     //get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
     double u(int i, int j) const;
@@ -35,6 +37,7 @@ public:
     double f(int i, int j) const;
     double g(int i, int j) const;
     double rhs(int i, int j) const;
+    double T(int i, int j) const;
 
     CELLTYPE flag(int i, int j) const;
 
@@ -45,6 +48,7 @@ public:
     FieldVariable &set_f();
     FieldVariable &set_g();
     FieldVariable &set_rhs();
+    FieldVariable &set_T();
 
     //access the value at coordinate (i,j), declared not const, i.e. the value can be changed
     double &set_u(int i, int j);
@@ -53,6 +57,7 @@ public:
     double &set_f(int i, int j);
     double &set_g(int i, int j);
     double &set_rhs(int i, int j);
+    double &set_T(int i, int j);
 
     int uIBegin() const;
     int uIEnd() const;
@@ -75,6 +80,7 @@ private:
     FieldVariable f_;
     FieldVariable g_;
     FieldVariable rhs_;
+    FieldVariable T_;
     
     
 };

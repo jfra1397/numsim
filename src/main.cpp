@@ -7,8 +7,6 @@
 #include "../includes/solver.h"
 #include "../includes/output_writer_paraview.h"
 
-
-
 #include <vtkImageData.h>
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
@@ -20,20 +18,32 @@ int main(int argc, char *argv[])
 {
 
     //load settings
+    bool meshOnly = false;
+    bool input = false;
     Settings settings;
-    if(argc <= 1) std::cout << "No input file given. Using default parameters!" << std::endl;
-    else settings.loadFromFile(argv[1]);
-    
-    
-    settings.printSettings();
 
-    double timeStep;
-    if (argc>=3) 
+    for (int i = 1; i < argc; i++)
     {
-        std::cout<< "Using always time step: " << argv[2] << std::endl;
-        timeStep = std::stod(argv[2]);
-    } 
-    else timeStep = 0; 
+        if (std::string(argv[i]) == "-m" || std::string(argv[i]) == "--mesh")
+        {
+            meshOnly = true;
+        }
+        else
+        {
+            settings.loadFromFile(argv[i]);
+            input = true;
+        }
+    }
+
+    if (!input)
+    {
+        std::cout << "No input file given. Abborting!" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    //else settings.loadFromFile(argv[1]);
+
+    settings.printSettings();
 
     //create discretization depending on a settings value
     std::shared_ptr<Discretization> discretization = settings.get_discretization();
@@ -43,12 +53,17 @@ int main(int argc, char *argv[])
 
     //create outputwriter class
     OutputWriterParaview writer(discretization);
-    writer.writeFile(0);
+
+    if (meshOnly)
+    {
+        writer.writeFile(0);
+        return EXIT_SUCCESS;
+    }
 
     // auto start = std::chrono::high_resolution_clock::now();
 
     //run loop to solve for new velocities u,v
-    // solver->solve_uv(settings, *discretization, writer, timeStep);
+    solver->solve_uv(settings, *discretization, writer);
 
     /**
     auto stop = std::chrono::high_resolution_clock::now();
@@ -63,6 +78,6 @@ int main(int argc, char *argv[])
     myfile << settings.nCells()[0] << ";" << settings.nCells()[1] << ";" << duration.count() << std::endl;
     myfile.close();
     */
-    
+
     return EXIT_SUCCESS;
 }

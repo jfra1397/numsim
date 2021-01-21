@@ -41,3 +41,16 @@ double CentralDifferences::computeDuvDy(int i, int j) const
     double denominator = 4 * dy();
     return ((u(i, j + 1) + uMid) * (v(i + 1, j) + vMid) - (uMid + u(i, j - 1)) * (v(i + 1, j - 1) + v(i, j - 1))) / denominator;
 }
+
+//compute the 1st derivative ∂ uT / ∂x
+double CentralDifferences::computeDuTDx(int i, int j) const
+{
+    return 0;
+}
+
+//compute the 1st derivative ∂ vT / ∂y
+double CentralDifferences::computeDvTDy(int i, int j) const
+{
+
+    return 0;
+}

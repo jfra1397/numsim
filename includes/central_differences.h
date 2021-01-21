@@ -23,4 +23,10 @@ public:
 
     //compute the 1st derivative ∂ (uv) / ∂y
     virtual double computeDuvDy(int i, int j) const;
+
+    //compute the 1st derivative ∂ uT / ∂x
+    virtual double computeDuTDx(int i, int j) const;
+
+    //compute the 1st derivative ∂ vT / ∂y
+    virtual double computeDvTDy(int i, int j) const;
 };

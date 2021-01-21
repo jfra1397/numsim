@@ -157,8 +157,11 @@ void OutputWriterParaview::writeFile(double currentTime)
   vtkWriter_->SetDataModeToBinary();      // set file mode to binary files: smaller file sizes
 
   // finally write out the data
-  // vtkWriter_->Write();
+  vtkWriter_->Write();
+  return;
 
+
+  
     // Create a mapper and actor
   vtkSmartPointer<vtkDataSetMapper> mapper = 
     vtkSmartPointer<vtkDataSetMapper>::New();
