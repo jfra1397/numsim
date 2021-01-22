@@ -5,29 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "discretization.h"
-
-enum BOUNDARYTYPE
-{
-    LEFTBOUND,
-    RIGHTBOUND,
-    TOPBOUND,
-    BOTTOMBOUND,
-    RECTANGLE,
-    TRIANGLE,
-    CIRLCE,
-    NM,
-    DR
-};
-
-enum DICT{
-    U=0,
-    V=1,
-    P=2,
-    T=3,
-    POSITION=4,
-    TYPE=4
-};
+#include "values.h"
 
 //get rid of co-depending classes
 class Solver;
@@ -37,6 +15,7 @@ class Discretization;
  * loads them from a given *.txt file. Also it creates 
  * the discretization and solver object with given 
  * paramters */
+
 
 class Settings
 {
@@ -159,9 +138,8 @@ public:
     // std::vector<std::string> rightBound_;
     // std::vector<std::string> topBound_;
     // std::vector<std::string> bottomBound_;
-    // std::vector<std::string> objects_;
-    std::vector<std::vector<double>> boundValues_;
-    std::vector<std::array<BOUNDARYTYPE,5>> boundTypes_;
+    // std::vector<std::string> Obstacles_;
+    std::vector<Obstacle> objects_;
 
 
     //which pressure solver to use, "GaussSeidel" or "SOR"
@@ -181,5 +159,13 @@ public:
 
     std::vector<std::string> cut (const std::string &str);
 
-    BOUNDARYTYPE string2enum(std::string str);
+    SHAPE string2shape(std::string str);
+    btype string2btype(std::string str);
+    CELLTYPE string2celltype(std::string str);
+
+
+    std::array<std::string,2> extract(std::string line);
+    
 };
+
+

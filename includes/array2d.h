@@ -8,28 +8,7 @@
 #include <vector>
 #include <array>
 
-enum CELLTYPE
-{
-    FLUID,
-    EMPTY,
-    BOUND,
-    OBJLEFT,
-    OBJRIGHT,
-    OBJTOP,
-    OBJBOTTOM,
-    OBJTOPLEFT,
-    OBJTOPRIGHT,
-    OBJBOTTOMLEFT,
-    OBJBOTTOMRIGHT
-};
-
-enum OBJECTTEMPTYPE
-{
-  HEATED,
-  ISOLATED,
-  NOOBJECT
-
-};
+#include "values.h"
 
 
 

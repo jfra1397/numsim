@@ -303,36 +303,36 @@ void StaggeredGrid::set_boundary_T(FieldVariable &T) const
             case EMPTY:
                 break;
             case OBJLEFT:
-                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i - 1, j);
-                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i - 1, j);
+                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i - 1, j);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i - 1, j);
                 break;
             case OBJRIGHT:
-                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i + 1, j);
-                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i + 1, j);
+                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i + 1, j);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i + 1, j);
                 break;
             case OBJTOP:
-                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i, j + 1);
-                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j + 1);
+                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i, j + 1);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j + 1);
                 break;
             case OBJBOTTOM:
-                if (objTemperatureFlag_(i, j) == ISOLATED) T(i, j) = T(i, j - 1);
-                else if (objTemperatureFlag_(i, j) == HEATED) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j - 1);
+                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i, j - 1);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j - 1);
                 break;
             case OBJBOTTOMLEFT:
-                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i-1,j))/2;
+                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i-1,j))/2;
                 break;
             case OBJBOTTOMRIGHT:
-                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i+1,j))/2;
+                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i+1,j))/2;
                 break;
             case OBJTOPLEFT:
-                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i-1,j))/2;
+                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i-1,j))/2;
                 break;
             case OBJTOPRIGHT:
-                if(objTemperatureFlag_(i,j)==ISOLATED) T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==HEATED) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i+1,j))/2;
+                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i+1,j))/2;
                 break;
 
             default:

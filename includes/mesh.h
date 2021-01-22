@@ -3,13 +3,13 @@
 #include "array2d.h"
 #include "field_variable.h"
 #include "settings.h"
+#include "values.h"
 
 class Mesh
 {
     public:
     Mesh(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize);
-    void set_boundary_condition(std::vector<std::vector<double>> boundValues, std::vector<std::array<BOUNDARYTYPE,5>> boundTypes);
-    void set_object_condition(std::vector<std::string> objects);
+    void set_boundary_condition(std::vector<Obstacle> objects);
     
     protected:
 
@@ -23,7 +23,7 @@ class Mesh
     std::array<double, 2> physicalSize_;
 
     Array2D<CELLTYPE> flag_;
-    Array2D<OBJECTTEMPTYPE> objTemperatureFlag_;
+    Array2D<btype> objTemperatureFlag_;
     Array2D<double> objTemperatureValues_;
 
     std::vector<btype> leftBoundVelFlag_;

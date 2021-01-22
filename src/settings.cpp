@@ -263,7 +263,7 @@ std::shared_ptr<Discretization> Settings::get_discretization()
             //create central differences
             discr = std::make_shared<CentralDifferences>(nCells(), physicalSize());
         }
-        discr->set_boundary_condition(boundValues_, boundTypes_);
+        discr->set_boundary_condition(objects_);
         return discr;
     }
 
@@ -285,13 +285,9 @@ std::shared_ptr<Solver> Settings::get_solver()
 
 void Settings::handle_dict(std::ifstream &file, std::string line)
 {
+    std::vector<std::array<std::string,2>> str;
     bool loop = true;
-    std::string param;
-    std::vector<std::string> valuesString;
-    std::vector<double> values = {0,0,0,0};
-    std::array<BOUNDARYTYPE,5> types = {DR, DR, NM, NM, LEFTBOUND};
-
-    while (loop)
+    while(loop)
     {
         size_t found = line.find("}");
         if (found != std::string::npos)
@@ -299,47 +295,60 @@ void Settings::handle_dict(std::ifstream &file, std::string line)
             line = line.substr(0,found);
             loop = false;
         }
-        found = line.find("#");
-        if (found != std::string::npos) line = line.substr(0,found);
-        found = line.find("=");
-        if (found != std::string::npos) 
-        {
-            param = line.substr(0,found);
-            valuesString = cut(line.substr(found+1));
-            if (param == "Velocity")
-            {
-                types[U] = string2enum(valuesString[0]);
-                types[V] = string2enum(valuesString[0]);
-                values[U] = std::stod(valuesString[1]);
-                values[V] = std::stod(valuesString[2]);
-            }
-            else if (param == "Pressure")
-            {
-                types[P] = string2enum(valuesString[0]);
-                values[P] = std::stod(valuesString[1]);
-            }
-            else if (param == "Temperature")
-            {
-                types[T] = string2enum(valuesString[0]);
-                values[T] = std::stod(valuesString[1]);
-            }
-            else if (param == "Type")
-            {
-                types[TYPE] = string2enum(valuesString[0]);
-            }
-            else if (param == "Position")
-            {
-                for(auto it = std::begin(valuesString); it != std::end(valuesString); ++it) values.push_back(std::stod(*it));
-            }
-            
-        }
-        if(loop) getline(file, line);
-        //get rid of spaces
-        std::string::iterator end_pos = std::remove(line.begin(), line.end(), ' ');
-        line.erase(end_pos, line.end());
+        str.push_back(extract(line));
+        if (loop) getline(file, line);
     }
-    boundTypes_.push_back(types);
-    boundValues_.push_back(values);
+    Obstacle obj;
+    std::vector<std::string> valuesString;
+    for(auto it = std::begin(str); it != std::end(str); ++it)
+    {
+        valuesString = cut((*it)[1]);
+        if ((*it)[0] == "Velocity")
+        {
+            obj.velType = string2btype(valuesString[0]);
+            obj.velValue = {std::stod(valuesString[1]), std::stod(valuesString[2])};
+        }
+        else if ((*it)[0] == "Pressure")
+        {
+            obj.pType = string2btype(valuesString[0]);
+            obj.pValue = std::stod(valuesString[1]);
+        }
+        else if ((*it)[0] == "Temperature")
+        {
+            obj.tType = string2btype(valuesString[0]);
+            obj.tValue = std::stod(valuesString[1]);
+        }
+        else if( (*it)[0] == "Shape") obj.shape = string2shape(valuesString[0]);
+        else if ( (*it)[0] == "Type") obj.type = string2celltype(valuesString[0]);
+        else if ((*it)[0] == "Position")
+        {
+            for(auto it2 = std::begin(valuesString); it2 != std::end(valuesString); ++it2) obj.position.push_back(std::stod(*it2));
+        }
+        else if( (*it)[0] == "") continue;
+        else assert(false);
+        
+            
+    }
+    objects_.push_back(obj);
+}
+
+std::array<std::string,2> Settings::extract(std::string line)
+{
+    std::array<std::string,2> str = {"", ""};
+    size_t found;
+    //get rid of spaces
+    std::string::iterator end_pos = std::remove(line.begin(), line.end(), ' ');
+    line.erase(end_pos, line.end());
+    found = line.find("#");
+    if (found != std::string::npos) line = line.substr(0,found);
+    found = line.find("=");
+    if (found != std::string::npos) 
+    {
+        str[0] = line.substr(0,found);
+        str[1] = line.substr(found+1);
+    }
+    return str;
+
 
 }
 
@@ -364,16 +373,30 @@ std::vector<std::string> Settings::cut (const std::string &str)
         return substr;
 }
 
-BOUNDARYTYPE Settings::string2enum(std::string str)
+SHAPE Settings::string2shape(std::string str)
+{
+    if(str == "Rectangle") return RECTANGLE;
+    else if(str == "Triangle") return TRIANGLE;
+    else if(str == "Ellipse") return ELLIPSE;
+    else assert(false);
+}
+
+btype Settings::string2btype(std::string str)
+{
+    if(str == "Neumann") return NEUMANN;
+    else if(str == "Dirichlet") return DIRICHLET;
+    else if(str == "Heated") return DIRICHLET;
+    else if(str == "Isolated") return NEUMANN;
+    else assert(false);
+}
+
+CELLTYPE Settings::string2celltype(std::string str)
 {
     if (str == "Leftbound") return LEFTBOUND;
     else if(str == "Rightbound") return RIGHTBOUND;
     else if(str == "Topbound") return TOPBOUND;
     else if(str == "Bottombound") return BOTTOMBOUND;
-    else if(str == "Rectangle") return RECTANGLE;
-    else if(str == "Triangle") return TRIANGLE;
-    else if(str == "Cirlce") return CIRLCE;
-    else if(str == "Neumann") return NM;
-    else if(str == "Dirichlet") return DR;
+    else if (str == "Fluid") return FLUID;
+    else if(str == "Object") return EMPTY;
     else assert(false);
 }

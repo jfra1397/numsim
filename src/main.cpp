@@ -17,7 +17,7 @@
 int main(int argc, char *argv[])
 
 {
-    std::string outputPath = "";
+    std::string outputPath = ".";
 
     //load settings
     bool meshOnly = false;

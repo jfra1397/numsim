@@ -12,12 +12,7 @@ enum vposition
     VTOP
 };
 
-//describe boundary condition type
-enum btype
-{
-    DIRICHLET,
-    NEUMANN
-};
+
 /** This class represents a field variable of double values.
  * It inhertits from Array2D to access and store the values
  * and additionally it contains methods to set boundary conditions
