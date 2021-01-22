@@ -1,14 +1,14 @@
 #include "../includes/solver.h"
 
 //compute timestep dt
-double Solver::compute_dt(double tau, double re,double pr, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v)
+double Solver::compute_dt(double tau, double re, double pr, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v)
 {
     //get maximum velocities in each direction
     double umax = u.get_abs_max();
     double vmax = v.get_abs_max();
 
     //get minimum of timestep possibilities (avoid dividing by zero)
-    double temp = re*pr / 2 * meshWidth[0] * meshWidth[0] * meshWidth[1] * meshWidth[1] / (meshWidth[0] * meshWidth[0] + meshWidth[1] * meshWidth[1]);
+    double temp = re * pr / 2 * meshWidth[0] * meshWidth[0] * meshWidth[1] * meshWidth[1] / (meshWidth[0] * meshWidth[0] + meshWidth[1] * meshWidth[1]);
     double temp_min = std::min(temp, maximumDt);
 
     if (umax == 0 && vmax == 0)
@@ -34,7 +34,7 @@ void Solver::compute_f(double re, double gx, double dt, double beta, const Discr
             //calculate F at position (i,j)
             if (discr.flag(i, j) != FLUID || discr.flag(i + 1, j) != FLUID)
                 continue;
-            f(i, j) = discr.u(i, j) + dt * (1 / re * (discr.computeD2uDx2(i, j) + discr.computeD2uDy2(i, j)) - discr.computeDu2Dx(i, j) - discr.computeDuvDy(i, j) + gx * (1 - beta * discr.T(i, j)));
+            f(i, j) = discr.u(i, j) + dt * (1 / re * (discr.computeD2uDx2(i, j) + discr.computeD2uDy2(i, j)) - discr.computeDu2Dx(i, j) - discr.computeDuvDy(i, j) + gx * (1 - beta * (discr.T(i, j) + discr.T(i + 1, j)) / 2));
         }
     }
 }
@@ -51,7 +51,7 @@ void Solver::compute_g(double re, double gy, double dt, double beta, const Discr
             //calculate G at position (i,j)
             if (discr.flag(i, j) != FLUID || discr.flag(i, j + 1) != FLUID)
                 continue;
-            g(i, j) = discr.v(i, j) + dt * (1 / re * (discr.computeD2vDx2(i, j) + discr.computeD2vDy2(i, j)) - discr.computeDv2Dy(i, j) - discr.computeDuvDx(i, j) + gy * (1 - beta * discr.T(i, j)));
+            g(i, j) = discr.v(i, j) + dt * (1 / re * (discr.computeD2vDx2(i, j) + discr.computeD2vDy2(i, j)) - discr.computeDv2Dy(i, j) - discr.computeDuvDx(i, j) + gy * (1 - beta * (discr.T(i, j) + discr.T(i, j + 1)) / 2));
         }
     }
 }
@@ -150,23 +150,25 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
 
     //set boundary condition values of u,v
     discr.set_boundary_uvfg();
+    discr.set_boundary_T(discr.set_T());
     //return;
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
     {
         //compute time step
-        dt = compute_dt(settings.tau(), settings.re(),settings.pr(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
+        dt = compute_dt(settings.tau(), settings.re(), settings.pr(), settings.maximumDt(), discr.meshWidth(), discr.u(), discr.v());
 
         //set timestep s.t. given endtime is not exceeded
         //set time step s.t. given endtime is not exceeded
         if (t + dt > settings.endTime())
             dt = settings.endTime() - t;
-        else if (int(t + dt) - t > 0)
-            dt = int(t + dt) - t;
+        //else if (int(t + dt) - t > 0)
+         //   dt = int(t + dt) - t;
 
         //compute T
         compute_T(settings.re(), settings.pr(), settings.q(), dt, discr, discr.set_T());
+        discr.set_boundary_T(discr.set_T());
 
         // compute f,g
         compute_f(settings.re(), settings.g()[0], dt, settings.beta(), discr, discr.set_f());
@@ -190,10 +192,10 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         t += dt;
 
         //write results to output files
-        if (int(t) == t)
-        {
+        //if (int(t) == t)
+        //{
             writer.writeFile(t);
-            //discr.write_to_file(fileNo++, t);
-        }
+            discr.write_to_file(fileNo++, t);
+        //}
     }
 }

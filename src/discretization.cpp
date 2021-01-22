@@ -128,6 +128,8 @@ void Discretization::write_to_file(int fileNo, double time) const
     f().write_to_file(fileName.str(), "f", true);
     g().write_to_file(fileName.str(), "g", true);
     rhs().write_to_file(fileName.str(), "rhs", true);
+    T().write_to_file(fileName.str(), "T", true);
+    
 }
 
 //get meshwidth in x-direction

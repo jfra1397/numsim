@@ -80,7 +80,11 @@ void Settings::loadFromFile(const std::string filename)
         //get rid of spaces
         std::string::iterator end_pos = std::remove(line.begin(), line.end(), ' ');
         line.erase(end_pos, line.end());
-
+        
+        //get rid of \r (Shitty Windows stuff)
+        end_pos = std::remove(line.begin(), line.end(), '\r');
+        line.erase(end_pos, line.end());
+        
         //skip comments
         if (line[0] == '#')
             continue;
@@ -338,6 +342,9 @@ std::array<std::string,2> Settings::extract(std::string line)
     size_t found;
     //get rid of spaces
     std::string::iterator end_pos = std::remove(line.begin(), line.end(), ' ');
+    line.erase(end_pos, line.end());
+    //get rid of \r
+    end_pos = std::remove(line.begin(), line.end(), '\r');
     line.erase(end_pos, line.end());
     found = line.find("#");
     if (found != std::string::npos) line = line.substr(0,found);
