@@ -3,7 +3,6 @@
 #include <vtkImageData.h>
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
-#include <vtkStructuredGrid.h>
 #include <vtkVersion.h>
 #include <vtkSmartPointer.h>
 #include <vtkActor.h>
@@ -14,11 +13,44 @@
 #include <vtkMath.h>
 
 
-OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization, std::string outputPath) :
-   OutputWriter(discretization, outputPath)
+OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization, std::string outputPath, bool remove) :
+   OutputWriter(discretization, outputPath, remove)
 {
   // Create a vtkWriter_
   vtkWriter_ = vtkSmartPointer<vtkXMLStructuredGridWriter>::New();
+
+  //set spacing of mesh
+ dx = discretization_->meshWidth()[0];
+  dy = discretization_->meshWidth()[1];
+  dz = 1;
+  // initialize data set that will be output to the file
+  dataSet = vtkSmartPointer<vtkStructuredGrid>::New();
+
+  // set number of points in each dimension, 1 cell in z direction
+ nCells = discretization_->nCells();
+  vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+  for (int j = 0; j < nCells[1]+1; j++)
+  {
+    for (int i = 0; i < nCells[0]+1; i++)
+    {
+      const double x = i*dx;
+      const double y = j*dy;
+      points->InsertNextPoint(x, y, 0);
+    }
+  }
+  dataSet->SetPoints(points);
+  dataSet->SetDimensions(nCells[0]+1, nCells[1]+1, 1);  // we want to have points at each corner of each cell
+
+  int index = 0;
+  for (int j = 1; j < nCells[1]+1; j++)
+  {
+
+    for (int i = 1; i < nCells[0]+1; i++, index++)
+    {
+      if (discretization_->flag(i,j) != FLUID) dataSet->BlankCell(index);
+    }
+  }
+      
 }
 
 void OutputWriterParaview::writeFile(double currentTime)
@@ -33,31 +65,10 @@ void OutputWriterParaview::writeFile(double currentTime)
   // assign the new file name to the output vtkWriter_
   vtkWriter_->SetFileName(fileName.str().c_str());
   
-  // initialize data set that will be output to the file
-  vtkSmartPointer<vtkStructuredGrid> dataSet = vtkSmartPointer<vtkStructuredGrid>::New();
+  
   //dataSet->SetOrigin(0, 0, 0);
 
-  // set spacing of mesh
-  const double dx = discretization_->meshWidth()[0];
-  const double dy = discretization_->meshWidth()[1];
-  const double dz = 1;
-  //dataSet->SetSpacing(dx, dy, dz);
-
-  // set number of points in each dimension, 1 cell in z direction
-  std::array<int,2> nCells = discretization_->nCells();
-  vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
-  for (int j = 0; j < nCells[1]+1; j++)
-  {
-    for (int i = 0; i < nCells[0]+1; i++)
-    {
-      const double x = i*dx;
-      const double y = j*dy;
-      points->InsertNextPoint(x, y, 0);
-    }
-  }
-  dataSet->SetPoints(points);
-  dataSet->SetDimensions(nCells[0]+1, nCells[1]+1, 1);  // we want to have points at each corner of each cell
-      
+  //
   
   // add pressure field variable
   // ---------------------------
@@ -163,15 +174,6 @@ void OutputWriterParaview::writeFile(double currentTime)
   // add the field variable to the data set
   dataSet->GetPointData()->AddArray(arrayTemperature);
 
-  index = 0;
-  for (int j = 1; j < nCells[1]+1; j++)
-  {
-
-    for (int i = 1; i < nCells[0]+1; i++, index++)
-    {
-      if (discretization_->flag(i,j) != FLUID) dataSet->BlankCell(index);
-    }
-  }
   
   // add current time 
   vtkSmartPointer<vtkDoubleArray> arrayTime = vtkDoubleArray::New();
@@ -191,6 +193,11 @@ void OutputWriterParaview::writeFile(double currentTime)
 
   // finally write out the data
   vtkWriter_->Write();
+
+  dataSet->GetPointData()->RemoveArray("TIME");
+  dataSet->GetPointData()->RemoveArray("velocity");
+  dataSet->GetPointData()->RemoveArray("pressure");
+  dataSet->GetPointData()->RemoveArray("temperature");
   return;
 
 

@@ -4,6 +4,7 @@
 
 #include <vtkSmartPointer.h>
 #include <vtkXMLStructuredGridWriter.h>
+#include <vtkStructuredGrid.h>
 
 #include <memory>
 
@@ -18,7 +19,7 @@ class OutputWriterParaview :
 public:
   //! constructor
   //! @param discretization shared pointer to the discretization object that will contain all the data to be written to the file
-  OutputWriterParaview(std::shared_ptr<Discretization> discretization, std::string outputPath);
+  OutputWriterParaview(std::shared_ptr<Discretization> discretization, std::string outputPath, bool remove);
 
   //! write current velocities to file, filename is output_<count>.vti
   void writeFile(double currentTime);
@@ -26,4 +27,10 @@ public:
 private:
 
   vtkSmartPointer<vtkXMLStructuredGridWriter> vtkWriter_;   //< vtk writer to write ImageData
+  //set spacing of mesh
+  double dx;
+  double dy;
+  double dz;
+  std::array<int,2> nCells;
+  vtkSmartPointer<vtkStructuredGrid> dataSet;
 };

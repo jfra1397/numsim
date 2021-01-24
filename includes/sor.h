@@ -15,7 +15,7 @@ public:
     SOR(int maximumNumberOfIterations, double epsilon, double omega);
 
     //solve pressure poisson equation by using SOR iterations
-    virtual void compute_p(const Discretization &discr, FieldVariable &p);
+    virtual double compute_p(const Discretization &discr, FieldVariable &p);
 
 private:
     //stopping criteria: maximum number of iterations

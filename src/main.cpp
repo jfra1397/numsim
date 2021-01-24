@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
     //load settings
     bool meshOnly = false;
     bool input = false;
+    bool remove = false;
+    bool feedback = false;
     Settings settings;
 
     for (int i = 1; i < argc; i++)
@@ -32,6 +34,8 @@ int main(int argc, char *argv[])
         {
             std::cout << "help" <<std::endl;
         }
+        else if (std::string(argv[i]) == "-r" || std::string(argv[i]) == "--remove") remove = true;
+        else if (std::string(argv[i]) == "-f" || std::string(argv[i]) == "--feedback") feedback = true;
         else
         {
             settings.loadFromFile(argv[i]);
@@ -56,7 +60,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Solver> solver = settings.get_solver();
 
     //create outputwriter class
-    OutputWriterParaview writer(discretization, outputPath);
+    OutputWriterParaview writer(discretization, outputPath, remove);
 
     if (meshOnly)
     {
@@ -67,7 +71,7 @@ int main(int argc, char *argv[])
     // auto start = std::chrono::high_resolution_clock::now();
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, writer);
+    solver->solve_uv(settings, *discretization, writer, feedback);
 
     /**
     auto stop = std::chrono::high_resolution_clock::now();

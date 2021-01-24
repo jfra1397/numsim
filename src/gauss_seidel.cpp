@@ -11,7 +11,7 @@ GaussSeidel::GaussSeidel(int maximumNumberOfIterations, double epsilon)
     epsilon_ = epsilon;
 }
 
-void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p)
+double GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p)
 {
     std::array<int, 2> size = p.size();
 
@@ -63,6 +63,7 @@ void GaussSeidel::compute_p(const Discretization &discr, FieldVariable &p)
 
     //set correct boundary values (safety first)
     p.set_boundary(0,0,0,0);
+    return norm_res;
 
 }
 

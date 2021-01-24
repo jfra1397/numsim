@@ -14,7 +14,7 @@ class Solver
 {
 public:
     //compute pressure p
-    virtual void compute_p(const Discretization &discr, FieldVariable &p) = 0;
+    virtual double compute_p(const Discretization &discr, FieldVariable &p) = 0;
 
     //compute timestep dt
     double compute_dt(double tau, double re,double pr, double maximumDt, const std::array<double, 2> &meshWidth, const FieldVariable &u, const FieldVariable &v);
@@ -38,5 +38,5 @@ public:
     void compute_v(double dt, const Discretization &discr, FieldVariable &v);
 
     //solve for velocities u and v
-    void solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer);
+    void solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, bool feedback);
 };
