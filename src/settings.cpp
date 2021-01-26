@@ -380,10 +380,11 @@ std::vector<std::string> Settings::cut (const std::string &str)
             temp = temp.substr(found+1);
 
         }
-        while (substr.back() == "")
-        {
-            substr.pop_back();
-        }
+        //while (substr.back() == "")
+        //{
+        //   if(substr.size()==1) break;
+        //    substr.pop_back();
+        //}
         
 
         return substr;

@@ -166,6 +166,8 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
             dt = settings.endTime() - t;
         else if (int(t + dt) - t > 0)
             dt = int(t + dt) - t;
+        else if(std::ceil(t+dt)-(t+dt)<0.0001)
+            dt =std::ceil(t+dt)-t;
 
         //compute T
         compute_T(settings.re(), settings.pr(), settings.q(), dt, discr, discr.set_T());
@@ -194,11 +196,11 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         t += dt;
 
         //write results to output files
-        if (int(t) == t)
-        {
-            writer.writeFile(t);
-            discr.write_to_file(fileNo++, t);
-        }
+        //if (int(t) == t)
+        //{
+        writer.writeFile(t);
+        discr.write_to_file(fileNo++, t);
+        //}
         if (feedback) std::cout << "time:\t" << t <<"\tres:\t" << res << std::endl;
 
 

@@ -29,13 +29,27 @@ int main(int argc, char *argv[])
     for (int i = 1; i < argc; i++)
     {
         if (std::string(argv[i]) == "-m" || std::string(argv[i]) == "--mesh") meshOnly = true;
-        else if (std::string(argv[i]) == "-o" || std::string(argv[i]) == "--output") outputPath = std::string(argv[i+1]);
+        else if (std::string(argv[i]) == "-o" || std::string(argv[i]) == "--output"){ outputPath = std::string(argv[i+1]);i++;}
         else if (std::string(argv[i]) == "-h" || std::string(argv[i]) == "--help")
         {
-            std::cout << "help" <<std::endl;
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout<< "FANCY NUMERICAL SOLVER FOR LAMINAR FLUID PROBLEMES WITH ARBITRARY GEOMETRIES AND HEAT" <<std::endl;
+            std::cout << std::endl;
+            std::cout << "Path of parameter file must be passed!" <<std::endl;
+            std::cout << std::endl;
+            std::cout << "Optional flags:" <<std::endl;
+            std::cout << "-m or --mesh: generate single file only containing specified mesh" <<std::endl;
+            std::cout << "-o or --out: generate output in following folder" <<std::endl;
+            std::cout << "-r or --remove: remove output folder (coudld be given with -o)" <<std::endl;
+            std::cout << "-tf or --timefeedback: print time and residuum to console after every timestep" <<std::endl;
+            std::cout <<std::endl;
+            std::cout <<"\u00a9 Stefania Scheurer, Marius Stach and Julian Franquinet "<< std::endl;
+
+            return EXIT_SUCCESS;
         }
         else if (std::string(argv[i]) == "-r" || std::string(argv[i]) == "--remove") remove = true;
-        else if (std::string(argv[i]) == "-f" || std::string(argv[i]) == "--feedback") feedback = true;
+        else if (std::string(argv[i]) == "-tf" || std::string(argv[i]) == "--timefeedback") feedback = true;
         else
         {
             settings.loadFromFile(argv[i]);

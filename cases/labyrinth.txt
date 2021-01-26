@@ -1,0 +1,91 @@
+# Settings file for numsim program
+# Run ./numsim lid_driven_cavity.txt
+#
+# Problem description
+physicalSizeX = 10.0   # physical size of the domain
+physicalSizeY = 5.0
+endTime = 20.0        # duration of the simulation
+re = 1500             # Reynolds number
+pr = 7.56              # Prandtl number
+gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
+gY = 0.0
+q = 0.0                 # internal heat flux
+#
+# Discretization parameters
+nCellsX = 40        # number of cells in x and y direction
+nCellsY = 20
+useDonorCell = true   # if donor cell discretization should be used, possible values: true false
+alpha = 0.5           # factor for donor-cell scheme, 0 is equivalent to central differences
+beta = 0.21           # volume expansion coefficient
+gamma = 0.5           # factor for donor-cell scheme of the temperature, 0 is equivalent to central differences
+tau = 0.5             # safety factor for time step width
+maximumDt = 0.1       # maximum values for time step width
+#
+# Solver parameters
+pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
+omega = 1.6           # overrelaxation factor, only for SOR solver
+epsilon = 1e-5        # tolerance for 2-norm of residual
+maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
+#
+# Dirichlet boundary conditions
+# first entry: Velocity; oder Pressure;
+# second entry: Dirichlet;
+# third and fourth entry: x1; x2; (top, bottom) or y1; y2; (left, right) as area where boundary value is set
+# fifth (and sixth) entry: u; v (Velocity) or p (Pressure)
+{
+    Type = Bottombound
+    Velocity= Dirichlet; 0; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 10
+}
+{
+    Type = Topbound
+    Velocity= Dirichlet; 0; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 10
+}
+{
+    Type = Leftbound
+    Velocity= Dirichlet; 1; 0
+    Pressure= Neumann; 0
+    Temperature = Dirichlet; 1
+    Position = 4; 5
+}
+{
+    Type = Rightbound
+    Velocity= Neumann; 0; 0
+    Pressure= Dirichlet; 0
+    Temperature = Neumann; 0
+    Position = 0;1
+}
+{
+    Shape = Rectangle
+    Position= 0.0;3.0;7.0;4.0
+    Temperature= Neumann; 0
+}
+{
+    Shape = Rectangle
+    Position= 8.0; 3.0; 10.0; 4.0
+    Temperature= Neumann; 0
+}
+{
+    Shape = Rectangle
+    Position= 0.0; 1.0; 4.0; 2.0
+    Temperature= Neumann; 0
+}
+{
+    Shape = Rectangle
+    Position= 5.0; 1.0; 10.0; 2.0
+    Temperature= Neumann; 0
+}
+#bottomBound= Velocity; Dirichlet; 0.0; 10.0; 0.0; 0.0
+#topBound= Velocity; Dirichlet; 0.0; 10.0; 0.0; 0.0
+#leftBound= Velocity; Dirichlet; 4.0; 5.0; 1.0; 0.0
+#rightBound= Pressure; Dirichlet; 0.0; 1.0; 0.0; 0.0
+#rightBound= Velocity; Dirichlet; 1.0; 5.0; 0.0; 0.0
+#object= Rectangle; 0.0; 3.0; 7.0; 4.0;
+#object= Rectangle; 8.0; 3.0; 10.0; 4.0;
+#object= Rectangle; 0.0; 1.0; 4.0; 2.0;
+#object= Rectangle; 5.0; 1.0; 10.0; 2.0;

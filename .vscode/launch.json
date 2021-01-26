@@ -8,7 +8,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/build/numsim",
-        "args": ["../parameters.txt"],
+        "args": ["../cases/labyrinth.txt"],
         "stopAtEntry": true,
         "cwd": "${workspaceFolder}/src",
         "environment": [],
