@@ -23,24 +23,38 @@ pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeid
 omega = 1.6           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
 maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
-
-
-# Dirichlet boundary conditions
-# first entry: Velocity; oder Pressure;
-# second entry: Dirichlet;
-# third and fourth entry: x1; x2; (top, bottom) or y1; y2; (left, right) as area where boundary value is set
-# fifth (and sixth) entry: u; v (Velocity) or p (Pressure)
-
-bottomBound= Velocity; Dirichlet; 0.0; 5.0; 0.0; 0.0
-topBound= Velocity; Dirichlet; 0.0; 5.0; 0.0; 0.0
-leftBound= Velocity; Dirichlet; 0.5; 1.0; 1.0; 0.0
-rightBound= Pressure; Dirichlet; 0.0; 1.0; 0.0; 0.0
-
-
-# Objects
-# first entry: Rectangle, Ellipse, Triangle
-# for Rectangle: x(lower left corner); y(lower left corner); x(upper right corner); y(upper right corner)
-# for Ellipse: x(center); y(center); a; b
-# for Triangle: x(point 1); y(point 1); x(point 2); y(point 2); x(point 3); y(point 3)
-
-object= Rectangle; 0.0; 0.0; 0.5; 0.5;
+#
+#
+{
+    Type = Bottombound
+    Velocity= Dirichlet; 0; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 5
+}
+{
+    Type = Topbound
+    Velocity= Dirichlet; 0; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 5
+}
+{
+    Type = Leftbound
+    Velocity= Dirichlet; 5; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0.5; 1
+}
+{
+    Type = Rightbound
+    Velocity= Neumann; 0; 0
+    Pressure= Dirichlet; 0
+    Temperature = Neumann; 0
+    Position = 0; 1
+}
+{
+    Shape = Rectangle
+    Position= 0;0;0.5;0.5
+    Temperature= Neumann; 0
+}
