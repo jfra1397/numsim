@@ -307,29 +307,31 @@ void Settings::handle_dict(std::ifstream &file, std::string line, int &lineNo)
         }
     }
     Obstacle obj;
-    std::vector<std::string> valuesString;
     for(auto it = std::begin(str); it != std::end(str); ++it)
     {
-        valuesString = cut((*it)[1]);
         if ((*it)[0] == "Velocity")
         {
+            std::vector<std::string> valuesString = cut((*it)[1]);
             obj.velType = string2btype(valuesString[0], lineNo);
             obj.velValue = {std::stod(valuesString[1]), std::stod(valuesString[2])};
         }
         else if ((*it)[0] == "Pressure")
         {
+            std::vector<std::string> valuesString = cut((*it)[1]);
             obj.pType = string2btype(valuesString[0], lineNo);
             obj.pValue = std::stod(valuesString[1]);
         }
         else if ((*it)[0] == "Temperature")
         {
+            std::vector<std::string> valuesString = cut((*it)[1]);
             obj.tType = string2btype(valuesString[0], lineNo);
             obj.tValue = std::stod(valuesString[1]);
         }
-        else if( (*it)[0] == "Shape") obj.shape = string2shape(valuesString[0], lineNo);
-        else if ( (*it)[0] == "Type") obj.type = string2celltype(valuesString[0], lineNo);
+        else if( (*it)[0] == "Shape") obj.shape = string2shape( cut((*it)[1])[0], lineNo);
+        else if ( (*it)[0] == "Type") obj.type = string2celltype( cut((*it)[1])[0], lineNo);
         else if ((*it)[0] == "Position")
         {
+            std::vector<std::string> valuesString = cut((*it)[1]);
             for(auto it2 = std::begin(valuesString); it2 != std::end(valuesString); ++it2) obj.position.push_back(std::stod(*it2));
         }
         else if( (*it)[0] == "") continue;
@@ -384,7 +386,6 @@ std::vector<std::string> Settings::cut (const std::string &str)
         {
             substr.pop_back();
         }
-        
 
         return substr;
 }
