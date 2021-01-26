@@ -3,14 +3,7 @@
 #include <algorithm> //forstr to int,double
 #include <math.h>
 
-void assertion_feedback(bool assertion, std::string msg)
-{
-    if (!assertion)
-    {
-        std::cout << msg << std::endl;
-        abort();
-    }
-}
+
 
 Mesh::Mesh(std::array<int, 2> nCells, const std::array<double, 2> physicalSize) : flag_({nCells[0] + 2, nCells[1] + 2}), objTemperatureValues_({nCells[0] + 2, nCells[1] + 2}), objTemperatureFlag_({nCells[0] + 2, nCells[1] + 2})
 

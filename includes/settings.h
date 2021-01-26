@@ -155,17 +155,19 @@ public:
     //maximum number of iterations in the solver
     int maximumNumberOfIterations_;
 
-    void handle_dict(std::ifstream &file, std::string line);
+    void handle_dict(std::ifstream &file, std::string line, int &lineNo);
 
     std::vector<std::string> cut (const std::string &str);
 
-    SHAPE string2shape(std::string str);
-    btype string2btype(std::string str);
-    CELLTYPE string2celltype(std::string str);
+    SHAPE string2shape(std::string str, int &lineNo);
+    btype string2btype(std::string str, int &lineNo);
+    CELLTYPE string2celltype(std::string str, int &lineNo);
 
 
     std::array<std::string,2> extract(std::string line);
     
 };
+
+void assertion_feedback(bool assertion, std::string msg);
 
 
