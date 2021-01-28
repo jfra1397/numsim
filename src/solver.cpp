@@ -173,13 +173,11 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         else if (settings.writeInterval() == 0)
         {
             write = true;
-            fileNo++;
         }
         else if (t + dt > fileNo * settings.writeInterval() - 0.0001)
         {
             dt = fileNo * settings.writeInterval() - t;
             write = true;
-            fileNo++;
         }
 
         //else if (int(t + dt) - t > 0)
@@ -217,6 +215,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         {
             writer.writeFile(t);
             discr.write_to_file(fileNo, t);
+            fileNo++;
             write = false;
         }
         if (feedback)
