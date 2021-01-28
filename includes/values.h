@@ -6,9 +6,10 @@
 //describe boundary condition type
 enum btype
 {
+    NOTHING,
     DIRICHLET,
-    NEUMANN,
-    NOTHING
+    NEUMANN
+    
 };
 
 enum CELLTYPE

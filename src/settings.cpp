@@ -22,8 +22,14 @@ Settings::Settings()
     //maximum time step width
     maximumDt_ = 0.1;
 
+    //interval length between written files
+    writeInterval_ =0.0;
+
     //external forces
     g_ = {0., 0.}; 
+
+    //initial temperature
+    tInit_=0.0;
 
     //if the donor cell scheme schould be used
     useDonorCell_ = false;
@@ -148,6 +154,8 @@ int Settings::assign_param_(std::string param, std::string value)
             physicalSize_[1] = std::stod(value);
         else if (param == "endTime")
             endTime_ = std::stod(value);
+        else if (param == "writeTimeInterval")
+            writeInterval_ = std::stod(value);
         else if (param == "re")
             re_ = std::stod(value);
         else if (param == "gX")
@@ -178,6 +186,8 @@ int Settings::assign_param_(std::string param, std::string value)
             pr_ = std::stod(value);
         else if (param == "q")
             q_ = std::stod(value);
+        else if (param == "tInit")
+            tInit_ = std::stod(value);
         else if (param == "gamma")
             gamma_ = std::stod(value);
         else if (param == "maximumNumberOfIterations")
@@ -225,11 +235,17 @@ double Settings::tau() const { return tau_; }
 //return maximum time step width
 double Settings::maximumDt() const { return maximumDt_; }
 
+//return interval length between written files
+double Settings::writeInterval() const {return writeInterval_;}
+
 //return external forces
 const std::array<double, 2> Settings::g() const { return g_; }
 
 //return heat flux
 double Settings::q() const {return q_;}
+
+//return initial temperature
+double Settings::tInit() const {return tInit_;}
 
 //return if the donor cell scheme schould be used
 bool Settings::useDonorCell() const { return useDonorCell_; }
@@ -260,12 +276,12 @@ std::shared_ptr<Discretization> Settings::get_discretization()
         if (useDonorCell())
         {
             //create donor cell discretization
-            discr = std::make_shared<DonorCell>(nCells(), physicalSize(), alpha(), gamma());
+            discr = std::make_shared<DonorCell>(nCells(), physicalSize(),tInit(), alpha(), gamma());
         }
         else
         {
             //create central differences
-            discr = std::make_shared<CentralDifferences>(nCells(), physicalSize());
+            discr = std::make_shared<CentralDifferences>(nCells(), physicalSize(),tInit());
         }
         discr->set_boundary_condition(objects_);
         return discr;

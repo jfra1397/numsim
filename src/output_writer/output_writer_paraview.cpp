@@ -53,6 +53,25 @@ OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discr
       
 }
 
+void OutputWriterParaview::writeMesh()
+{
+    // Assemble the filename
+  std::stringstream fileName;
+  fileName << outputPath_ << "/generatedMesh" << "." << vtkWriter_->GetDefaultFileExtension();
+
+  // assign the new file name to the output vtkWriter_
+  vtkWriter_->SetFileName(fileName.str().c_str());
+  // Write the data
+  vtkWriter_->SetInputData(dataSet);
+  
+  //vtkWriter_->SetDataModeToAscii();     // comment this in to get ascii text files: those can be checked in an editor
+  vtkWriter_->SetDataModeToBinary();      // set file mode to binary files: smaller file sizes
+
+  // finally write out the data
+  vtkWriter_->Write();
+
+}
+
 void OutputWriterParaview::writeFile(double currentTime)
 {
   // Assemble the filename

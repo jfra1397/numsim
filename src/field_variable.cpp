@@ -4,7 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize) : Array2D<double>({0, 0})
+FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize,double value) : Array2D<double>({0, 0},value)
 {
     //set position of corresponding variable on grid
     pos_ = pos;

@@ -2,46 +2,47 @@
 # Run ./numsim lid_driven_cavity.txt
 #
 # Problem description
-physicalSizeX = 1.0   # physical size of the domain
+physicalSizeX = 8.0   # physical size of the domain
 physicalSizeY = 1.0
-endTime = 10.0        # duration of the simulation
-re = 1500             # Reynolds number
-pr = 7.56              # Prandtl number
+endTime = 2.0        # duration of the simulation
+re = 100             # Reynolds number
+pr = 1.0              # Prandtl number
 gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
-gY = 0.0
-q = 0.0                 # internal heat flux
+gY = -9.81
+q = 0.0               # internal heat flux
+tInit = 1.0           #Initial Temperature
 #
 # Discretization parameters
-nCellsX = 20        # number of cells in x and y direction
+nCellsX = 80        # number of cells in x and y direction
 nCellsY = 20
 useDonorCell = true   # if donor cell discretization should be used, possible values: true false
 alpha = 0.5           # factor for donor-cell scheme of the velocity, 0 is equivalent to central differences
-beta = 0.21           # volume expansion coefficient
+beta = 0.1019367991845056       # volume expansion coefficient
 gamma = 0.5           # factor for donor-cell scheme of the temperature, 0 is equivalent to central differences
 tau = 0.5             # safety factor for time step width
-maximumDt = 0.1       # maximum values for time step width
-writeTimeInterval =0.0 #interval length between written files, 0.0 to write after every single timestep
+maximumDt = 1.0       # maximum values for time step width
+writeTimeInterval =0.5 #interval length between written files, 0.0 to write after every single timestep
 #
 # Solver parameters
 pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
-omega = 1.6           # overrelaxation factor, only for SOR solver
+omega = 1.7           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
-maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
+maximumNumberOfIterations = 1e3   # maximum number of iterations in the solver
 #
 #
 {
     Type = Bottombound
     Velocity= Dirichlet; 0; 0
     Pressure= Neumann; 0
-    Temperature = Neumann; 0
-    Position = 0; 1
+    Temperature = Dirichlet; 2
+    Position = 0; 8
 }
 {
     Type = Topbound
-    Velocity= Dirichlet; 2; 0
+    Velocity= Dirichlet; 0; 0
     Pressure= Neumann; 0
-    Temperature = Neumann; 0
-    Position = 0; 1
+    Temperature = Dirichlet; 1
+    Position = 0; 8
 }
 {
     Type = Leftbound
@@ -56,9 +57,4 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
     Pressure= Neumann; 0
     Temperature = Neumann; 0
     Position = 0; 1
-}
-{
-    Shape = Rectangle
-    Position= 0.4;0.4;0.6;0.6
-    Temperature= Dirichlet; 1
 }

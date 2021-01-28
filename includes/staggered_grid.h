@@ -13,7 +13,7 @@ class StaggeredGrid: public Mesh
 {
 public:
     //constructor
-    StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize);
+    StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize,double tInit);
 
     //set boundary values corresponding to variable
     void set_boundary_uvfg();

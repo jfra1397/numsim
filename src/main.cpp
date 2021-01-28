@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 
     if (meshOnly)
     {
-        writer.writeFile(0);
+        writer.writeMesh();
         return EXIT_SUCCESS;
     }
 

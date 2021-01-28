@@ -23,6 +23,7 @@ public:
 
   //! write current velocities to file, filename is output_<count>.vti
   void writeFile(double currentTime);
+  void writeMesh();
 
 private:
 

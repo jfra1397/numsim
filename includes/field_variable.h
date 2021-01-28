@@ -22,7 +22,7 @@ class FieldVariable : public Array2D<double>
 {
 public:
     //constructor
-    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize);
+    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize,double value =0.0);
 
     //set boundary condition type of each boundary
     int set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);

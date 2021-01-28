@@ -53,6 +53,9 @@ public:
     //return end time of the simulation
     double endTime() const;
 
+    //return intervall length between written files in seconds
+    double writeInterval() const;
+
     //return safety factor for time step width
     double tau() const;
 
@@ -64,6 +67,9 @@ public:
 
     //return heat flux
     double q() const;
+
+    //return initial temperature
+    double tInit() const;
 
     //return if the donor cell scheme schould be used
     bool useDonorCell() const;
@@ -111,6 +117,9 @@ public:
     //end time of the simulation
     double endTime_;
 
+    //interval length between written files in seconds
+    double writeInterval_;
+
     //safety factor for time step width
     double tau_;
 
@@ -122,6 +131,9 @@ public:
 
     //heat flux
     double q_;
+
+    //initial temperature
+    double tInit_;
 
     //if the donor cell scheme schould be used
     bool useDonorCell_;

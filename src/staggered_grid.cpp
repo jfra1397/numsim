@@ -1,7 +1,7 @@
 #include "../includes/staggered_grid.h"
 
-StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize)
-    : Mesh(size, physicalSize), u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize), T_(size, VCENTRE, physicalSize)
+StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize,double tInit)
+    : Mesh(size, physicalSize), u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize), T_(size, VCENTRE, physicalSize,tInit)
 {
 
     // flag_(18,18) = OBJTOPRIGHT;
@@ -320,19 +320,19 @@ void StaggeredGrid::set_boundary_T(FieldVariable &T) const
                 break;
             case OBJBOTTOMLEFT:
                 if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i-1,j))/2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j-1)+ T(i-1,j))/2;
                 break;
             case OBJBOTTOMRIGHT:
                 if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j-1)+ T(i+1,j))/2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j-1)+ T(i+1,j))/2;
                 break;
             case OBJTOPLEFT:
                 if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i-1,j))/2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j+1)+ T(i-1,j))/2;
                 break;
             case OBJTOPRIGHT:
                 if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = objTemperatureValues_(i,j)- (T(i, j+1)+ T(i+1,j))/2;
+                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j+1)+ T(i+1,j))/2;
                 break;
 
             default:

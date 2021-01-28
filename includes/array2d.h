@@ -21,7 +21,7 @@ class Array2D
 {
 public:
   //constructor
-  Array2D(std::array<int, 2> size);
+  Array2D(std::array<int, 2> size,T tvalue=T());
 
   //get the size
   const std::array<int, 2> size() const {return size_ ;};
