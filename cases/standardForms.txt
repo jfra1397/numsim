@@ -10,10 +10,11 @@ pr = 7.56              # Prandtl number
 gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
 gY = 0.0
 q = 0.0                 # internal heat flux
+tInit = 0.0             #initial temperature
 #
 # Discretization parameters
-nCellsX = 500        # number of cells in x and y direction
-nCellsY = 100
+nCellsX = 200        # number of cells in x and y direction
+nCellsY = 40
 useDonorCell = true   # if donor cell discretization should be used, possible values: true false
 alpha = 0.5           # factor for donor-cell scheme of the velocity, 0 is equivalent to central differences
 beta = 0.21           # volume expansion coefficient
@@ -79,7 +80,7 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
 }
 {
     Shape = Ellipse
-    Position= 8.75;1.0;1;0.25
+    Position= 8.75;0.5;0.5;0.6
     Temperature= Dirichlet; 1
     Type = Fluid
 }

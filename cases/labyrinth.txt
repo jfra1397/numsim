@@ -19,14 +19,14 @@ alpha = 0.5           # factor for donor-cell scheme, 0 is equivalent to central
 beta = 0.21           # volume expansion coefficient
 gamma = 0.5           # factor for donor-cell scheme of the temperature, 0 is equivalent to central differences
 tau = 0.5             # safety factor for time step width
-maximumDt = 10        # maximum values for time step width
+maximumDt = 1.0        # maximum values for time step width
 writeTimeInterval =0.0 #interval length between written files, 0.0 to write after every single timestep
 #
 # Solver parameters
 pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
 omega = 1.6           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
-maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
+maximumNumberOfIterations = 1e5    # maximum number of iterations in the solver
 #
 # Dirichlet boundary conditions
 # first entry: Velocity; oder Pressure;
@@ -57,16 +57,9 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
 {
     Type = Rightbound
     Velocity= Neumann; 0; 0
-    Pressure= Dirichlet; -0.5
+    Pressure= Dirichlet; 0
     Temperature = Neumann; 0
     Position = 0;1
-}
-{
-    Type = Rightbound
-    Velocity= Neumann; 0; 0
-    Pressure= Dirichlet; 0.0
-    Temperature = Neumann; 0
-    Position = 4;5
 }
 {
     Shape = Rectangle
@@ -76,11 +69,6 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
 {
     Shape = Rectangle
     Position= 8.0; 3.0; 10.0; 4.0
-    Temperature= Neumann; 0
-}
-{
-    Shape = Triangle
-    Position= 7.0; 5.0; 8.0; 5.0; 7.5;4.3
     Temperature= Neumann; 0
 }
 {
