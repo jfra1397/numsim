@@ -1,7 +1,21 @@
 #include "../includes/staggered_grid.h"
 
-StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize,double tInit)
-    : Mesh(size, physicalSize), u_(size, VRIGHT, physicalSize), v_(size, VTOP, physicalSize), p_(size, VCENTRE, physicalSize), f_(size, VRIGHT, physicalSize), g_(size, VTOP, physicalSize), rhs_(size, VCENTRE, physicalSize), T_(size, VCENTRE, physicalSize,tInit)
+StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double tInit)
+    : Mesh(size, physicalSize),
+    u_({size[0]+1, size[1]+2}, VRIGHT, physicalSize, meshWidth),
+    v_({size[0]+2, size[1]+1}, VTOP, physicalSize, meshWidth),
+    p_({size[0]+2, size[1]+2}, VCENTRE, physicalSize, meshWidth),
+    f_({size[0]+1, size[1]+2}, VRIGHT, physicalSize, meshWidth),
+    g_({size[0]+2, size[1]+1}, VTOP, physicalSize, meshWidth),
+    rhs_({size[0]+2, size[1]+2}, VCENTRE, physicalSize, meshWidth),
+    T_({size[0]+2, size[1]+2}, VCENTRE, physicalSize, meshWidth, tInit)
+    // u_(size, VRIGHT, physicalSize, meshWidth),
+    // v_(size, VTOP, physicalSize, meshWidth),
+    // p_(size, VCENTRE, physicalSize, meshWidth),
+    // f_(size, VRIGHT, physicalSize, meshWidth),
+    // g_(size, VTOP, physicalSize, meshWidth),
+    // rhs_(size, VCENTRE, physicalSize, meshWidth),
+    // T_(size, VCENTRE, physicalSize, meshWidth, tInit)
 {
 
     // flag_(18,18) = OBJTOPRIGHT;

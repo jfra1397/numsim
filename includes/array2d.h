@@ -99,14 +99,6 @@ public:
   }
 };
 
-protected:
-  //resize to size and reset matrix on initial values (=0)
-  void resize(const std::array<int, 2> size){
-  size_ = size;
-  // allocate data, initialize to 0
-  data_.resize(size_[0] * size_[1], 0.0);
-};
-
 private:
   //storage array values, in row-major order
   std::vector<T> data_;

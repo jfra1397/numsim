@@ -12,14 +12,16 @@ gY = -9.81.0
 q = 0.0                 # internal heat flux
 #
 # Discretization parameters
-nCellsX = 40        # number of cells in x and y direction
-nCellsY = 40
+nCellsX = 20        # number of cells in x and y direction
+nCellsY = 20
 useDonorCell = true   # if donor cell discretization should be used, possible values: true false
 alpha = 0.5           # factor for donor-cell scheme of the velocity, 0 is equivalent to central differences
 beta = 0.21           # volume expansion coefficient
 gamma = 0.5           # factor for donor-cell scheme of the temperature, 0 is equivalent to central differences
 tau = 0.5             # safety factor for time step width
 maximumDt = 0.1       # maximum values for time step width
+tInit = 1.0
+writeTimeInterval = 1
 #
 # Solver parameters
 pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
@@ -37,7 +39,7 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
 }
 {
     Type = Topbound
-    Velocity= Dirichlet; 0; 0
+    Velocity= Dirichlet; 2; 0
     Pressure= Neumann; 0
     Temperature = Neumann; 0
     Position = 0; 1
@@ -56,8 +58,8 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
     Temperature = Neumann; 0
     Position = 0; 1
 }
-{
-    Shape = Rectangle
-    Position= 0.4;0.4;0.6;0.6
-    Temperature= Dirichlet; 10
-}
+#{
+#    Shape = Rectangle
+#    Position= 0.4;0.4;0.6;0.6
+#    Temperature= Dirichlet; 10
+#}

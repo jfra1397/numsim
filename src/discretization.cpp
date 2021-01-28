@@ -6,7 +6,7 @@
 
 #include "../includes/discretization.h"
 
-Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize,double tInit) : StaggeredGrid(nCells, physicalSize,tInit)
+Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize,double tInit) : StaggeredGrid(nCells, physicalSize, {physicalSize[0]/nCells[0], physicalSize[1]/nCells[1]}, tInit)
 {
 }
 

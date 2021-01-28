@@ -1,9 +1,8 @@
 #build folder
 build/*
-.vscode/
+.vscode/*
 out/*
 build/out/*
-src/out*
 
 # Prerequisites
 *.d

@@ -4,178 +4,55 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize,double value) : Array2D<double>({0, 0},value)
+FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double value) : 
+    Array2D<double>(size, value)
 {
     //set position of corresponding variable on grid
     pos_ = pos;
 
-    //set boundary condition at top/bottom/left/right boundary
-    topBoundType_ = DIRICHLET;
-    bottomBoundType_ = DIRICHLET;
-    leftBoundType_ = DIRICHLET;
-    rightBoundType_ = DIRICHLET;
-
     //calculate meshwidth in each direction
-    meshWidth_ = {physicalSize[0] / (double)size[0], physicalSize[1] / (double)size[1]};
+    meshWidth_ = meshWidth;
 
     //physical size in each direction
     physicalSize_ = physicalSize;
 
-    //set size in each direction
-    int sizex = size[0], sizey = size[1];
+    // //set size in each direction
+    // int sizex = size[0], sizey = size[1];
 
     //if value is at centre, extend matrix in both directions by two (variable types p and rhs)
     if (pos == VCENTRE)
     {
-        sizex += 2;
-        sizey += 2;
+        // sizex += 2;
+        // sizey += 2;
         // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = true;
         verticalBoundInterpolate_ = true;
+        horizontalOffset_ = meshWidth_[0] / 2;
+        verticalOffset_ = meshWidth_[1] / 2;
     }
     //if value is at right, extend matrix in y-direction by two and x-direction by one (variable types u and F)
     else if (pos == VRIGHT)
     {
-        sizex += 1;
-        sizey += 2;
+        // sizex += 1;
+        // sizey += 2;
         // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = false;
         verticalBoundInterpolate_ = true;
+        verticalOffset_ = meshWidth_[1] / 2;
+        horizontalOffset_ = 0;
     }
     //if value is at top, extend matrix in y-direction by one and x-direction by two (variable types v and G)
     else if (pos == VTOP)
     {
-        sizex += 2;
-        sizey += 1;
+        // sizex += 2;
+        // sizey += 1;
         // allocate data, initialize to 0
-        resize({sizex, sizey});
         horizontalBoundInterpolate_ = true;
         verticalBoundInterpolate_ = false;
+        horizontalOffset_ = meshWidth_[0] / 2;
+        verticalOffset_ = 0;
     }
-}
-
-//set boundary condition type of each boundary
-int FieldVariable::set_boundary_type(btype top, btype bottom, btype left, btype right)
-{
-    if (top == NEUMANN || bottom == NEUMANN || left == NEUMANN || right == NEUMANN)
-    {
-        assert(("Neumann boundary condition not implemented for variable positions at top and right!", pos_ == VCENTRE));
-    }
-    topBoundType_ = top;
-    bottomBoundType_ = bottom;
-    leftBoundType_ = left;
-    rightBoundType_ = right;
-
-    return 0;
-}
-
-//set boundary values at each boundary
-int FieldVariable::set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h)
-{
-    int i, j;
-    //iterate over bottom boundary
-    j = size()[1] - 1;
-    for (i = 1; i < size()[0] - 1; i++)
-    {
-        //check boundary type
-        if (topBoundType_ == DIRICHLET)
-        {
-            //check if interpolation is necessary
-            if (verticalBoundInterpolate_)
-            {
-                //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * topBound - (*this)(i, j - 1);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = topBound;
-            }
-        }
-        else if (topBoundType_ == NEUMANN)
-        {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = topBound * h + (*this)(i, j - 1);
-        }
-    }
-    //iterate over top boundary
-    j = 0;
-    for (i = 1; i < size()[0] - 1; i++)
-    {
-        //check boundary type
-        if (bottomBoundType_ == DIRICHLET)
-        {
-            //check if interpolation is necessary
-            if (verticalBoundInterpolate_)
-            {
-                //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * bottomBound - (*this)(i, j + 1);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = bottomBound;
-            }
-        }
-        else if (bottomBoundType_ == NEUMANN)
-        {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = bottomBound * h + (*this)(i, j + 1);
-        }
-    }
-    //iterate over left boundary
-    i = 0;
-    for (j = 0; j < size()[1]; j++)
-    {
-        //check boundary type
-        if (leftBoundType_ == DIRICHLET)
-        {
-            //check if interpolation is necessary
-            if (horizontalBoundInterpolate_)
-            {
-                //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * leftBound - (*this)(i + 1, j);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = leftBound;
-            }
-        }
-        else if (leftBoundType_ == NEUMANN)
-        {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = leftBound * h + (*this)(i + 1, j);
-        }
-    }
-    //iterate over right boundary
-    i = size()[0] - 1;
-    for (j = 0; j < size()[1]; j++)
-    {
-        //check boundary type
-        if (rightBoundType_ == DIRICHLET)
-        {
-            //check if interpolation is necessary
-            if (horizontalBoundInterpolate_)
-            {
-                //average values to match "real" boundary conditon value in the middle
-                (*this)(i, j) = 2 * rightBound - (*this)(i - 1, j);
-            }
-            else
-            {
-                //set value to boundary condition value
-                (*this)(i, j) = rightBound;
-            }
-        }
-        else if (rightBoundType_ == NEUMANN)
-        {
-            //set value such that derivation at boundary matches boundary condition
-            (*this)(i, j) = rightBound * h + (*this)(i - 1, j);
-        }
-    }
-    return 0;
+    //resize({sizex, sizey}, value);
 }
 
 //set field variable matrix to data matrix
@@ -249,26 +126,10 @@ double FieldVariable::interpolateAt(double x, double y) const
     assert(("Position in x-direction is out of bound!", 0 <= x && x <= physicalSize_[0]));
     assert(("Position in y-direction is out of bound!", 0 <= y && y <= physicalSize_[1]));
 
-    double verticalOffset = 0, horizontalOffset = 0;
-
-    //check position to calculate offset
-    if (pos_ == VCENTRE)
-    {
-        horizontalOffset = meshWidth_[0] / 2;
-        verticalOffset = meshWidth_[1] / 2;
-    }
-    else if (pos_ == VRIGHT)
-    {
-        verticalOffset = meshWidth_[1] / 2;
-    }
-    else if (pos_ == VTOP)
-    {
-        horizontalOffset = meshWidth_[0] / 2;
-    }
 
     //calculate index of grid point left below or equal to physical point (x,y)
-    int i = (x + horizontalOffset) / meshWidth_[0];
-    int j = (y + verticalOffset) / meshWidth_[1];
+    int i = (x + horizontalOffset_) / meshWidth_[0];
+    int j = (y + verticalOffset_) / meshWidth_[1];
 
     //deal with right boundary and top (sketch it!)
     if (pos_ == VRIGHT && i == size()[0] - 1)
@@ -281,10 +142,10 @@ double FieldVariable::interpolateAt(double x, double y) const
     }
 
     //calculate missing grid points that frame the physical position point (x,y) and get corresponding values
-    double xLeft = i * meshWidth_[0] - horizontalOffset;
-    double xRight = (i + 1) * meshWidth_[0] - horizontalOffset;
-    double yUp = (j + 1) * meshWidth_[1] - verticalOffset;
-    double yDown = j * meshWidth_[1] - verticalOffset;
+    double xLeft = i * meshWidth_[0] - horizontalOffset_;
+    double xRight = (i + 1) * meshWidth_[0] - horizontalOffset_;
+    double yUp = (j + 1) * meshWidth_[1] - verticalOffset_;
+    double yDown = j * meshWidth_[1] - verticalOffset_;
 
     double downLeft = (*this)(i, j);
     double downRight = (*this)(i + 1, j);

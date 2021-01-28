@@ -1,0 +1,172 @@
+# Settings file for numsim program
+# Run ./numsim lid_driven_cavity.txt
+#
+# Problem description
+physicalSizeX = 15.0   # physical size of the domain
+physicalSizeY = 5.0
+endTime = 10.0        # duration of the simulation
+re = 1500             # Reynolds number
+pr = 7.56              # Prandtl number
+gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
+gY = 0.0
+q = 0.0                 # internal heat flux
+#
+# Discretization parameters
+nCellsX = 180        # number of cells in x and y direction
+nCellsY = 60
+useDonorCell = true   # if donor cell discretization should be used, possible values: true false
+alpha = 0.5           # factor for donor-cell scheme of the velocity, 0 is equivalent to central differences
+beta = 0.21           # volume expansion coefficient
+gamma = 0.5           # factor for donor-cell scheme of the temperature, 0 is equivalent to central differences
+tau = 0.5             # safety factor for time step width
+maximumDt = 0.1       # maximum values for time step width
+writeTimeInterval = 0.5
+#
+# Solver parameters
+pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
+omega = 1.6           # overrelaxation factor, only for SOR solver
+epsilon = 1e-5        # tolerance for 2-norm of residual
+maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
+#
+#
+{
+    Type = Bottombound
+    Velocity= Dirichlet; 0; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 10
+}
+{
+    Type = Topbound
+    Velocity= Dirichlet; 0; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 10
+}
+{
+    Type = Leftbound
+    Velocity= Dirichlet; 1; 0
+    Pressure= Neumann; 0
+    Temperature = Neumann; 0
+    Position = 0; 5
+}
+{
+    Type = Rightbound
+    Velocity= Neumann; 0;0
+    Pressure= Dirichlet; 0
+    Temperature = Neumann; 0
+    Position = 0; 5
+}
+#N
+{
+    Shape = Rectangle
+    Position= 1.1;1;2.65;4
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Triangle
+    Position= 1.5;1;1.5;3.5;2;1
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+{
+    Shape = Triangle
+    Position= 1.75;4;2.25;4;2.25;1.5
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+#U
+{
+    Shape = Ellipse
+    Position= 4;1.775;0.775;0.775
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Rectangle
+    Position= 3.225;1.775;4.775;4
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Ellipse
+    Position= 4;1.775;0.375;0.375
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+{
+    Shape = Rectangle
+    Position= 3.625;1.775;4.375;4
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+#M
+{
+    Shape = Rectangle
+    Position= 5.35;1;7.65;4
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Triangle
+    Position= 5.75;1;5.75;3.5;6.25;1
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+{
+    Shape = Triangle
+    Position= 6;4;7;4;6.5;1.5
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+{
+    Shape = Triangle
+    Position= 7.25;1;7.25;3.5;6.75;1
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+#S
+{
+    Shape = Rectangle
+    Position= 8.225;1;9.775;4
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Rectangle
+    Position= 8.225;1.4;9.375;2.3
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+{
+    Shape = Rectangle
+    Position= 8.625;2.6;9.775;3.6
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+#I
+{
+    Shape = Rectangle
+    Position= 10.35;1;10.75;4
+    Temperature= Dirichlet; 1
+}
+#M
+{
+    Shape = Rectangle
+    Position= 11.375;1;13.625;4
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Triangle
+    Position= 11.725;1;11.725;3.5;12.225;1
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+{
+    Shape = Triangle
+    Position= 11.975;4;12.975;4;12.475;1.5
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
+{
+    Shape = Triangle
+    Position= 13.225;1;13.225;3.5;12.725;1
+    Temperature= Dirichlet; 1
+    Type= Fluid
+}
