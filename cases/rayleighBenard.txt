@@ -27,7 +27,7 @@ writeTimeInterval =1 #interval length between written files, 0.0 to write after 
 pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
 omega = 1.7           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
-maximumNumberOfIterations = 1e3   # maximum number of iterations in the solver
+maximumNumberOfIterations = 1e5   # maximum number of iterations in the solver
 #
 #
 {
