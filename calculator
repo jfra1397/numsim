@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for input in cases/*
+do
+  echo "$input"
+  output=${input%.*}
+  output=${output##*/}
+  output="out/"$output
+  echo $output
+  ./build/numsim $input -o $output -r -tf
+done
