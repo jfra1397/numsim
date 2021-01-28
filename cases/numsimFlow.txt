@@ -13,8 +13,8 @@ q = 0.0                 # internal heat flux
 tInit = 0.0             #initial temperature
 #
 # Discretization parameters
-nCellsX = 180        # number of cells in x and y direction
-nCellsY = 60
+nCellsX = 600        # number of cells in x and y direction
+nCellsY = 200
 useDonorCell = true   # if donor cell discretization should be used, possible values: true false
 alpha = 0.5           # factor for donor-cell scheme of the velocity, 0 is equivalent to central differences
 beta = 0.21           # volume expansion coefficient
@@ -58,44 +58,87 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
     Temperature = Neumann; 0
     Position = 0; 5
 }
+#Inits
+{
+    Shape = Rectangle
+    Position= 0.0;0.0;15.0;5.0
+    Temperature= Dirichlet; 1
+}
+{
+    Shape = Rectangle
+    Position= 0;1;1.1;1.4
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+{
+    Shape = Rectangle
+    Position= 13.625;1;15;1.4
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
 #N
 {
     Shape = Rectangle
     Position= 1.1;1;2.65;4
     Temperature= Dirichlet; 1
+    Type = Fluid
 }
 {
     Shape = Triangle
     Position= 1.5;1;1.5;3.5;2;1
     Temperature= Dirichlet; 1
-    Type= Fluid
 }
 {
     Shape = Triangle
     Position= 1.75;4;2.25;4;2.25;1.5
     Temperature= Dirichlet; 1
-    Type= Fluid
+}
+#N-U
+{
+    Shape = Rectangle
+    Position= 2.65;3.6;3.225;4
+    Temperature= Dirichlet; 1
+    Type = Fluid
 }
 #U
 {
     Shape = Ellipse
     Position= 4;1.775;0.775;0.775
     Temperature= Dirichlet; 1
+    Type = Fluid
 }
 {
     Shape = Rectangle
     Position= 3.225;1.775;4.775;4
     Temperature= Dirichlet; 1
+    Type = Fluid
 }
 {
     Shape = Ellipse
     Position= 4;1.775;0.375;0.375
     Temperature= Dirichlet; 1
-    Type = Fluid
 }
 {
     Shape = Rectangle
     Position= 3.625;1.775;4.375;4
+    Temperature= Dirichlet; 1
+}
+#U-M
+{
+    Shape = Rectangle
+    Position= 4.85;1;5.1;4
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+{
+    Shape = Rectangle
+    Position= 4.775;3.8;4.85;4
+    Temperature= Dirichlet; 1
+    Type = Fluid
+}
+{
+    Shape = Rectangle
+    Position= 5.1;1;5.35;1.2
     Temperature= Dirichlet; 1
     Type = Fluid
 }
@@ -104,40 +147,51 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
     Shape = Rectangle
     Position= 5.35;1;7.65;4
     Temperature= Dirichlet; 1
+    Type = Fluid
 }
 {
     Shape = Triangle
     Position= 5.75;1;5.75;3.5;6.25;1
     Temperature= Dirichlet; 1
-    Type= Fluid
 }
 {
     Shape = Triangle
     Position= 6;4;7;4;6.5;1.5
     Temperature= Dirichlet; 1
-    Type= Fluid
 }
 {
     Shape = Triangle
     Position= 7.25;1;7.25;3.5;6.75;1
     Temperature= Dirichlet; 1
-    Type= Fluid
+}
+#M-S
+{
+    Shape = Rectangle
+    Position= 7.65;1;8.225;1.44
+    Temperature= Dirichlet; 1
+    Type = Fluid
 }
 #S
 {
     Shape = Rectangle
     Position= 8.225;1;9.775;4
     Temperature= Dirichlet; 1
+    Type = Fluid
 }
 {
     Shape = Rectangle
     Position= 8.225;1.4;9.375;2.3
     Temperature= Dirichlet; 1
-    Type = Fluid
 }
 {
     Shape = Rectangle
     Position= 8.625;2.6;9.775;3.6
+    Temperature= Dirichlet; 1
+}
+#S-I
+{
+    Shape = Rectangle
+    Position= 9.775;3.6;10.75;4
     Temperature= Dirichlet; 1
     Type = Fluid
 }
@@ -146,28 +200,34 @@ maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
     Shape = Rectangle
     Position= 10.35;1;10.75;4
     Temperature= Dirichlet; 1
+    Type = Fluid
+}
+#I-M
+{
+    Shape = Rectangle
+    Position= 10.75;1;11.375;1.44
+    Temperature= Dirichlet; 1
+    Type = Fluid
 }
 #M
 {
     Shape = Rectangle
     Position= 11.375;1;13.625;4
     Temperature= Dirichlet; 1
+    Type = Fluid
 }
 {
     Shape = Triangle
     Position= 11.725;1;11.725;3.5;12.225;1
     Temperature= Dirichlet; 1
-    Type= Fluid
 }
 {
     Shape = Triangle
     Position= 11.975;4;12.975;4;12.475;1.5
     Temperature= Dirichlet; 1
-    Type= Fluid
 }
 {
     Shape = Triangle
     Position= 13.225;1;13.225;3.5;12.725;1
     Temperature= Dirichlet; 1
-    Type= Fluid
 }
