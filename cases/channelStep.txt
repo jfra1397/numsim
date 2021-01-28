@@ -22,13 +22,13 @@ beta = 0.21           # volume expansion coefficient
 gamma = 0.5           # factor for donor-cell scheme of the temperature, 0 is equivalent to central differences
 tau = 0.5             # safety factor for time step width
 maximumDt = 1.0       # maximum values for time step width
-writeTimeInterval =1.0 #interval length between written files, 0.0 to write after every single timestep
+writeTimeInterval =0.0 #interval length between written files, 0.0 to write after every single timestep
 #
 # Solver parameters
 pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeidel SOR CG
 omega = 1.6           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
-maximumNumberOfIterations = 1e4    # maximum number of iterations in the solver
+maximumNumberOfIterations = 1e5    # maximum number of iterations in the solver
 #
 #
 {

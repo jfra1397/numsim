@@ -68,5 +68,5 @@ double SOR::compute_p(const Discretization &discr, FieldVariable &p)
 
     //set correct boundary values (safety first)
     discr.set_boundary_p(p);
-    return norm_res;
+    return sqrt(norm_res);
 }
