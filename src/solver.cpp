@@ -214,7 +214,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         if (write)
         {
             writer.writeFile(t);
-            discr.write_to_file(fileNo, t);
+            //discr.write_to_file(fileNo, t);
             fileNo++;
             write = false;
         }
