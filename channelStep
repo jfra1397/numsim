@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/channelStep.txt -o out/channelStep -r -tf

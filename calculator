@@ -7,5 +7,5 @@ do
   output=${output##*/}
   output="out/"$output
   echo $output
-  ./build/numsim $input -o $output -r -tf
+  srun ./build/numsim $input -o $output -r -tf
 done

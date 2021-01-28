@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/city.txt -o out/city -r -tf

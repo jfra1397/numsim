@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/galton.txt -o out/galton -r -tf

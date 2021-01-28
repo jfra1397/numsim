@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/standardForms.txt -o out/standardForms -r -tf

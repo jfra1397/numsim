@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/numsim.txt -o out/numsim -r -tf

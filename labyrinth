@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/labyrinth.txt -o out/labyrinth -r -tf
