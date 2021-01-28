@@ -22,13 +22,7 @@ class FieldVariable : public Array2D<double>
 {
 public:
     //constructor
-    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize,double value =0.0);
-
-    //set boundary condition type of each boundary
-    int set_boundary_type(btype top = DIRICHLET, btype bottom = DIRICHLET, btype left = DIRICHLET, btype right = DIRICHLET);
-
-    //set boundary values at each boundary
-    int set_boundary(double bottomBound, double rightBound, double topBound, double leftBound, double h = 0);
+    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double value =0.0);
 
     //set field variable matrix to data matrix
     void operator=(const Array2D<double> &data);
@@ -49,11 +43,8 @@ private:
     //activate interpolation at left and right boundary
     bool horizontalBoundInterpolate_;
 
-    //boundary condition at top/bottom/left/right boundary
-    btype topBoundType_;
-    btype bottomBoundType_;
-    btype leftBoundType_;
-    btype rightBoundType_;
+    double horizontalOffset_;
+    double verticalOffset_;
 
     //position of corresponding variable on grid
     vposition pos_;
