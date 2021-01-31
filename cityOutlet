@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/cityOutlet.txt -o out/cityOutlet -r -tf

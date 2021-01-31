@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./build/numsim cases/numsimFlowTemperature.txt -o out/numsimFlowTemperature -r -tf
