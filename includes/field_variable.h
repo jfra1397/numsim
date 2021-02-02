@@ -4,15 +4,6 @@
 
 #include "array2d.h"
 
-//describe position of corresponding variable on grid
-enum vposition
-{
-    VCENTRE,
-    VRIGHT,
-    VTOP
-};
-
-
 /** This class represents a field variable of double values.
  * It inhertits from Array2D to access and store the values
  * and additionally it contains methods to set boundary conditions
@@ -22,7 +13,7 @@ class FieldVariable : public Array2D<double>
 {
 public:
     //constructor
-    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double value =0.0);
+    FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double value = 0.0);
 
     //set field variable matrix to data matrix
     void operator=(const Array2D<double> &data);
@@ -37,12 +28,7 @@ private:
     //disable default constructor
     FieldVariable();
 
-    //activate interpolation at top and bottom boundary
-    bool verticalBoundInterpolate_;
-
-    //activate interpolation at left and right boundary
-    bool horizontalBoundInterpolate_;
-
+    //offset for u and v for interpolation
     double horizontalOffset_;
     double verticalOffset_;
 

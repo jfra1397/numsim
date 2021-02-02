@@ -6,7 +6,7 @@
 
 #include "../includes/discretization.h"
 
-Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize,double tInit) : StaggeredGrid(nCells, physicalSize, {physicalSize[0]/nCells[0], physicalSize[1]/nCells[1]}, tInit)
+Discretization::Discretization(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, double tInit) : StaggeredGrid(nCells, physicalSize, {physicalSize[0] / nCells[0], physicalSize[1] / nCells[1]}, tInit)
 {
 }
 
@@ -129,10 +129,9 @@ void Discretization::write_to_file(int fileNo, double time) const
     g().write_to_file(fileName.str(), "g", true);
     rhs().write_to_file(fileName.str(), "rhs", true);
     T().write_to_file(fileName.str(), "T", true);
-    
 }
 
 //get meshwidth in x-direction
-double Discretization::dx() const {return meshWidth_[0];}
+double Discretization::dx() const { return meshWidth_[0]; }
 //get meshwidth in y-direction
-double Discretization::dy() const {return meshWidth_[1];}
+double Discretization::dy() const { return meshWidth_[1]; }

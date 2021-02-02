@@ -4,8 +4,7 @@
 
 #include "../includes/field_variable.h"
 
-FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double value) : 
-    Array2D<double>(size, value)
+FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double value) : Array2D<double>(size, value)
 {
     //set position of corresponding variable on grid
     pos_ = pos;
@@ -16,43 +15,22 @@ FieldVariable::FieldVariable(const std::array<int, 2> size, vposition pos, const
     //physical size in each direction
     physicalSize_ = physicalSize;
 
-    // //set size in each direction
-    // int sizex = size[0], sizey = size[1];
-
-    //if value is at centre, extend matrix in both directions by two (variable types p and rhs)
+    //adapt offset according to position of field variable in every cell
     if (pos == VCENTRE)
     {
-        // sizex += 2;
-        // sizey += 2;
-        // allocate data, initialize to 0
-        horizontalBoundInterpolate_ = true;
-        verticalBoundInterpolate_ = true;
         horizontalOffset_ = meshWidth_[0] / 2;
         verticalOffset_ = meshWidth_[1] / 2;
     }
-    //if value is at right, extend matrix in y-direction by two and x-direction by one (variable types u and F)
     else if (pos == VRIGHT)
     {
-        // sizex += 1;
-        // sizey += 2;
-        // allocate data, initialize to 0
-        horizontalBoundInterpolate_ = false;
-        verticalBoundInterpolate_ = true;
         verticalOffset_ = meshWidth_[1] / 2;
         horizontalOffset_ = 0;
     }
-    //if value is at top, extend matrix in y-direction by one and x-direction by two (variable types v and G)
     else if (pos == VTOP)
     {
-        // sizex += 2;
-        // sizey += 1;
-        // allocate data, initialize to 0
-        horizontalBoundInterpolate_ = true;
-        verticalBoundInterpolate_ = false;
         horizontalOffset_ = meshWidth_[0] / 2;
         verticalOffset_ = 0;
     }
-    //resize({sizex, sizey}, value);
 }
 
 //set field variable matrix to data matrix
@@ -66,7 +44,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
 {
     //declare file instance
     std::ofstream myfile;
-    
+
     //open file either in append mode or overwritte mode
     if (append)
         myfile.open(fileName, std::ios::out | std::ios::app);
@@ -80,7 +58,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
     myfile << std::right;
     myfile.precision(4);
     int setw = 14;
-    
+
     //write header of table
     int ii = -1;
     myfile << std::setw(setw + 1) << "|";
@@ -104,7 +82,7 @@ void FieldVariable::write_to_file(std::string fileName, std::string name, bool a
     for (int j = size()[1] - 1; j >= 0; j--)
     {
         //write row header
-        myfile << std::setw(setw) << j-1 << "|";
+        myfile << std::setw(setw) << j - 1 << "|";
         //loop throug columns
         for (int i = 0; i < size()[0]; i++)
         {
@@ -125,7 +103,6 @@ double FieldVariable::interpolateAt(double x, double y) const
     //check if x and y are legal values
     assert(("Position in x-direction is out of bound!", 0 <= x && x <= physicalSize_[0]));
     assert(("Position in y-direction is out of bound!", 0 <= y && y <= physicalSize_[1]));
-
 
     //calculate index of grid point left below or equal to physical point (x,y)
     int i = (x + horizontalOffset_) / meshWidth_[0];

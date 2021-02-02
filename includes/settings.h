@@ -14,8 +14,7 @@ class Discretization;
 /** This class contains all parameter values and
  * loads them from a given *.txt file. Also it creates 
  * the discretization and solver object with given 
- * paramters */
-
+ * parameters */
 
 class Settings
 {
@@ -92,12 +91,10 @@ public:
     //return maximum number of iterations in the solver
     int maximumNumberOfIterations() const;
 
-
-//private:
+    //private:
 
     //assign value to parameter named param and cast datatype
     int assign_param_(std::string param, std::string value);
-
 
     //number of cells in x and y direction
     std::array<int, 2> nCells_;
@@ -124,7 +121,7 @@ public:
     double tau_;
 
     //maximum time step width
-    double maximumDt_; 
+    double maximumDt_;
 
     //external forces
     std::array<double, 2> g_;
@@ -144,15 +141,8 @@ public:
     //factor for donor-cell scheme temperature
     double gamma_;
 
-    // std::vector<btype> leftBoundVelFlag_;
-    // // u,v,p
-    // std::vector<std::string> leftBound_;
-    // std::vector<std::string> rightBound_;
-    // std::vector<std::string> topBound_;
-    // std::vector<std::string> bottomBound_;
-    // std::vector<std::string> Obstacles_;
+    //save information given by boundaries and obstacles
     std::vector<Obstacle> objects_;
-
 
     //which pressure solver to use, "GaussSeidel" or "SOR"
     std::string pressureSolver_;
@@ -160,26 +150,30 @@ public:
     //overrelaxation factor velocities
     double omega_;
 
-
     //tolerance for the residual in the pressure solver
     double epsilon_;
 
     //maximum number of iterations in the solver
     int maximumNumberOfIterations_;
 
+    //handle dict input for boundary conditions and obstacles
     void handle_dict(std::ifstream &file, std::string line, int &lineNo);
 
-    std::vector<std::string> cut (const std::string &str);
+    //split line by "="
+    std::array<std::string, 2> extract(std::string line);
 
+    //return list of strings by cutting a string at ";"
+    std::vector<std::string> cut(const std::string &str);
+
+    //convert datatype from string to enum shape
     SHAPE string2shape(std::string str, int &lineNo);
+
+    //convert datatype from string to enum btype
     btype string2btype(std::string str, int &lineNo);
+
+    //convert datatype from string to enum CELLTYPE
     CELLTYPE string2celltype(std::string str, int &lineNo);
-
-
-    std::array<std::string,2> extract(std::string line);
-    
 };
 
+//give feedback when error occurs
 void assertion_feedback(bool assertion, std::string msg);
-
-

@@ -3,6 +3,14 @@
 #include <vector>
 #include <array>
 
+//describe position of corresponding variable on grid
+enum vposition
+{
+    VCENTRE,
+    VRIGHT,
+    VTOP
+};
+
 //describe boundary condition type
 enum btype
 {
@@ -12,6 +20,7 @@ enum btype
     
 };
 
+//describe celltype
 enum CELLTYPE
 {
     FLUID,
@@ -30,6 +39,7 @@ enum CELLTYPE
     BOTTOMBOUND
 };
 
+//decribe shape of obstacle
 enum SHAPE{
     RECTANGLE,
     TRIANGLE,
@@ -37,6 +47,7 @@ enum SHAPE{
 };
 
 
+//describe properties of obstacle
 struct Obstacle
 {
     SHAPE shape;

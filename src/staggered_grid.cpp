@@ -1,32 +1,16 @@
 #include "../includes/staggered_grid.h"
 
+//constructor
 StaggeredGrid::StaggeredGrid(const std::array<int, 2> size, const std::array<double, 2> physicalSize, const std::array<double, 2> meshWidth, double tInit)
     : Mesh(size, physicalSize),
-    u_({size[0]+1, size[1]+2}, VRIGHT, physicalSize, meshWidth),
-    v_({size[0]+2, size[1]+1}, VTOP, physicalSize, meshWidth),
-    p_({size[0]+2, size[1]+2}, VCENTRE, physicalSize, meshWidth),
-    f_({size[0]+1, size[1]+2}, VRIGHT, physicalSize, meshWidth),
-    g_({size[0]+2, size[1]+1}, VTOP, physicalSize, meshWidth),
-    rhs_({size[0]+2, size[1]+2}, VCENTRE, physicalSize, meshWidth),
-    T_({size[0]+2, size[1]+2}, VCENTRE, physicalSize, meshWidth, tInit)
-    // u_(size, VRIGHT, physicalSize, meshWidth),
-    // v_(size, VTOP, physicalSize, meshWidth),
-    // p_(size, VCENTRE, physicalSize, meshWidth),
-    // f_(size, VRIGHT, physicalSize, meshWidth),
-    // g_(size, VTOP, physicalSize, meshWidth),
-    // rhs_(size, VCENTRE, physicalSize, meshWidth),
-    // T_(size, VCENTRE, physicalSize, meshWidth, tInit)
+      u_({size[0] + 1, size[1] + 2}, VRIGHT, physicalSize, meshWidth),
+      v_({size[0] + 2, size[1] + 1}, VTOP, physicalSize, meshWidth),
+      p_({size[0] + 2, size[1] + 2}, VCENTRE, physicalSize, meshWidth),
+      f_({size[0] + 1, size[1] + 2}, VRIGHT, physicalSize, meshWidth),
+      g_({size[0] + 2, size[1] + 1}, VTOP, physicalSize, meshWidth),
+      rhs_({size[0] + 2, size[1] + 2}, VCENTRE, physicalSize, meshWidth),
+      T_({size[0] + 2, size[1] + 2}, VCENTRE, physicalSize, meshWidth, tInit)
 {
-
-    // flag_(18,18) = OBJTOPRIGHT;
-    // flag_(17,18) = OBJTOP;
-    // flag_(16,18) = OBJTOPLEFT;
-    // flag_(18,17) = OBJRIGHT;
-    // flag_(18,16) = OBJBOTTOMRIGHT;
-    // flag_(17,17) = EMPTY;
-    // flag_(17,16) = OBJBOTTOM;
-    // flag_(16,17) = OBJLEFT;
-    // flag_(16,16) = OBJBOTTOMLEFT;
 }
 
 //set boundary values of u and v according to given boundary condition values
@@ -38,9 +22,11 @@ void StaggeredGrid::set_boundary_uvfg()
         {
             switch (flag_(i, j))
             {
+            //no boundary to be set in cells of type fluid or empty
             case FLUID:
             case EMPTY:
                 break;
+            //set boundaries depending on where obstacle cell is
             case OBJLEFT:
                 u_(i - 1, j) = 0;
                 v_(i, j) = -v_(i - 1, j);
@@ -103,6 +89,7 @@ void StaggeredGrid::set_boundary_uvfg()
             }
         }
     }
+    //set boundary value for u at bottom and top bound
     for (int i = 0; i < u_.size()[0]; i++)
     {
         switch (bottomBoundVelFlag_[i])
@@ -129,6 +116,7 @@ void StaggeredGrid::set_boundary_uvfg()
             assert(false);
         }
     }
+    //set boundary value for u at left and right bound
     for (int j = 0; j < u_.size()[1]; j++)
     {
         switch (leftBoundVelFlag_[j])
@@ -155,6 +143,7 @@ void StaggeredGrid::set_boundary_uvfg()
             assert(false);
         }
     }
+    //set boundary value for v at bottom and top bound
     for (int i = 0; i < v_.size()[0]; i++)
     {
         switch (bottomBoundVelFlag_[i])
@@ -181,6 +170,7 @@ void StaggeredGrid::set_boundary_uvfg()
             assert(false);
         }
     }
+    //set boundary value for v at left and right bound
     for (int j = 0; j < v_.size()[1]; j++)
     {
         switch (leftBoundVelFlag_[j])
@@ -209,6 +199,7 @@ void StaggeredGrid::set_boundary_uvfg()
     }
 }
 
+//set boundary values of p according to given boundary condition values
 void StaggeredGrid::set_boundary_p(FieldVariable &p) const
 {
     for (int j = 1; j < flag_.size()[1] - 1; j++)
@@ -217,9 +208,11 @@ void StaggeredGrid::set_boundary_p(FieldVariable &p) const
         {
             switch (flag_(i, j))
             {
+            //no boundary to be set in cells of type fluid or empty
             case FLUID:
             case EMPTY:
                 break;
+            //set boundaries depending on where obstacle cell is
             case OBJLEFT:
                 p(i, j) = p(i - 1, j);
                 break;
@@ -250,6 +243,7 @@ void StaggeredGrid::set_boundary_p(FieldVariable &p) const
             }
         }
     }
+    //set boundary value for p at bottom and top bound
     for (int i = 0; i < p_.size()[0]; i++)
     {
         switch (bottomBoundVelFlag_[i])
@@ -276,6 +270,7 @@ void StaggeredGrid::set_boundary_p(FieldVariable &p) const
             assert(false);
         }
     }
+    //set boundary value for u at left and right bound
     for (int j = 0; j < p.size()[1]; j++)
     {
         switch (leftBoundVelFlag_[j])
@@ -304,6 +299,7 @@ void StaggeredGrid::set_boundary_p(FieldVariable &p) const
     }
 }
 
+//set boundary values of T according to given boundary condition values
 void StaggeredGrid::set_boundary_T(FieldVariable &T) const
 {
     for (int j = 1; j < flag_.size()[1] - 1; j++)
@@ -313,40 +309,58 @@ void StaggeredGrid::set_boundary_T(FieldVariable &T) const
 
             switch (flag_(i, j))
             {
+            //no boundary to be set in cells of type fluid or empty
             case FLUID:
             case EMPTY:
                 break;
+            //set boundaries depending on where obstacle cell is
             case OBJLEFT:
-                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i - 1, j);
-                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i - 1, j);
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = T(i - 1, j);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - T(i - 1, j);
                 break;
             case OBJRIGHT:
-                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i + 1, j);
-                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i + 1, j);
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = T(i + 1, j);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - T(i + 1, j);
                 break;
             case OBJTOP:
-                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i, j + 1);
-                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j + 1);
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = T(i, j + 1);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j + 1);
                 break;
             case OBJBOTTOM:
-                if (objTemperatureFlag_(i, j) == NEUMANN) T(i, j) = T(i, j - 1);
-                else if (objTemperatureFlag_(i, j) == DIRICHLET) T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j - 1);
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = T(i, j - 1);
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - T(i, j - 1);
                 break;
             case OBJBOTTOMLEFT:
-                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j-1)+ T(i-1,j))/2;
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = (T(i - 1, j) + T(i, j - 1)) / 2;
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - (T(i, j - 1) + T(i - 1, j)) / 2;
                 break;
             case OBJBOTTOMRIGHT:
-                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j-1)+ T(i+1,j))/2;
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = (T(i + 1, j) + T(i, j - 1)) / 2;
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - (T(i, j - 1) + T(i + 1, j)) / 2;
                 break;
             case OBJTOPLEFT:
-                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j+1)+ T(i-1,j))/2;
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = (T(i - 1, j) + T(i, j + 1)) / 2;
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - (T(i, j + 1) + T(i - 1, j)) / 2;
                 break;
             case OBJTOPRIGHT:
-                if(objTemperatureFlag_(i,j)==NEUMANN) T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
-                else if(objTemperatureFlag_(i,j)==DIRICHLET) T(i,j) = 2*objTemperatureValues_(i,j)- (T(i, j+1)+ T(i+1,j))/2;
+                if (objTemperatureFlag_(i, j) == NEUMANN)
+                    T(i, j) = (T(i + 1, j) + T(i, j + 1)) / 2;
+                else if (objTemperatureFlag_(i, j) == DIRICHLET)
+                    T(i, j) = 2 * objTemperatureValues_(i, j) - (T(i, j + 1) + T(i + 1, j)) / 2;
                 break;
 
             default:
@@ -354,6 +368,7 @@ void StaggeredGrid::set_boundary_T(FieldVariable &T) const
             }
         }
     }
+    //set boundary value for T at bottom and top bound
     for (int i = 0; i < T_.size()[0]; i++)
     {
         switch (bottomBoundTempFlag_[i])
@@ -381,6 +396,7 @@ void StaggeredGrid::set_boundary_T(FieldVariable &T) const
             assert(false);
         }
     }
+    //set boundary value for T at left and right bound
     for (int j = 0; j < T_.size()[1]; j++)
     {
         switch (leftBoundTempFlag_[j])
@@ -425,7 +441,6 @@ double StaggeredGrid::f(int i, int j) const { return f_(i, j); }
 double StaggeredGrid::g(int i, int j) const { return g_(i, j); }
 double StaggeredGrid::rhs(int i, int j) const { return rhs_(i, j); }
 double StaggeredGrid::T(int i, int j) const { return T_(i, j); }
-
 CELLTYPE StaggeredGrid::flag(int i, int j) const { return flag_(i, j); }
 
 //access the field variable, declared not const, i.e. the values can be changed
@@ -445,16 +460,3 @@ double &StaggeredGrid::set_f(int i, int j) { return f_(i, j); }
 double &StaggeredGrid::set_g(int i, int j) { return g_(i, j); }
 double &StaggeredGrid::set_rhs(int i, int j) { return rhs_(i, j); }
 double &StaggeredGrid::set_T(int i, int j) { return T_(i, j); }
-
-int StaggeredGrid::uIBegin() const {}
-int StaggeredGrid::uIEnd() const {}
-int StaggeredGrid::uJBegin() const {}
-int StaggeredGrid::uJEnd() const {}
-int StaggeredGrid::vIBegin() const {}
-int StaggeredGrid::vIEnd() const {}
-int StaggeredGrid::vJBegin() const {}
-int StaggeredGrid::vJEnd() const {}
-int StaggeredGrid::pIBegin() const {}
-int StaggeredGrid::pIEnd() const {}
-int StaggeredGrid::pJBegin() const {}
-int StaggeredGrid::pJEnd() const {}

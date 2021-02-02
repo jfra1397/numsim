@@ -36,7 +36,7 @@ Obstacles are determined similarly, possible shapes are rectangle, triangle and 
 }
 {
     Shape = Ellipse             
-    Position= 0.4;0.4;0.6;0.8      #center (x,y) and half-axes (a,b) of ellipsee as x;y;a;b
+    Position= 0.4;0.4;0.6;0.8      #center (x,y) and half-axes (a,b) of ellipse as x;y;a;b
     Temperature= Dirichlet; 1      #boundary type and value for temperature, alternatives: Dirichlet , Neumann
 }
 It is possible to change the obstacle its type to fluid, by adding
@@ -51,3 +51,5 @@ The following flags can be added when running the file (./numsim ../cases/parame
 -tf (print time feedback)
 -h (help)
 For further information run ./numsim ../cases/parameters.txt -h.
+
+Resulting vts-files are stored in the given out-folder (-o, default: build/out).

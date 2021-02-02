@@ -2,7 +2,6 @@
 
 #include "solver.h"
 
-
 /** This class contains the iterative SOR-solver to solve 
  * the pressure-poisson-equation. All other needed methods 
  * to sovler for the other field variables are inherited 

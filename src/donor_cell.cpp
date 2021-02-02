@@ -2,7 +2,7 @@
 
 #include "../includes/donor_cell.h"
 
-DonorCell::DonorCell(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, double tInit, double alpha, double gamma) : Discretization(nCells, physicalSize,tInit)
+DonorCell::DonorCell(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, double tInit, double alpha, double gamma) : Discretization(nCells, physicalSize, tInit)
 {
     //weighting factor
     alpha_ = alpha;

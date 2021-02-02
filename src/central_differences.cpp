@@ -2,7 +2,7 @@
 
 #include "../includes/central_differences.h"
 
-CentralDifferences::CentralDifferences(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize,double tInit) : Discretization(nCells, physicalSize, tInit)
+CentralDifferences::CentralDifferences(const std::array<int, 2> nCells, const std::array<double, 2> physicalSize, double tInit) : Discretization(nCells, physicalSize, tInit)
 {
 }
 
@@ -45,15 +45,15 @@ double CentralDifferences::computeDuvDy(int i, int j) const
 //compute the 1st derivative ∂ uT / ∂x
 double CentralDifferences::computeDuTDx(int i, int j) const
 {
-    double TLeft = (T(i-1,j)+T(i,j))/2;
-    double TRight = (T(i+1,j)+T(i,j))/2;
-    return (u(i,j)*TRight - u(i-1,j)*TLeft)/dx();
+    double TLeft = (T(i - 1, j) + T(i, j)) / 2;
+    double TRight = (T(i + 1, j) + T(i, j)) / 2;
+    return (u(i, j) * TRight - u(i - 1, j) * TLeft) / dx();
 }
 
 //compute the 1st derivative ∂ vT / ∂y
 double CentralDifferences::computeDvTDy(int i, int j) const
 {
-    double TTop = (T(i,j+1)+T(i,j))/2;
-    double TBottom = (T(i,j-1)+T(i,j))/2;
-    return (v(i,j)*TTop -v(i,j-1)*TBottom)/dy();
+    double TTop = (T(i, j + 1) + T(i, j)) / 2;
+    double TBottom = (T(i, j - 1) + T(i, j)) / 2;
+    return (v(i, j) * TTop - v(i, j - 1) * TBottom) / dy();
 }

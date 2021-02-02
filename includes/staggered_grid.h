@@ -4,12 +4,10 @@
 #include "field_variable.h"
 #include "mesh.h"
 
-
-
 /** This class stores all field variables and 
  * is able to set boundary conditions and values
  */
-class StaggeredGrid: public Mesh
+class StaggeredGrid : public Mesh
 {
 public:
     //constructor
@@ -17,7 +15,6 @@ public:
 
     //set boundary values corresponding to variable
     void set_boundary_uvfg();
-    void set_boundary_fg();
     void set_boundary_p(FieldVariable &p) const;
     void set_boundary_T(FieldVariable &T) const;
 
@@ -30,7 +27,6 @@ public:
     const FieldVariable &rhs() const;
     const FieldVariable &T() const;
 
-
     //get the value at coordinate (i,j), declared const, i.e. it is not possible to change the value
     double u(int i, int j) const;
     double v(int i, int j) const;
@@ -39,7 +35,6 @@ public:
     double g(int i, int j) const;
     double rhs(int i, int j) const;
     double T(int i, int j) const;
-
     CELLTYPE flag(int i, int j) const;
 
     //access the field variable, declared not const, i.e. the values can be changed
@@ -60,19 +55,6 @@ public:
     double &set_rhs(int i, int j);
     double &set_T(int i, int j);
 
-    int uIBegin() const;
-    int uIEnd() const;
-    int uJBegin() const;
-    int uJEnd() const;
-    int vIBegin() const;
-    int vIEnd() const;
-    int vJBegin() const;
-    int vJEnd() const;
-    int pIBegin() const;
-    int pIEnd() const;
-    int pJBegin() const;
-    int pJEnd() const;
-
 private:
     //field variables
     FieldVariable u_;
@@ -82,6 +64,4 @@ private:
     FieldVariable g_;
     FieldVariable rhs_;
     FieldVariable T_;
-    
-    
 };
