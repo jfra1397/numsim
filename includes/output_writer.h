@@ -19,5 +19,5 @@ public:
 protected:
   std::shared_ptr<Discretization> discretization_; //< a shared pointer to the discretization which contains all data that will be written to the file
   int fileNo_;                                     //< a counter that increments for every file, this number is part of the file name of output files
-  std::string outputPath_;
+  std::string outputPath_;                         // output path default "out/"
 };

@@ -26,6 +26,8 @@ OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discr
 
   // set number of points in each dimension, 1 cell in z direction
   nCells = discretization_->nCells();
+
+  //generate structured grid and add points of mesh
   vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
   for (int j = 0; j < nCells[1] + 1; j++)
   {
@@ -39,6 +41,7 @@ OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discr
   dataSet->SetPoints(points);
   dataSet->SetDimensions(nCells[0] + 1, nCells[1] + 1, 1); // we want to have points at each corner of each cell
 
+  //hide all object cells
   int index = 0;
   for (int j = 1; j < nCells[1] + 1; j++)
   {
@@ -51,6 +54,7 @@ OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discr
   }
 }
 
+//write only mesh to vtk file
 void OutputWriterParaview::writeMesh()
 {
   // Assemble the filename
@@ -81,10 +85,6 @@ void OutputWriterParaview::writeFile(double currentTime)
 
   // assign the new file name to the output vtkWriter_
   vtkWriter_->SetFileName(fileName.str().c_str());
-
-  //dataSet->SetOrigin(0, 0, 0);
-
-  //
 
   // add pressure field variable
   // ---------------------------
@@ -209,35 +209,9 @@ void OutputWriterParaview::writeFile(double currentTime)
   // finally write out the data
   vtkWriter_->Write();
 
+  // remove all arrays after writing output to file
   dataSet->GetPointData()->RemoveArray("TIME");
   dataSet->GetPointData()->RemoveArray("velocity");
   dataSet->GetPointData()->RemoveArray("pressure");
   dataSet->GetPointData()->RemoveArray("temperature");
-  return;
-
-  // Create a mapper and actor
-  vtkSmartPointer<vtkDataSetMapper> mapper =
-      vtkSmartPointer<vtkDataSetMapper>::New();
-  mapper->SetInputData(dataSet);
-  vtkSmartPointer<vtkActor> actor =
-      vtkSmartPointer<vtkActor>::New();
-  actor->SetMapper(mapper);
-
-  // Create a renderer, render window, and interactor
-  vtkSmartPointer<vtkRenderer> renderer =
-      vtkSmartPointer<vtkRenderer>::New();
-  vtkSmartPointer<vtkRenderWindow> renderWindow =
-      vtkSmartPointer<vtkRenderWindow>::New();
-  renderWindow->AddRenderer(renderer);
-  vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
-      vtkSmartPointer<vtkRenderWindowInteractor>::New();
-  renderWindowInteractor->SetRenderWindow(renderWindow);
-
-  // Add the actor to the scene
-  renderer->AddActor(actor);
-  renderer->SetBackground(.2, .3, .4);
-
-  // Render and interact
-  renderWindow->Render();
-  renderWindowInteractor->Start();
 }

@@ -11,7 +11,7 @@ OutputWriter::OutputWriter(std::shared_ptr<Discretization> discretization, std::
   if (returnValue != 0)
     std::cout << "Could not create subdirectory \"" << outputPath << "\"." << std::endl;
   outputPath_ = outputPath;
-
+  // remove files in output directory if -r flag is given
   if (remove)
   {
     int returnValue = system(("rm -r " + outputPath + "/*").c_str());
