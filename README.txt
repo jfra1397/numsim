@@ -1,7 +1,7 @@
 README
 
 This program is a fluid solver for laminar flow.
-It is possible to use arbitrary geometries und to model heat flow.
+It is possible to use arbitrary geometries and to model heat flow.
 
 How to run the program?
 create a build folder and execute the following from within it:
