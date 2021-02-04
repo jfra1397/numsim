@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     bool input = false;
     bool remove = false;
     bool feedback = false;
+    bool writeText = false;
     Settings settings;
 
     //check for and read given input flags
@@ -47,6 +48,7 @@ int main(int argc, char *argv[])
             std::cout << "-m or --mesh: generate single file only containing specified mesh" << std::endl;
             std::cout << "-o or --out: generate output in following folder" << std::endl;
             std::cout << "-r or --remove: remove output folder (coudld be given with -o)" << std::endl;
+            std::cout << "-wt or --writetext: generate additional txt files containing all fieldvariables" << std::endl;
             std::cout << "-tf or --timefeedback: print time and residuum to console after every timestep" << std::endl;
             std::cout << std::endl;
             std::cout << "\u00a9 Stefania Scheurer, Marius Stach and Julian Franquinet " << std::endl;
@@ -57,6 +59,8 @@ int main(int argc, char *argv[])
             remove = true;
         else if (std::string(argv[i]) == "-tf" || std::string(argv[i]) == "--timefeedback")
             feedback = true;
+        else if (std::string(argv[i]) == "-wt" || std::string(argv[i]) == "--writetext")
+            writeText = true;
         else
         {
             settings.loadFromFile(argv[i]);
@@ -91,7 +95,7 @@ int main(int argc, char *argv[])
     }
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, writer, feedback);
+    solver->solve_uv(settings, *discretization, writer, writeText, feedback, outputPath);
 
     return EXIT_SUCCESS;
 }

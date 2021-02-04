@@ -111,7 +111,7 @@ void Solver::compute_u(double dt, const Discretization &discr, FieldVariable &u)
         {
             //calculate u at position (i,j)
             if (discr.flag(i, j) != FLUID || discr.flag(i + 1, j) != FLUID)
-            //ignore non-fluid cells
+                //ignore non-fluid cells
                 continue;
             u(i, j) = discr.f(i, j) - dt * discr.computeDpDx(i, j);
         }
@@ -130,14 +130,14 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
         {
             //calculate v at position (i,j)
             if (discr.flag(i, j) != FLUID || discr.flag(i, j + 1) != FLUID)
-            //ignore non-fluid cells
+                //ignore non-fluid cells
                 continue;
             v(i, j) = discr.g(i, j) - dt * discr.computeDpDy(i, j);
         }
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, bool feedback)
+void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, bool writeText, bool feedback, std::string outputPath)
 {
 
     //initialize needed parameters
@@ -153,6 +153,9 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
 
     //write to vts file
     writer.writeFile(t);
+    if (writeText)
+        discr.write_to_file(fileNo, t, outputPath);
+    fileNo++;
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
@@ -204,7 +207,8 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         if (write)
         {
             writer.writeFile(t);
-            discr.write_to_file(fileNo, t);
+            if (writeText)
+                discr.write_to_file(fileNo, t, outputPath);
             fileNo++;
             write = false;
         }
