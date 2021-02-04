@@ -137,7 +137,7 @@ void Solver::compute_v(double dt, const Discretization &discr, FieldVariable &v)
     }
 }
 
-void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, bool feedback)
+void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWriterParaview &writer, bool feedback, std::string outputPath)
 {
 
     //initialize needed parameters
@@ -153,6 +153,8 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
 
     //write to vts file
     writer.writeFile(t);
+    discr.write_to_file(fileNo, t,outputPath);
+    fileNo++;
 
     //iterate until given endtime in settings is reached
     while (t < settings.endTime())
@@ -204,7 +206,7 @@ void Solver::solve_uv(const Settings &settings, Discretization &discr, OutputWri
         if (write)
         {
             writer.writeFile(t);
-            discr.write_to_file(fileNo, t);
+            discr.write_to_file(fileNo, t,outputPath);
             fileNo++;
             write = false;
         }

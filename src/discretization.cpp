@@ -103,7 +103,7 @@ const std::array<int, 2> Discretization::nCells() const
 }
 
 //write output to .txt file (self written)
-void Discretization::write_to_file(int fileNo, double time) const
+void Discretization::write_to_file(int fileNo, double time, std::string outputPath) const
 {
     // create "out" subdirectory if it does not yet exist
     int returnValue = system("mkdir -p out");
@@ -112,7 +112,7 @@ void Discretization::write_to_file(int fileNo, double time) const
 
     // Assemble the filename
     std::stringstream fileName;
-    fileName << "out/output_" << std::setw(4) << std::setfill('0') << fileNo << ".txt";
+    fileName << outputPath<<"/output_" << std::setw(4) << std::setfill('0') << fileNo << ".txt";
 
     //header in .txt file
     std::ofstream myfile;

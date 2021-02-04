@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     }
 
     //run loop to solve for new velocities u,v
-    solver->solve_uv(settings, *discretization, writer, feedback);
+    solver->solve_uv(settings, *discretization, writer, feedback,outputPath);
 
     return EXIT_SUCCESS;
 }

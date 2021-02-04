@@ -76,6 +76,6 @@ public:
     const std::array<int, 2> nCells() const;
 
     //write output to .txt file (self written)
-    void write_to_file(int fileNo, double time) const;
+    void write_to_file(int fileNo, double time, std::string outputPath) const;
 
 };
